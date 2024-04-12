@@ -32,7 +32,7 @@ public class CamFollowController : MonoBehaviour
         switch (movementType)
         {
             case CameraMovementType.HORIZONTAL:
-                HandleHORIZONTALMovement();
+                HandleHorizontalMovement();
                 break;
             case CameraMovementType.VERTICAL:
                 HandleVerticalMovement();
@@ -42,7 +42,7 @@ public class CamFollowController : MonoBehaviour
         }
     }
 
-    private void HandleHORIZONTALMovement()
+    private void HandleHorizontalMovement()
     {
         if (target != null)
         {
@@ -58,5 +58,13 @@ public class CamFollowController : MonoBehaviour
             Vector3 targetPosition = new Vector3(transform.position.x, target.position.y, transform.position.z);
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * cameraSpeed);
         }
+    }
+
+
+    public void sceneTransitionTween(Vector3 newPosition)
+    {
+        movementType = CameraMovementType.FIXED;
+
+        transform.position = newPosition;
     }
 }
