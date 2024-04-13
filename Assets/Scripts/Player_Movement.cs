@@ -7,14 +7,17 @@ public class Player_Movement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Collision coll;
+    private Animator anim;
     public float jumpForce = 10;
     public float speed = 50;
+    private bool jumpStart = false;
 
     // Start is called before the first frame update
     void Start()
     {
         coll = GetComponent<Collision>(); //pega o componente Collision do objeto
         rb = GetComponent<Rigidbody2D>(); //pega o componente do objeto
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -30,6 +33,22 @@ public class Player_Movement : MonoBehaviour
             if (coll.onGround) //checa se o player esta no chao
                 jump(Vector2.up);
         }
+
+        anim.SetFloat("MoveSpeed", Mathf.Abs(rb.velocity.x));
+        anim.SetFloat("JumpSpeed", Mathf.Abs(rb.velocity.y));
+        if (!jumpStart)
+        {
+            anim.SetBool("OnGround", coll.onGround);
+        }
+
+        if(rb.velocity.x < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (rb.velocity.x > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 
     private void walk(Vector2 dir) 
@@ -42,5 +61,14 @@ public class Player_Movement : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.velocity += dir * jumpForce;
+        StartCoroutine("JumpAnim");
+    }
+
+    IEnumerator JumpAnim()
+    {
+        anim.SetBool("OnGround", false);
+        jumpStart = true;
+        yield return new WaitForSeconds(0.5f);
+        jumpStart = false;
     }
 }
