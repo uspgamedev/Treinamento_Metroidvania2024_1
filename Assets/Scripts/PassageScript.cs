@@ -13,31 +13,33 @@ public class PassageScript : MonoBehaviour
     private SpriteRenderer fadeRenderer;
     private Color corInicial;
 
-    private int transFrame;
-
-    private void Start()
-    {
-        GameObject fadeObjeto = GameObject.FindGameObjectWithTag("BlackFade"); 
-        transFrame = 0;
-        if (fadeObjeto != null)
-        {
-            fadeRenderer = fadeObjeto.GetComponent<SpriteRenderer>();
-            corInicial = fadeRenderer.color;
-            fadeRenderer.color = new Color(corInicial.r, corInicial.g, corInicial.b, 0); //Existe alguma forma de mudar só o alpha?????
-        }
-    }
+    private int transFrame = 0;
 
     private void FixedUpdate()
     {
         if (encostou && !trocarCena)
         {
-            float alpha = Mathf.Lerp(0, 255, transFrame / 60);
-            fadeRenderer.color = new Color(corInicial.r, corInicial.g, corInicial.b, alpha);
+            transFrame++;
+            float alpha = Mathf.Lerp(255, 0, transFrame / (60*duracaoFade));
+            SetAlphaForAllRenderers(alpha, true);
 
             if (alpha >= 250)
             {
                 trocarCena = true;
                 SceneManager.LoadScene(cenaAlvo);
+            }
+        }
+    }
+
+    private void SetAlphaForAllRenderers(float alpha, bool decrease)
+    {
+        Renderer[] renderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if ((renderer.material.color.a > alpha && decrease) || (renderer.material.color.a < alpha && !decrease))
+            {
+                Color cor = renderer.material.color;
+                renderer.material.color = new Color(cor.r, cor.g, cor.b, alpha);
             }
         }
     }
