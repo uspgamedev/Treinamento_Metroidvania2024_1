@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Fonte: Otávio
 public class PlayerCombat : MonoBehaviour
 {
-    [SerializeField] private LayerMask enemiesLayer;
+    [SerializeField] private LayerMask enemiesLayer; //qual a layer dos inimigos;
     [SerializeField] private Animator animator;
-    [SerializeField] private Transform attackPoint;
-    [SerializeField] private float attackRange;
-    [SerializeField] private int attackDamage;
-    [HideInInspector] public bool isAttacking;
+    [SerializeField] private Transform attackPoint; //define um ponto (um objeto) de referência para calcular o alcance do ataque;
+    [SerializeField] private float attackRange; //range de ataque (perceba que ele é calculado a partir do attackPoint);
+    [SerializeField] private int attackDamage; //dano de stun do ataque;
+    [HideInInspector] public bool isAttacking = false;
 
 
     void Start()
@@ -19,27 +20,31 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        //se J foi pressionado ataque;
+        if (Input.GetKeyDown(KeyCode.J))
         {
             Attack();
-            Debug.Log("Tavin");
         }
     }
 
     void Attack()
     {
-        StartCoroutine(OnAttack());
-
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
-
-        foreach (Collider2D enemy in hitEnemies)
+        if (!isAttacking)
         {
-            enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
-            Debug.Log("atacou");
+            StartCoroutine(OnAttack()); //chama função que torna isAttacking = true até que o limite de tempo entre ataques passe;
+
+            //retorna uma lista com todos os inimigos que estão dentro do range de ataque;
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
+
+            //para cada inimigo no range de ataque chame TakeDamage;
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
+            }
         }
     }
 
-    private IEnumerator OnAttack()
+    private IEnumerator OnAttack() //implementa tempo entre ataques
     {
         isAttacking = true;
 
