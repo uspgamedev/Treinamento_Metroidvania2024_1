@@ -11,7 +11,6 @@ public class PassageScript : MonoBehaviour
     private bool encostou = false;
     private bool trocarCena = false;
     private SpriteRenderer fadeRenderer;
-    private Color corInicial;
 
     private int transFrame = 0;
 
@@ -20,26 +19,13 @@ public class PassageScript : MonoBehaviour
         if (encostou && !trocarCena)
         {
             transFrame++;
-            float alpha = Mathf.Lerp(255, 0, transFrame / (60*duracaoFade));
-            SetAlphaForAllRenderers(alpha, true);
+            float alpha = Mathf.Lerp(255, 0, transFrame / (60 * duracaoFade));
+            
 
             if (alpha >= 250)
             {
                 trocarCena = true;
-                SceneManager.LoadScene(cenaAlvo);
-            }
-        }
-    }
-
-    private void SetAlphaForAllRenderers(float alpha, bool decrease)
-    {
-        Renderer[] renderers = FindObjectsOfType<Renderer>();
-        foreach (Renderer renderer in renderers)
-        {
-            if ((renderer.material.color.a > alpha && decrease) || (renderer.material.color.a < alpha && !decrease))
-            {
-                Color cor = renderer.material.color;
-                renderer.material.color = new Color(cor.r, cor.g, cor.b, alpha);
+                SceneManager.LoadScene(cenaAlvo, LoadSceneMode.Single);
             }
         }
     }

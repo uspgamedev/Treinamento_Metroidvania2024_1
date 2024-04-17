@@ -159,6 +159,18 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1210296293528494261, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.9547169
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210296293528494261, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.44978613
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210296293528494261, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.06304721
+      objectReference: {fileID: 0}
     - target: {fileID: 1892611827573538760, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.92
