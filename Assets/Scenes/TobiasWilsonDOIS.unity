@@ -486,7 +486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6184887983828740520, guid: 1560d2d7c7a3bab41b72e6b830ae83a7, type: 3}
       propertyPath: cenaAlvo
-      value: Assets/Scenes/Otavio
+      value: Scenes/Otavio
       objectReference: {fileID: 0}
     - target: {fileID: 6184887983828740520, guid: 1560d2d7c7a3bab41b72e6b830ae83a7, type: 3}
       propertyPath: duracaoFade
