@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
     private int currentHealth;
     [SerializeField] private int maxHealth;
     [SerializeField] private GameObject healthUI;
+    [SerializeField] private float healthSize = 1f;
     private Image[] hpSprites;
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
@@ -21,7 +22,8 @@ public class Health : MonoBehaviour
         {
             GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("Canvas").transform);
             hpSprites[i] = t.GetComponent<Image>();
-            t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i, 0);
+            t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i * healthSize * 1.5f, 0);
+            t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
         }
     }
     
