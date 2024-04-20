@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
         {
-            GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("Canvas").transform);
+            GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
             hpSprites[i] = t.GetComponent<Image>();
             t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i * healthSize * 1.5f, 0);
             t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
