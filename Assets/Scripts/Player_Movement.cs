@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //fonte: https://www.youtube.com/watch?v=STyY26a_dPY
 public class Player_Movement : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private bool canMove;
     private Collision coll;
     private Animator anim;
     public float jumpForce = 10;
@@ -25,6 +27,13 @@ public class Player_Movement : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal"); //pega o input -1, 0 ou 1, a depender se o player esta pressionando a ou d
         float y = Input.GetAxis("Vertical"); //pega o input -1, 0 ou 1, a depender se o player esta pressionando w ou s
+        if(GameObject.FindGameObjectWithTag("BlackFade") != null){
+            canMove = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>().color.a <= 0.5f;
+        //Não sei se entendi direito a lógica do Alpha da unity, mas aparentemente o alpha varia de 0 até 1 (não de 0 a 255)
+        //Sendo assim, é só escolher ali quantos porcento da transição deve estar completa pro manito poder andar.
+        }
+
+        if (!canMove) x = y = 0;
         Vector2 dir = new Vector2(x, y); //cria um vetor que representa para quais direcoes o player quer se movimentar
         
         walk(dir);
