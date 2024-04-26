@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Inimigo
   - BlackFade
+  - WorldBoundary
   layers:
   - Default
   - TransparentFX

@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // Adicionando a diretiva using para o namespace UnityEngine.UI
+using UnityEngine.UI;
+using Cinemachine;
 
 public class PassageScript : MonoBehaviour
 {
-    [SerializeField] private string cenaAlvo;
+    [SerializeField] private Vector3 nextPositionPlayer;
+    // [SerializeField] private bool shouldFlip; // Deixando comentado apenas porque acho que isso não vai ser nescessário.
+    // Mas qualquer coisa, tá ai um lembrete.
     [SerializeField] private float duracaoFade = 1f;
+    [SerializeField] private PolygonCollider2D newCollider;
     private bool encostou = false;
     private bool trocarCena = false;
     private int transFrame = 0;
@@ -18,8 +22,7 @@ public class PassageScript : MonoBehaviour
     private void Start()
     {
         blackFade = GameObject.FindGameObjectWithTag("BlackFade");
-        defaded = true;
-        transFrame = 0;
+        resetVariables();
     }
 
     private void FixedUpdate()
@@ -58,7 +61,20 @@ public class PassageScript : MonoBehaviour
             if (alpha >= 1f)
             {
                 trocarCena = true;
-                SceneManager.LoadScene(cenaAlvo, LoadSceneMode.Single);
+              GameObject worldBoundary = GameObject.FindGameObjectWithTag("WorldBoundary");
+              PolygonCollider2D worldBoundaryCollider = worldBoundary.GetComponent<PolygonCollider2D>();
+
+              if (worldBoundaryCollider != null && newCollider != null)
+              {
+                  worldBoundaryCollider.points = newCollider.points;
+              }
+              GameObject.FindGameObjectWithTag("Player").transform.position = nextPositionPlayer;
+              GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+              CinemachineVirtualCamera virtualCamera = mainCamera.GetComponent<CinemachineVirtualCamera>();
+              CinemachineConfiner2D confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
+              confiner.InvalidateCache();
+
+              resetVariables();
             }
         }
     }
@@ -69,5 +85,13 @@ public class PassageScript : MonoBehaviour
         {
             encostou = true;
         }
+    }
+
+    private void resetVariables()
+    {
+        encostou = false;
+        trocarCena = false;
+        defaded = true;
+        transFrame = 0;
     }
 }
