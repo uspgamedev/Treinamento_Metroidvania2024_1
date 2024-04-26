@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextPositionPlayer: {x: 0, y: 0, z: 0}
   duracaoFade: 0.5
-  newCollider: {fileID: 0}
+  newCollider: {fileID: 6118510292920539516}
 --- !u!60 &6118510292920539516
 PolygonCollider2D:
   m_ObjectHideFlags: 0

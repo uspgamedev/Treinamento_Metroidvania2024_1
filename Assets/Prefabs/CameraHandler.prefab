@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BoundingShape2D: {fileID: 4289991511206234775}
-  m_Damping: 0.5
+  m_Damping: 0.05
   m_MaxWindowSize: -1
 --- !u!1 &2882608457505221814
 GameObject:
@@ -303,7 +303,7 @@ Transform:
   m_GameObject: {fileID: 3952369478375100843}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.79851973, y: -0.26156974, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
