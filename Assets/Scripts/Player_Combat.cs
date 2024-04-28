@@ -21,7 +21,7 @@ public class PlayerCombat : MonoBehaviour
     void Update()
     {
         //se J foi pressionado ataque;
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J)) //tem que mudar esse botao para mudar o botao do ataque
         {
             Attack();
         }

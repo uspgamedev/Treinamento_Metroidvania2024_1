@@ -70,6 +70,7 @@ public class Player_Movement : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.velocity += dir * jumpForce;
+        // GetComponent<Rigidbody2D>().velocity = Vector2.up * jumpForce;
         StartCoroutine("JumpAnim");
     }
 

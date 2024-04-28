@@ -253,8 +253,8 @@ GameObject:
   - component: {fileID: 576387144}
   - component: {fileID: 576387143}
   - component: {fileID: 576387146}
-  m_Layer: 3
-  m_Name: '"Inimigo"'
+  m_Layer: 6
+  m_Name: Ground Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
