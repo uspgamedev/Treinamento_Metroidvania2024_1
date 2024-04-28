@@ -13,14 +13,14 @@ GameObject:
   - component: {fileID: 2277153381899419701}
   - component: {fileID: 3503931467618595740}
   - component: {fileID: 2556436613632562620}
+  - component: {fileID: 6416887898794572963}
   - component: {fileID: 429157850925583163}
-  - component: {fileID: 6429541112360623613}
   - component: {fileID: 4013869640577056885}
   - component: {fileID: 5774480323708914095}
   - component: {fileID: 8400267965935359251}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 3
+  m_GravityScale: 1.5
   m_Material: {fileID: 6200000, guid: b1ca616f1bbd4425a9ffe05b2caecc25, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -183,21 +183,7 @@ MonoBehaviour:
   onGround: 0
   collisionRadius: 0.25
   bottomOffset: {x: 0, y: -0.56}
---- !u!114 &429157850925583163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3220496064087455316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f0cf512f4ec02841a4380ea7c71993e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpForce: 11
-  speed: 8
---- !u!114 &6429541112360623613
+--- !u!114 &6416887898794572963
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,6 +200,20 @@ MonoBehaviour:
   healthSize: 1
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
+--- !u!114 &429157850925583163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220496064087455316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f0cf512f4ec02841a4380ea7c71993e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 10
+  speed: 8
 --- !u!95 &4013869640577056885
 Animator:
   serializedVersion: 5
@@ -267,6 +267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f23017b98588d49a8c271e5823a660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
 --- !u!1 &6605021183066097082
 GameObject:
   m_ObjectHideFlags: 0
