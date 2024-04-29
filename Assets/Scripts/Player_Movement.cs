@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //fonte: https://www.youtube.com/watch?v=STyY26a_dPY
+//fonte: https://gist.github.com/bendux/aa8f588b5123d75f07ca8e69388f40d9
 public class Player_Movement : MonoBehaviour
 {
     private Rigidbody2D rb;
@@ -13,6 +14,18 @@ public class Player_Movement : MonoBehaviour
     public float jumpForce = 10;
     public float speed = 50;
     private bool jumpStart = false;
+    private float horizontal;
+    // private bool isFacingRight = true;
+    private bool canDash = true;
+    private bool isDashing = false;
+    private string ganchoTag = "Gancho";
+    private bool canGancho = false;
+    [SerializeField] private float terminalVelocity = 24f;
+    [SerializeField] private float dashingPower = 24f;
+    [SerializeField] private float dashingTime = 0.2f;
+    [SerializeField] private float dashingCooldown = 1f;
+    [SerializeField] private float ganchoForce = 1f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +38,14 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (coll.onGround)
+            GetComponent<Better_Jumping>().enabled = true;
+
+        if (isDashing)
+        {
+            return;
+        }
+
         float x = Input.GetAxis("Horizontal"); //pega o input -1, 0 ou 1, a depender se o player esta pressionando a ou d
         float y = Input.GetAxis("Vertical"); //pega o input -1, 0 ou 1, a depender se o player esta pressionando w ou s
         if(GameObject.FindGameObjectWithTag("BlackFade") != null){
@@ -58,6 +79,15 @@ public class Player_Movement : MonoBehaviour
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
+
+        if (Input.GetKeyDown(KeyCode.L) && canDash) //tem que mudar aqui se quiser mudar o botão do dash
+        {
+            StartCoroutine(Dash());
+        }
+        
+        if (rb.velocity.y > terminalVelocity) rb.velocity = (new Vector2(rb.velocity.x, terminalVelocity)); //implementa a velocidade terminal do player
+;
+        // Flip();
     }
 
     private void walk(Vector2 dir) 
@@ -65,6 +95,26 @@ public class Player_Movement : MonoBehaviour
         rb.velocity = (new Vector2(dir.x * speed, rb.velocity.y)); //atualiza o vetor velocidade com o x do vetor dir, note que ele nao muda o y, uma vez que o player so se movimenta
         //verticalmente por meio do pulo
     }
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.gameObject.tag == ganchoTag)
+        {
+            if(GetComponent<PlayerCombat>().isParrying && canGancho)
+            {            
+                canGancho = false;
+                GetComponent<Better_Jumping>().enabled = false;
+                jump(Vector2.up*ganchoForce);
+            }
+        }
+    }
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.tag == ganchoTag)
+        {
+            canGancho = true;
+        }
+    }
+
 
     private void jump(Vector2 dir)
     {
@@ -81,4 +131,30 @@ public class Player_Movement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         jumpStart = false;
     }
+
+    // private void Flip()
+    // {
+    //     if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+    //     {
+    //         Vector3 localScale = transform.localScale;
+    //         isFacingRight = !isFacingRight;
+    //         localScale.x *= -1f;
+    //         transform.localScale = localScale;
+    //     }
+    // }
+
+    private IEnumerator Dash()
+    {
+        //esse codigo zera a gravidade e impulsiona o inimigo para o sentido que ele está apontado
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f); 
+        yield return new WaitForSeconds(dashingTime);
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
+    } 
 }

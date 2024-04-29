@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Fonte: https://github.com/mixandjam/Celeste-Movement/blob/master/Assets/Scripts/BetterJumping.cs
 public class Better_Jumping : MonoBehaviour
 {
     public float fallMultiplier = 2.5f; //define a diferenca entre a velocidade de subida e a velocidade de descida no pulo,

@@ -51,6 +51,7 @@ public class Vida_Inimiga : MonoBehaviour
     {
         if (currentStun <= superMaxStun)
         {
+            StartCoroutine(DamageColorChange());
             currentStun += damage;
         }
 
@@ -94,5 +95,11 @@ public class Vida_Inimiga : MonoBehaviour
             GetComponent<SpriteRenderer>().color = colorArchive;
             yield return new WaitForSeconds(stunColorChangeTime);
         }
+    }
+        private IEnumerator DamageColorChange()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(250, 0, 0); //mude esses parametros se quiser mudar a cor da piscada do inimigo quando ele leva dano
+        yield return new WaitForSeconds(stunColorChangeTime); //o tempo que leva para o inimigo voltar a cor normal apos levar dano é o mesmo do tempo entre as piscadas de stun
+        GetComponent<SpriteRenderer>().color = colorArchive;
     }
 }
