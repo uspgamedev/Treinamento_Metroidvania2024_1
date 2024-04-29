@@ -29042,6 +29042,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 429157850925583163, guid: c44bdabfa5efb3940ab8c169a3662004, type: 3}
+      propertyPath: terminalVelocity
+      value: 18.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 429157850925583163, guid: c44bdabfa5efb3940ab8c169a3662004, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 64
       objectReference: {fileID: 0}

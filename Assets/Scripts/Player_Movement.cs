@@ -39,7 +39,9 @@ public class Player_Movement : MonoBehaviour
     void Update()
     {
         if (coll.onGround)
+        {
             GetComponent<Better_Jumping>().enabled = true;
+        }
 
         if (isDashing)
         {
@@ -57,7 +59,11 @@ public class Player_Movement : MonoBehaviour
         if (!canMove) x = y = 0;
         Vector2 dir = new Vector2(x, y); //cria um vetor que representa para quais direcoes o player quer se movimentar
         
-        walk(dir);
+        if(GetComponent<PlayerCombat>().isParrying == true && coll.onGround) // se isParrying e ele está no chão então ele fica parado
+            walk(new Vector2(0, 0));
+        else // de resto ele da parry e continua se movimentando normalmente
+            walk(dir); 
+
         if (Input.GetButtonDown("Jump"))
         {
             if (coll.onGround) //checa se o player esta no chao
