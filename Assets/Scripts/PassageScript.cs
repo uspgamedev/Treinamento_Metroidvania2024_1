@@ -7,11 +7,18 @@ using Cinemachine;
 
 public class PassageScript : MonoBehaviour
 {
+    private enum LockAxis{
+        X,
+        Y,
+        XY,
+        NONE
+    }
     [SerializeField] private Vector3 nextPositionPlayer;
     // [SerializeField] private bool shouldFlip; // Deixando comentado apenas porque acho que isso não vai ser nescessário.
     // Mas qualquer coisa, tá ai um lembrete.
     [SerializeField] private float duracaoFade = 1f;
     [SerializeField] private PolygonCollider2D newCollider;
+    [SerializeField] private LockAxis axisToLock = LockAxis.NONE;
     private bool encostou = false;
     private bool trocarCena = false;
     private int transFrame = 0;
@@ -71,6 +78,25 @@ public class PassageScript : MonoBehaviour
               GameObject.FindGameObjectWithTag("Player").transform.position = nextPositionPlayer;
               GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
               CinemachineVirtualCamera virtualCamera = mainCamera.GetComponent<CinemachineVirtualCamera>();
+              CinemachineFramingTransposer framingTranspose = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                    switch (axisToLock) {
+                        case LockAxis.X:
+                            framingTranspose.m_DeadZoneWidth = 2f;
+                            framingTranspose.m_DeadZoneHeight = 0f;
+                            break;
+                        case LockAxis.Y:
+                            framingTranspose.m_DeadZoneHeight = 2f;
+                            framingTranspose.m_DeadZoneWidth = 0f;
+                            break;
+                        case LockAxis.XY:
+                            framingTranspose.m_DeadZoneWidth = 2f;
+                            framingTranspose.m_DeadZoneHeight = 2f;
+                            break;
+                        default:
+                            framingTranspose.m_DeadZoneWidth = 0f;
+                            framingTranspose.m_DeadZoneHeight = 0f;
+                            break;
+                    }
               CinemachineConfiner2D confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
               confiner.InvalidateCache();
 
