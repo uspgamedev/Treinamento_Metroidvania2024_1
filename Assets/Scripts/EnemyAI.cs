@@ -166,7 +166,7 @@ public class EnemyAI : MonoBehaviour
         idleTimer -= Time.deltaTime;
         if (idleTimer <= 0)
         {   
-            Timer = 1f;
+            Timer = 0.5f;
             ChoosePatrolDirection();
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
             currentState = State.Patrolling;
@@ -182,7 +182,16 @@ public class EnemyAI : MonoBehaviour
         if (visionEnemy.collider != null && Timer2 <= 0)
         {
             if (visionEnemy.collider.CompareTag("Player")){
-                pjDistance = jogador.transform.position.x - transform.position.x;
+                currentState = State.Attack;
+            }
+        }
+
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 2.5f, layerVision);
+        Debug.DrawRay(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
+
+        if (visionEnemy.collider != null && Timer2 <= 0)
+        {
+            if (visionEnemy.collider.CompareTag("Player")){
                 currentState = State.Attack;
             }
         }
@@ -219,11 +228,11 @@ public class EnemyAI : MonoBehaviour
         {
             if (pjdirection > 0)
             {
-                enemyRB.velocity = new Vector2(8f, 6f);
+                enemyRB.velocity = new Vector2(12f, 6f);
             }
             else
             {
-                enemyRB.velocity = new Vector2(-8f, 6f);
+                enemyRB.velocity = new Vector2(-12f, 6f);
             }
 
             Timer2 -= Time.deltaTime;
@@ -236,7 +245,7 @@ public class EnemyAI : MonoBehaviour
             }
         } else
         {
-            Timer2 = 0.25f; // Reinicia o Timer2 enquanto o Timer ainda está ativo
+            Timer2 = 0.125f; // Reinicia o Timer2 enquanto o Timer ainda está ativo
         }
 
     }
