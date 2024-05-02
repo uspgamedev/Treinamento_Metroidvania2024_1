@@ -189,8 +189,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void AttackState(){
-        Debug.Log("atacando");
-        Vision();
+        Debug.Log("atacando"); 
         pjDistance = Mathf.Sqrt(((jogador.transform.position.x - transform.position.x)*(jogador.transform.position.x - transform.position.x) + 
                       (jogador.transform.position.y - transform.position.y)*(jogador.transform.position.y - transform.position.y)));
         pjdirection = jogador.transform.position.x - transform.position.x;
