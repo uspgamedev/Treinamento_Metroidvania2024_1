@@ -26,6 +26,8 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float dashingCooldown = 1f;
     [SerializeField] private float ganchoForce = 1f;
 
+    private SimpleFlash flashScript;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,7 @@ public class Player_Movement : MonoBehaviour
         coll = GetComponent<Collision>(); //pega o componente Collision do objeto
         rb = GetComponent<Rigidbody2D>(); //pega o componente do objeto
         anim = GetComponent<Animator>();
+        flashScript = GetComponent<SimpleFlash>();
     }
 
     // Update is called once per frame
@@ -161,6 +164,8 @@ public class Player_Movement : MonoBehaviour
         rb.gravityScale = originalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
+        
+        flashScript.Flash(Color.white);
         canDash = true;
     } 
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2556436613632562620}
   - component: {fileID: 6416887898794572963}
   - component: {fileID: 429157850925583163}
+  - component: {fileID: 7963062247277411838}
   - component: {fileID: 4013869640577056885}
   - component: {fileID: 5774480323708914095}
   - component: {fileID: 8400267965935359251}
@@ -108,7 +109,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.5
   m_Material: {fileID: 6200000, guid: b1ca616f1bbd4425a9ffe05b2caecc25, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -213,12 +214,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 10
-  speed: 8
+  speed: 6
   terminalVelocity: 24
   dashingPower: 16
   dashingTime: 0.2
   dashingCooldown: 1
   ganchoForce: 1
+--- !u!114 &7963062247277411838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220496064087455316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0a571ea052e4bce992b3bb86c60381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 077447a337efe4ccb94103a350bce60d, type: 2}
+  duration: 0.125
 --- !u!95 &4013869640577056885
 Animator:
   serializedVersion: 5
