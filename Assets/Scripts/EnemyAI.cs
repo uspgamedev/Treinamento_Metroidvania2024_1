@@ -20,8 +20,10 @@ public class EnemyAI : MonoBehaviour
 
     //private int direction = 1;
     private Vector2 direction;
+
     [Header("Componentes")]
     public Rigidbody2D enemyRB;
+    private Animator anim;
 
     [Header("Movimento")]
     public float moveSpeed;
@@ -32,7 +34,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask lala;
     public LayerMask layerVision;
 
-    [Header("Máquina_de_Estados")]
+    [Header("Mï¿½quina_de_Estados")]
     public float idleTimeMin = 1f; 
     public float idleTimeMax = 3f;
     private State currentState;
@@ -46,6 +48,7 @@ public class EnemyAI : MonoBehaviour
     private float pjdirection;
     private GameObject jogador;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +56,7 @@ public class EnemyAI : MonoBehaviour
         currentState = State.Patrolling;
         idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         jogador = GameObject.Find("Player");
-        
+        anim = GetComponent<Animator>();
     }
     // Update is called once per frame
     void Update()
@@ -72,6 +75,15 @@ public class EnemyAI : MonoBehaviour
             case State.Jump:
                 JumpState();
                 break;
+        }
+
+        if(enemyRB.velocity.x < 0 && currentState != State.Jump)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (enemyRB.velocity.x > 0 && currentState != State.Jump)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
@@ -100,7 +112,6 @@ public class EnemyAI : MonoBehaviour
 
         if (rightWall.collider != null) {
             enemyRB.velocity = new Vector2(-2f, 0f).normalized;
-            Debug.Log("ola");
             direction = new Vector2(-1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = 0.5f;
@@ -112,7 +123,6 @@ public class EnemyAI : MonoBehaviour
 
         if (leftWall.collider != null) {
             enemyRB.velocity = new Vector2(2f, 0f).normalized;
-            Debug.Log("ola");
             direction = new Vector2(1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = -0.5f;
@@ -122,7 +132,7 @@ public class EnemyAI : MonoBehaviour
 
     private void ChoosePatrolDirection()
     {
-        // Escolhe uma direção de patrulha aleatória
+        // Escolhe uma direï¿½ï¿½o de patrulha aleatï¿½ria
         numero = Random.Range(-1f, 1f);
         enemyRB.velocity = new Vector2(2f*numero, 0f).normalized;
         direction = new Vector2(numero, 0f).normalized;
@@ -131,9 +141,11 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void PatrollingState()
-    {   
+    {
+        ChangeAnim(false, true, false, false);
+
         Vision();
-        
+
         Move();
         if (Timer <= 0){
             CheckSurroundings();
@@ -141,12 +153,12 @@ public class EnemyAI : MonoBehaviour
             Timer -= Time.deltaTime;
         }
 
-        // Muda para o estado de espera após um determinado tempo de patrulha
+        // Muda para o estado de espera apï¿½s um determinado tempo de patrulha
         idleTimer -= Time.deltaTime;
         if (idleTimer <= 0)
         {
             randomValue = Random.Range(0, 2);
-            boolState = (randomValue == 0) ? false : true;
+            boolState = randomValue != 0;
 
             if (boolState){
                 currentState = State.Idling;
@@ -160,6 +172,8 @@ public class EnemyAI : MonoBehaviour
 
     private void IdlingState()
     {
+        ChangeAnim(true, false, false, false);
+
         enemyRB.velocity = new Vector2(0f, 0f);
         Vision();
         // Reduz o temporizador de espera
@@ -197,15 +211,13 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void AttackState(){
-        Debug.Log("atacando"); 
+    private void AttackState(){ 
         pjDistance = Mathf.Sqrt(((jogador.transform.position.x - transform.position.x)*(jogador.transform.position.x - transform.position.x) + 
                       (jogador.transform.position.y - transform.position.y)*(jogador.transform.position.y - transform.position.y)));
         pjdirection = jogador.transform.position.x - transform.position.x;
         if (pjDistance < 2f){
             currentState = State.Jump;
             enemyRB.velocity = new Vector2(0f, 0f);
-            Debug.Log("uai");
             Timer = 1f;
             Timer2 = 0.5f;
         } else if (pjdirection > 0){
@@ -226,6 +238,8 @@ public class EnemyAI : MonoBehaviour
 
         if (Timer <= 0)
         {
+            ChangeAnim(false, false, false, true);
+            
             if (pjdirection > 0)
             {
                 enemyRB.velocity = new Vector2(12f, 6f);
@@ -245,9 +259,26 @@ public class EnemyAI : MonoBehaviour
             }
         } else
         {
-            Timer2 = 0.125f; // Reinicia o Timer2 enquanto o Timer ainda está ativo
+            ChangeAnim(false, false, true, false);
+        if(pjdirection > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+            Timer2 = 0.125f; // Reinicia o Timer2 enquanto o Timer ainda estï¿½ ativo
         }
 
     }
+
 }
+    private void ChangeAnim(bool idle, bool patrol, bool prepare, bool jump)
+    {
+        anim.SetBool("Idle", idle);
+        anim.SetBool("Patrol", patrol);
+        anim.SetBool("Prepare", prepare);
+        anim.SetBool("Jump", jump);
+    }
 }
