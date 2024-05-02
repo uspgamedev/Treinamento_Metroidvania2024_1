@@ -190,7 +190,7 @@ public class EnemyAI : MonoBehaviour
     private void Vision()
     {   
         Timer2 -= Time.deltaTime;
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 2.5f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
         Debug.DrawRay(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
@@ -200,7 +200,7 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 2.5f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
         Debug.DrawRay(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
@@ -215,7 +215,7 @@ public class EnemyAI : MonoBehaviour
         pjDistance = Mathf.Sqrt(((jogador.transform.position.x - transform.position.x)*(jogador.transform.position.x - transform.position.x) + 
                       (jogador.transform.position.y - transform.position.y)*(jogador.transform.position.y - transform.position.y)));
         pjdirection = jogador.transform.position.x - transform.position.x;
-        if (pjDistance < 2f){
+        if (pjDistance < 3f){
             currentState = State.Jump;
             enemyRB.velocity = new Vector2(0f, 0f);
             Timer = 1f;
@@ -228,7 +228,6 @@ public class EnemyAI : MonoBehaviour
             Move();
         }
         
-        //currentState = State.Patrolling;
     }
 
     private void JumpState()
@@ -242,11 +241,11 @@ public class EnemyAI : MonoBehaviour
             
             if (pjdirection > 0)
             {
-                enemyRB.velocity = new Vector2(12f, 6f);
+                enemyRB.velocity = new Vector2(12f, 4f);
             }
             else
             {
-                enemyRB.velocity = new Vector2(-12f, 6f);
+                enemyRB.velocity = new Vector2(-12f, 4f);
             }
 
             Timer2 -= Time.deltaTime;
@@ -260,15 +259,15 @@ public class EnemyAI : MonoBehaviour
         } else
         {
             ChangeAnim(false, false, true, false);
-        if(pjdirection > 0)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-            Timer2 = 0.125f; // Reinicia o Timer2 enquanto o Timer ainda est� ativo
+            if(pjdirection > 0)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            Timer2 = 0.25f; // Reinicia o Timer2 enquanto o Timer ainda est� ativo
         }
 
     }
