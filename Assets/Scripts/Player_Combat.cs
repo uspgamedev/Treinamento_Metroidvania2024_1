@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 //Fonte: Otávio
 public class PlayerCombat : MonoBehaviour
@@ -14,8 +16,12 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isParrying = false;
 
+    private Animator anim;
+    private bool followUp = false;
+
     void Start()
     {
+        anim = GetComponent<Animator>();
     }
 
 
@@ -39,6 +45,17 @@ public class PlayerCombat : MonoBehaviour
         {
             StartCoroutine(OnAttack()); //chama função que torna isAttacking = true até que o limite de tempo entre ataques passe;
 
+            anim.SetBool("FollowUp", followUp);
+            anim.SetTrigger("Attack");
+
+            if (!followUp) {
+                StartCoroutine("AttackFollowUp");
+            }
+            else {
+                StopCoroutine("AttackFollowUp");
+                followUp = false;
+            }
+
             //retorna uma lista com todos os inimigos que estão dentro do range de ataque;
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
 
@@ -54,7 +71,7 @@ public class PlayerCombat : MonoBehaviour
     {
         isAttacking = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         isAttacking = false;
     }
@@ -63,6 +80,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!isParrying && !isAttacking)
         {
+            anim.SetTrigger("Parry");
             StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;
         }
     }
@@ -82,8 +100,18 @@ public class PlayerCombat : MonoBehaviour
         { 
             if (isParrying)
             {
-            other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
             }
         }
     }
+
+    private IEnumerator AttackFollowUp()
+    {
+        followUp = true;
+
+        yield return new WaitForSeconds(0.8f);
+
+        followUp = false;
+    }
+    
 }
