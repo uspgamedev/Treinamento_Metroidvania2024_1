@@ -10,6 +10,7 @@ TagManager:
   - Gancho
   - enemyIsAttacking
   - SecondCamera
+  - Hazard
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - UI
   - Ground
   - Player
-  - 
+  - EnemyBound
   - 
   - 
   - 

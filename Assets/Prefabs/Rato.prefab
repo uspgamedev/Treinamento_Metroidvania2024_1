@@ -13,8 +13,10 @@ GameObject:
   - component: {fileID: 5519432728957572335}
   - component: {fileID: 6056800854767005446}
   - component: {fileID: 8362665845177357061}
+  - component: {fileID: 4845471237499525588}
+  - component: {fileID: 7361905325962953329}
   - component: {fileID: 4153656956137912232}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rato
   m_TagString: Inimigo
   m_Icon: {fileID: 0}
@@ -178,12 +180,47 @@ MonoBehaviour:
   offSetVision: {x: 0, y: 0}
   lala:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 320
   layerVision:
     serializedVersion: 2
     m_Bits: 128
   idleTimeMin: 1
   idleTimeMax: 3
+--- !u!114 &4845471237499525588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9373511723480710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdde406812e0e4646b4a79a8b2737349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  maxStun: 10
+  stunTime: 0.5
+  stunDecreaseRate: 0.5
+  superMaxStun: 10
+  parryCircleRange: 2
+  currentStun: 0
+--- !u!114 &7361905325962953329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9373511723480710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0a571ea052e4bce992b3bb86c60381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 077447a337efe4ccb94103a350bce60d, type: 2}
+  duration: 0.125
 --- !u!95 &4153656956137912232
 Animator:
   serializedVersion: 5

@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class Player_Movement : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private bool canMove;
+    [HideInInspector] public bool canMove;
+    [HideInInspector] public bool canMove2 = true;
     private Collision coll;
     private Animator anim;
     public float jumpForce = 10;
@@ -27,6 +28,10 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float ganchoForce = 1f;
 
     private SimpleFlash flashScript;
+    [HideInInspector] public Vector3 lastPos;
+    [HideInInspector] public float lastDir;
+    private bool onGroundRec = false;
+    private LayerMask groundLayer;
 
 
     // Start is called before the first frame update
@@ -36,6 +41,7 @@ public class Player_Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); //pega o componente do objeto
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
+        groundLayer = GameObject.Find("MainTilemap").layer;
     }
 
     // Update is called once per frame
@@ -59,7 +65,7 @@ public class Player_Movement : MonoBehaviour
         //Sendo assim, é só escolher ali quantos porcento da transição deve estar completa pro manito poder andar.
         }
 
-        if (!canMove) x = y = 0;
+        if (!canMove || !canMove2) x = y = 0;
         Vector2 dir = new Vector2(x, y); //cria um vetor que representa para quais direcoes o player quer se movimentar
         
         if(GetComponent<PlayerCombat>().isParrying == true && coll.onGround) // se isParrying e ele está no chão então ele fica parado
@@ -69,8 +75,9 @@ public class Player_Movement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            if (coll.onGround) //checa se o player esta no chao
+            if (coll.onGround) { //checa se o player esta no chao
                 jump(Vector2.up);
+            }
         }
 
         anim.SetFloat("MoveSpeed", Mathf.Abs(rb.velocity.x));
@@ -95,7 +102,10 @@ public class Player_Movement : MonoBehaviour
         }
         
         if (rb.velocity.y > terminalVelocity) rb.velocity = (new Vector2(rb.velocity.x, terminalVelocity)); //implementa a velocidade terminal do player
-;
+
+
+        CalculateLastPos();
+        
         // Flip();
     }
 
@@ -167,5 +177,19 @@ public class Player_Movement : MonoBehaviour
         
         flashScript.Flash(Color.white);
         canDash = true;
-    } 
+    }
+
+    private void CalculateLastPos()
+    {
+        if (onGroundRec != coll.onGround) {
+            lastPos = transform.position;
+            lastDir = transform.localScale.x;
+            onGroundRec = coll.onGround;
+
+            if (!Physics2D.Raycast(lastPos + new Vector3(lastDir, 0, 0), Vector2.down, 1f, groundLayer)) {
+                lastPos -= new Vector3(lastDir/2, 0, 0);
+            }
+        }
+
+    }
 }

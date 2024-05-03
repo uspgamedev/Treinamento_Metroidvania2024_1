@@ -182,8 +182,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   onGround: 0
-  collisionRadius: 0.25
-  bottomOffset: {x: 0, y: -0.56}
+  collisionRadius: 0.45
+  bottomOffset: {x: 0, y: -0.26}
 --- !u!114 &6416887898794572963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 3
   healthUI: {fileID: 3606247851656254604, guid: 71730c96de7764000a814eb60ddb3972, type: 3}
-  healthSize: 1.5
+  healthSize: 1
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
 --- !u!114 &429157850925583163
@@ -272,7 +272,7 @@ MonoBehaviour:
     m_Bits: 8
   animator: {fileID: 4013869640577056885}
   attackPoint: {fileID: 3342923446026726715}
-  attackRange: 1
+  attackRange: 0.3
   attackDamage: 1
   parryDamage: 0
   isAttacking: 0
@@ -317,7 +317,7 @@ Transform:
   m_GameObject: {fileID: 6605021183066097082}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.02, y: -0.15, z: 0}
+  m_LocalPosition: {x: 1.143, y: 0, z: 0}
   m_LocalScale: {x: 2.4793, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
