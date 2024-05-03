@@ -26,9 +26,18 @@ public class Health : MonoBehaviour
     private Vector3 currentLastDir;
     private Rigidbody2D rb;
 
+    [SerializeField] private float immortalTime;
+    [SerializeField] private float knockbackForce;
+    private bool damageable = true;
+    private SimpleFlash flashScript;
+    private Animator anim;
+    private float maxBlinkTime = 0.5f;
+    private float blinkTime;
+
     private void Start()
     {
         currentHealth = maxHealth;
+        blinkTime = maxBlinkTime;
 
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
@@ -42,15 +51,20 @@ public class Health : MonoBehaviour
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
         moveScript = GetComponent<Player_Movement>();
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        flashScript = GetComponent<SimpleFlash>();
 
         moveScript.canMove2 = true;
     }
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (collision.gameObject.tag == "Inimigo"){
+            if (collision.gameObject.tag == "Inimigo" && damageable){
+                Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
+
+                StartCoroutine(DamageKnockback(collision.gameObject));
             }
     }
 
@@ -132,4 +146,53 @@ public class Health : MonoBehaviour
         }
     }
 
+    private IEnumerator DamageKnockback(GameObject enemy)
+    {
+        anim.SetBool("Damaged", true);
+
+        float dir;
+
+        if (enemy.transform.position.x > transform.position.x) {
+            dir = -1;
+        }
+        else {
+            dir = 1;
+        }
+
+        moveScript.canMove2 = false;
+
+        rb.velocity = new Vector2(dir * knockbackForce, knockbackForce);
+
+        yield return new WaitForSeconds(0.4f);
+
+        anim.SetBool("Damaged", false);
+
+        moveScript.canMove2 = true;
+        damageable = false;
+        StartCoroutine(Blink());
+
+        yield return new WaitForSeconds(immortalTime);
+        
+        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
+
+        damageable = true;
+    }
+
+    private IEnumerator Blink()
+    {
+        blinkTime = maxBlinkTime;
+
+        while (!damageable)
+        {
+            flashScript.Flash(new Color(1f, 1f, 1f, 0f));
+
+            yield return new WaitForSeconds(blinkTime);
+
+            blinkTime -= 0.05f;
+
+            if (blinkTime < 0.25f) {
+                blinkTime = 0.25f;
+            }
+        }
+    }
 }

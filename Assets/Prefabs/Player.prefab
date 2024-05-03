@@ -201,6 +201,8 @@ MonoBehaviour:
   healthSize: 1
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
+  immortalTime: 3
+  knockbackForce: 5
 --- !u!114 &429157850925583163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0cf512f4ec02841a4380ea7c71993e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
+  canMove2: 1
   jumpForce: 10
   speed: 6
   terminalVelocity: 24
@@ -220,6 +224,8 @@ MonoBehaviour:
   dashingTime: 0.2
   dashingCooldown: 1
   ganchoForce: 1
+  lastPos: {x: 0, y: 0, z: 0}
+  lastDir: 0
 --- !u!114 &7963062247277411838
 MonoBehaviour:
   m_ObjectHideFlags: 0

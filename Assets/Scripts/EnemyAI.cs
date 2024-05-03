@@ -116,6 +116,7 @@ public class EnemyAI : MonoBehaviour
             directionVision = direction;
             offSetVision.x = 0.5f;
             Timer = 0.5f;
+            idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         }
     
        
@@ -127,6 +128,7 @@ public class EnemyAI : MonoBehaviour
             directionVision = direction;
             offSetVision.x = -0.5f;
             Timer = 0.5f;
+            idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         }
     }
 
