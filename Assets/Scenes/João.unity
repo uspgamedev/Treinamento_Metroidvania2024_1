@@ -608,10 +608,11 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  maxStun: 1
+  maxStun: 17
   stunTime: 0.5
   stunDecreaseRate: 0.5
-  superMaxStun: 10
+  stunCooldownTime: 5.4
+  superMaxStun: 28.47
   parryCircleRange: 25.8
   currentStun: 0
 --- !u!114 &201328003
@@ -991,11 +992,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8543407197507271241, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.3906727
+      value: 3.8970168
       objectReference: {fileID: 0}
     - target: {fileID: 8543407197507271241, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8541199
+      value: -0.082589984
       objectReference: {fileID: 0}
     - target: {fileID: 8543407197507271241, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.z

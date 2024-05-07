@@ -62,7 +62,6 @@ public class Vida_Inimiga : MonoBehaviour
             currentStun = maxStun;
             notStunned = false;
             StartCoroutine(StunCooldown());
-            EnemyStun(); //a ser implementado
         }
     }
 
