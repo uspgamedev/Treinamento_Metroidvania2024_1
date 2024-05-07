@@ -204,6 +204,7 @@ MonoBehaviour:
   maxStun: 10
   stunTime: 0.5
   stunDecreaseRate: 0.5
+  stunCooldownTime: 5
   superMaxStun: 10
   parryCircleRange: 2
   currentStun: 0

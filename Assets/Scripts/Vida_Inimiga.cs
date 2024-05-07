@@ -6,13 +6,13 @@ using UnityEngine;
 public class Vida_Inimiga : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer; //qual a layer do player;
-    [SerializeField] private int maxStun = 1; //número que define a quantidade de stun damage necessária para deixar o inimigo em stun;
+    [SerializeField] public int maxStun = 1; //número que define a quantidade de stun damage necessária para deixar o inimigo em stun;
     [SerializeField] private float stunTime = 0.5f; //a cada stunTime o currentStun do inimigo diminui em uma quantidade stunDecreaseRate;
     [SerializeField] private float stunDecreaseRate = 0.5f; //o quanto de currentStun o inimigo perde a cada stunTime segundos;
-    [SerializeField] private float stunCooldownTime = 5f; //o tempo que leva para o inimigo parar de ficar estunado;
+    [SerializeField] public float stunCooldownTime = 5f; //o tempo que leva para o inimigo parar de ficar estunado;
     [SerializeField] private float superMaxStun = 10; //hardcap do quanto que de stun que o player pode infligir no inimigo;
     [SerializeField] private float parryCircleRange = 2.0f; //o raio do circula que determina a area de parry do player;
-    [SerializeField] private float currentStun; //a quantidade de stun que o inimigo apresenta
+    [SerializeField] public float currentStun; //a quantidade de stun que o inimigo apresenta
     //porque SerializeField e não public? public permite que as variáveis sejam acessadas por qualquer código e que elas sejam alteradas no inspetor,
     //SerializeField não permite que a variável seja acessada por qualquer código, porém permite que ela seja alterada no inspetor;
     private bool notStunned = true; //true se o inimigo está ativo (não está estunado);
