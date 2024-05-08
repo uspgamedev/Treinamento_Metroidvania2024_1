@@ -42,10 +42,12 @@ public class Health : MonoBehaviour
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
         {
-            GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
-            hpSprites[i] = t.GetComponent<Image>();
-            t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i * healthSize * 1.5f, 0);
-            t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
+            // GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
+            // hpSprites[i] = t.GetComponent<Image>();
+            // t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i * healthSize * 1.5f, 0);
+            // t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
+
+            InstantiateHealth(i);
         }
 
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
@@ -194,5 +196,24 @@ public class Health : MonoBehaviour
                 blinkTime = 0.25f;
             }
         }
+    }
+
+    public void HealthUp()
+    {
+        hpSprites = new Image[maxHealth + 1];
+        
+        for (int i = 0; i < maxHealth + 1; i++) {
+            InstantiateHealth(i);
+        }
+
+        maxHealth++;
+    }
+
+    private void InstantiateHealth(int index)
+    {
+        GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
+        hpSprites[index] = t.GetComponent<Image>();
+        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * index * healthSize * 1.5f, 0);
+        t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
     }
 }
