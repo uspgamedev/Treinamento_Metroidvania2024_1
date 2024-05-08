@@ -10,7 +10,7 @@ public class Vida_Inimiga : MonoBehaviour
     [SerializeField] private float stunTime = 0.5f; //a cada stunTime o currentStun do inimigo diminui em uma quantidade stunDecreaseRate;
     [SerializeField] private float stunDecreaseRate = 0.5f; //o quanto de currentStun o inimigo perde a cada stunTime segundos;
     [SerializeField] public float stunCooldownTime = 5f; //o tempo que leva para o inimigo parar de ficar estunado;
-    [SerializeField] private float superMaxStun = 10; //hardcap do quanto que de stun que o player pode infligir no inimigo;
+    // [SerializeField] private float superMaxStun = 10; //hardcap do quanto que de stun que o player pode infligir no inimigo;
     [SerializeField] private float parryCircleRange = 2.0f; //o raio do circula que determina a area de parry do player;
     [SerializeField] public float currentStun; //a quantidade de stun que o inimigo apresenta
     //porque SerializeField e não public? public permite que as variáveis sejam acessadas por qualquer código e que elas sejam alteradas no inspetor,
@@ -79,7 +79,7 @@ public class Vida_Inimiga : MonoBehaviour
         canDecreaseStun = true;
     }
 
-    private IEnumerator StunCooldown()
+    private IEnumerator StunCooldown() //para de diminuir o stun até o inimigo para de estar estunado
     {
         yield return new WaitForSeconds(stunCooldownTime);
         notStunned = true;

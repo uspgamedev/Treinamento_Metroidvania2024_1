@@ -12,7 +12,7 @@ public class Trocar_Lado : MonoBehaviour
     void Start()
     {
         canChangeSides = false;
-        foreach (GameObject objeto in listaB)
+        foreach (GameObject objeto in listaB) //disabilita todos os objetos do lado B no começo do jogo
         {
             objeto.SetActive(false);
         }
@@ -21,11 +21,12 @@ public class Trocar_Lado : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
         if(canChangeSides)
         {
-            if(coll.gameObject.tag == "Player")
+            if(coll.gameObject.tag == "Player") 
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E)) 
                 {
                     ChangeSides();
                 }
@@ -33,7 +34,7 @@ public class Trocar_Lado : MonoBehaviour
         }
     }
 
-    private void ChangeSides()
+    private void ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
         foreach (GameObject objeto in listaA)
         {
@@ -45,13 +46,13 @@ public class Trocar_Lado : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) 
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         canChangeSides = true;
         coll = collision;
     }
 
-    private void OnTriggerExit2D(Collider2D collision) 
+    private void OnTriggerExit2D(Collider2D collision)
     {
         canChangeSides = false;
     }
