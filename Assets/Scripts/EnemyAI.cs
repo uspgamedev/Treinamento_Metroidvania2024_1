@@ -13,7 +13,8 @@ public class EnemyAI : MonoBehaviour
         Patrolling,
         Idling,
         Attack,
-        Jump
+        Jump,
+        Stunnado
     }
 
     private float numero;
@@ -47,6 +48,8 @@ public class EnemyAI : MonoBehaviour
     private float pjDistance;
     private float pjdirection;
     private GameObject jogador;
+    private Vida_Inimiga stunScript;
+    private float stun;
 
 
     // Start is called before the first frame update
@@ -57,6 +60,7 @@ public class EnemyAI : MonoBehaviour
         idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         jogador = GameObject.Find("Player");
         anim = GetComponent<Animator>();
+        stunScript = GetComponent<Vida_Inimiga>();
     }
     // Update is called once per frame
     void Update()
@@ -75,6 +79,9 @@ public class EnemyAI : MonoBehaviour
             case State.Jump:
                 JumpState();
                 break;
+            case State.Stunnado:
+                Stunnado_State();
+                break;
         }
 
         if(enemyRB.velocity.x < 0 && currentState != State.Jump)
@@ -84,6 +91,10 @@ public class EnemyAI : MonoBehaviour
         else if (enemyRB.velocity.x > 0 && currentState != State.Jump)
         {
             transform.localScale = new Vector3(1, 1, 1);
+        }
+        if (stunScript.currentStun >= stunScript.maxStun){
+            currentState = State.Stunnado;
+            Timer = stunScript.stunCooldownTime;
         }
     }
 
@@ -281,5 +292,15 @@ public class EnemyAI : MonoBehaviour
         anim.SetBool("Patrol", patrol);
         anim.SetBool("Prepare", prepare);
         anim.SetBool("Jump", jump);
+    }
+
+    private void Stunnado_State(){
+        enemyRB.velocity = new Vector2(0f, 0f);
+
+        Timer -= Time.deltaTime;
+
+        if (stunScript.currentStun < stunScript.maxStun && Timer <= 0f){
+            currentState = State.Idling;
+        }
     }
 }
