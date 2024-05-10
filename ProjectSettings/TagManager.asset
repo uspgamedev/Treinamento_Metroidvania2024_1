@@ -11,6 +11,8 @@ TagManager:
   - enemyIsAttacking
   - SecondCamera
   - Hazard
+  - LadoA
+  - LadoB
   layers:
   - Default
   - TransparentFX

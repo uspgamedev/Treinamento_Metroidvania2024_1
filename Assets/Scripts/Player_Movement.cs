@@ -41,7 +41,7 @@ public class Player_Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); //pega o componente do objeto
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
-        groundLayer = GameObject.Find("MainTilemap").layer;
+        groundLayer = GameObject.Find("MainTilemapA").layer;
     }
 
     // Update is called once per frame
