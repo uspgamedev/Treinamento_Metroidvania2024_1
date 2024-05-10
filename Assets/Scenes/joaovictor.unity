@@ -135,14 +135,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rato
       objectReference: {fileID: 0}
-    - target: {fileID: 4845471237499525588, guid: c351ac732268f41b0aecae8022e712ce, type: 3}
-      propertyPath: superMaxStun
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4845471237499525588, guid: c351ac732268f41b0aecae8022e712ce, type: 3}
-      propertyPath: parryCircleRange
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 5446796117533086236, guid: c351ac732268f41b0aecae8022e712ce, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.8
@@ -2419,7 +2411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8543407197507271241, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.4352984
+      value: 4.4353004
       objectReference: {fileID: 0}
     - target: {fileID: 8543407197507271241, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_LocalPosition.y

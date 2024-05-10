@@ -178,12 +178,12 @@ MonoBehaviour:
   moveSpeed: 2
   offSet: {x: -0.45, y: -0.4}
   offSetVision: {x: 0, y: 0}
-  lala:
+  layerCollision:
     serializedVersion: 2
     m_Bits: 320
-  layerVision:
+  layerPlayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 448
   idleTimeMin: 1
   idleTimeMax: 3
 --- !u!114 &4845471237499525588
@@ -205,7 +205,6 @@ MonoBehaviour:
   stunTime: 0.5
   stunDecreaseRate: 0.5
   stunCooldownTime: 5
-  superMaxStun: 10
   parryCircleRange: 2
   currentStun: 0
 --- !u!114 &7361905325962953329
