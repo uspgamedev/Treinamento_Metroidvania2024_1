@@ -7,6 +7,13 @@ using Cinemachine;
 
 public class PassageScript : MonoBehaviour
 {
+
+    private enum NextDirection{
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
     private enum LockAxis{
         X,
         Y,
@@ -23,7 +30,8 @@ public class PassageScript : MonoBehaviour
         RIGHT,
         AUTO //Se AUTO, então a posição da camera é decidida com base na posição do player (geralmente não é problema, com exceção de salas em que as portas ficam em alturas diferentes.)
     }
-    [SerializeField] private Vector3 nextPositionPlayer;
+
+    [SerializeField] private NextDirection nextPositionPlayer;
     // [SerializeField] private bool shouldFlip; // Deixando comentado apenas porque acho que isso não vai ser nescessário.
     // Mas qualquer coisa, tá ai um lembrete.
     [SerializeField] private CameraPosition nextPositionCamera = CameraPosition.CENTERH; //Em geral, deixar ela centralizada resolve na maioria dos casos.
@@ -111,10 +119,10 @@ public class PassageScript : MonoBehaviour
                             framingTranspose.m_DeadZoneHeight = 0f;
                             break;
                     }
+
+                    updatePlayerPosition();
               CinemachineConfiner2D confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
               confiner.InvalidateCache();
-
-              GameObject.FindGameObjectWithTag("Player").transform.position = nextPositionPlayer;
 
             Vector2 newCameraPosition;
               switch (nextPositionCamera)
@@ -149,6 +157,47 @@ public class PassageScript : MonoBehaviour
               resetVariables();
             }
         }
+    }
+
+    private const float constantPosition = 1f; //Distância entre a porta e o próximo spawn do player
+
+    private void updatePlayerPosition()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 playerPosition = player.transform.position;
+
+        BoxCollider2D boxReference = GetComponent<BoxCollider2D>();
+        Vector3 nextPosition = player.transform.position;
+
+
+        switch (nextPositionPlayer)
+        {
+            case NextDirection.LEFT:
+                nextPosition.x = boxReference.offset.x - boxReference.size.x - constantPosition;
+                break; 
+            case NextDirection.RIGHT:
+                nextPosition.x = boxReference.offset.x + constantPosition;
+                break;
+            case NextDirection.UP:
+                nextPosition.x = boxReference.offset.x; //Só a ponta da caixa já é suficiente, o empurrão lá em baixo resolve o resto.
+                nextPosition.y = boxReference.offset.y + constantPosition*5;
+                break;
+            case NextDirection.DOWN:
+                nextPosition.y = boxReference.offset.y - boxReference.size.y - constantPosition;
+                break;
+        }
+
+        playerPosition = nextPosition;
+
+        if (nextPositionPlayer == NextDirection.UP)
+        {
+            Rigidbody2D playerRigidbody = player.GetComponent<Rigidbody2D>();
+            Vector2 newVelocity = playerRigidbody.velocity;
+            newVelocity.x += 100;
+            playerRigidbody.velocity = newVelocity;
+            player.transform.localScale = new Vector3(1, 1, 1);
+        }
+        player.transform.position = playerPosition;
     }
 
     private Vector2 CalculateLeftPosition(Vector2[] points)
