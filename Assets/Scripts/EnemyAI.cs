@@ -32,8 +32,8 @@ public class EnemyAI : MonoBehaviour
     [Header("Raycast")]
     public Vector2 offSet;
     public Vector2 offSetVision;
-    public LayerMask lala;
-    public LayerMask layerVision;
+    public LayerMask layerCollision;
+    public LayerMask layerPlayer;
 
     [Header("M�quina_de_Estados")]
     public float idleTimeMin = 1f; 
@@ -115,10 +115,10 @@ public class EnemyAI : MonoBehaviour
 
     private void CheckSurroundings(){
         //Direita
-        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1f, lala);
+        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
 
-        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1f, lala);
+        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
 
         if (rightWall.collider != null) {
@@ -203,7 +203,7 @@ public class EnemyAI : MonoBehaviour
     private void Vision()
     {   
         Timer2 -= Time.deltaTime;
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
@@ -213,7 +213,7 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
