@@ -144,4 +144,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladoInicial: 0
-  transTime: 1
+  transTime: 0.5

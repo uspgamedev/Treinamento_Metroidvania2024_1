@@ -1,21 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Trocar_Lado : MonoBehaviour
 {
-    private enum LadoInicial {
-        A,
-        B
-    }
-
     private GameObject[] listaA;
     private GameObject[] listaB;
     private bool canChangeSides;
     private Collider2D coll;
 
-    [SerializeField] LadoInicial ladoInicial;
     [SerializeField] float transTime;
     private Image whiteFade;
     private float alpha;
@@ -23,24 +18,13 @@ public class Trocar_Lado : MonoBehaviour
 
     void Start()
     {
-        listaA = GameObject.FindGameObjectsWithTag("LadoA");
-        listaB = GameObject.FindGameObjectsWithTag("LadoB");
+        GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
 
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(whiteFade.color.r, whiteFade.color.g, whiteFade.color.b, 0f);
 
-        if (ladoInicial == LadoInicial.A) {
-            foreach (GameObject objeto in listaB)
-            {
-                objeto.SetActive(false);
-            }
-        }
-        if (ladoInicial == LadoInicial.B) {
-            foreach (GameObject objeto in listaA)
-            {
-                objeto.SetActive(false);
-            }
-        }
+        listaA = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaA;
+        listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
 
         canChangeSides = false;
     }
@@ -80,10 +64,12 @@ public class Trocar_Lado : MonoBehaviour
 
         foreach (GameObject objeto in listaA)
         {
+            if (objeto != null)
             objeto.SetActive(!objeto.activeInHierarchy);
         }
         foreach (GameObject objeto in listaB)
         {
+            if (objeto != null)
             objeto.SetActive(!objeto.activeInHierarchy);
         }
 
