@@ -48,8 +48,14 @@ public class EnemyAI : MonoBehaviour
     private float pjDistance;
     private float pjdirection;
     private GameObject jogador;
+
     private Vida_Inimiga stunScript;
     private float stun;
+    public Transform stunBar;
+    public GameObject stunBarObject;
+    private Vector2 stunBarScale;
+    private float stunPercent;
+    private Vector2 originalScale1;
 
 
     // Start is called before the first frame update
@@ -61,10 +67,19 @@ public class EnemyAI : MonoBehaviour
         jogador = GameObject.Find("Player");
         anim = GetComponent<Animator>();
         stunScript = GetComponent<Vida_Inimiga>();
+
+        originalScale1 = stunBar.localScale;
+        stunBarScale = stunBar.localScale;
+    }
+
+    void UpdateStunBar(){
+        stunPercent = stunScript.currentStun/stunScript.maxStun;
+        stunBarScale.x = stunPercent * originalScale1.x;
+        stunBar.localScale = stunBarScale;
     }
     // Update is called once per frame
     void Update()
-    {
+    {   
         switch (currentState)
         {
             case State.Patrolling:
@@ -96,6 +111,8 @@ public class EnemyAI : MonoBehaviour
             currentState = State.Stunnado;
             Timer = stunScript.stunCooldownTime;
         }
+
+        UpdateStunBar();
     }
 
     private void FixedUpdate()
@@ -115,10 +132,10 @@ public class EnemyAI : MonoBehaviour
 
     private void CheckSurroundings(){
         //Direita
-        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1f, layerCollision);
+        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1.33f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
 
-        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1f, layerCollision);
+        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1.33f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
 
         if (rightWall.collider != null) {
@@ -126,8 +143,9 @@ public class EnemyAI : MonoBehaviour
             direction = new Vector2(-1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = 0.5f;
-            Timer = 0.5f;
+            Timer = 0.2f;
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
+
         }
     
        
@@ -138,7 +156,7 @@ public class EnemyAI : MonoBehaviour
             direction = new Vector2(1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = -0.5f;
-            Timer = 0.5f;
+            Timer = 0.2f;
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         }
     }
@@ -193,7 +211,7 @@ public class EnemyAI : MonoBehaviour
         idleTimer -= Time.deltaTime;
         if (idleTimer <= 0)
         {   
-            Timer = 0.5f;
+            Timer = 0f;
             ChoosePatrolDirection();
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
             currentState = State.Patrolling;
