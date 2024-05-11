@@ -273,11 +273,25 @@ public class EnemyAI : MonoBehaviour
             if (pjdirection > 0)
             {
                 enemyRB.velocity = new Vector2(12f, 4f);
+
+                rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1.7f, layerCollision);
+                Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
+
+                if (rightWall.collider != null) {
+                    enemyRB.velocity = new Vector2(0f, 0f).normalized;
+                }
             }
             else
             {
                 enemyRB.velocity = new Vector2(-12f, 4f);
+
+                leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1.7f, layerCollision);
+                Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
+
+                if (leftWall.collider != null) {
+                enemyRB.velocity = new Vector2(2f, 0f).normalized;
             }
+            } 
 
             Timer2 -= Time.deltaTime;
 
