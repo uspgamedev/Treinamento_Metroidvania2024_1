@@ -11,6 +11,7 @@ TagManager:
   - enemyIsAttacking
   - SecondCamera
   - Hazard
+  - MenuButton
   layers:
   - Default
   - TransparentFX
