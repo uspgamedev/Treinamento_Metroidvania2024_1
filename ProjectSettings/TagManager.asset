@@ -13,6 +13,7 @@ TagManager:
   - Hazard
   - LadoA
   - LadoB
+  - Morto
   layers:
   - Default
   - TransparentFX
@@ -49,6 +50,9 @@ TagManager:
   m_SortingLayers:
   - name: BackGround
     uniqueID: 626645977
+    locked: 0
+  - name: SceneUI
+    uniqueID: 767610575
     locked: 0
   - name: Default
     uniqueID: 0

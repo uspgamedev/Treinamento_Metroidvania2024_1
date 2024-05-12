@@ -15,14 +15,20 @@ public class Vida_Inimiga : MonoBehaviour
     [SerializeField] public float currentStun; //a quantidade de stun que o inimigo apresenta
     //porque SerializeField e não public? public permite que as variáveis sejam acessadas por qualquer código e que elas sejam alteradas no inspetor,
     //SerializeField não permite que a variável seja acessada por qualquer código, porém permite que ela seja alterada no inspetor;
-    private bool notStunned = true; //true se o inimigo está ativo (não está estunado);
+    [HideInInspector] public bool notStunned = true; //true se o inimigo está ativo (não está estunado);
     private bool canDecreaseStun = true; //true se a função StunDecrease deve ser chamada, para que a função seja chamada baseado no tempo e não no frame;
 
     private SimpleFlash flashScript;
+    private float timeSinceHit = 100f;
+    private GameObject yellowBar;
+    private GameObject stunBar;
 
     void Start()
     {
         currentStun = 0f;
+
+        stunBar = transform.GetChild(0).gameObject;
+        yellowBar = transform.GetChild(0).GetChild(0).gameObject;
 
         flashScript = GetComponent<SimpleFlash>();
     }
@@ -43,26 +49,42 @@ public class Vida_Inimiga : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.K)) //tem que mudar esse botao para mudar o botao do parry
                 { 
-                    Destroy(gameObject);
+                    StartCoroutine(Die());
                 }
             }
         }
+
+        if (timeSinceHit >= 6f) {
+            stunBar.SetActive(false);
+        }
+        else {
+            stunBar.SetActive(true);
+        }
+
+        timeSinceHit += Time.deltaTime;
     }
 
     public void TakeDamage(int damage) //da dano de stun ao inimigo
     {
+        timeSinceHit = 0f;
+
         if (notStunned)
         {
             flashScript.Flash(Color.white);
             currentStun += damage;
         }
 
+        if (!notStunned) {
+            StartCoroutine(Die());
+        }
+        
         if (currentStun >= maxStun && notStunned)
         {
             currentStun = maxStun;
             notStunned = false;
             StartCoroutine(StunCooldown());
         }
+
     }
 
     private IEnumerator StunDecrease()
@@ -73,7 +95,10 @@ public class Vida_Inimiga : MonoBehaviour
         if (currentStun > 0)
         {
             yield return new WaitForSeconds(stunTime);
-            currentStun -= stunDecreaseRate;
+
+            if (notStunned) {
+                currentStun -= stunDecreaseRate;
+            }
         }
 
         canDecreaseStun = true;
@@ -81,7 +106,9 @@ public class Vida_Inimiga : MonoBehaviour
 
     private IEnumerator StunCooldown() //para de diminuir o stun até o inimigo para de estar estunado
     {
+        StartCoroutine(BarFlash());
         yield return new WaitForSeconds(stunCooldownTime);
+        currentStun = 0f;
         notStunned = true;
     }
 
@@ -99,4 +126,22 @@ public class Vida_Inimiga : MonoBehaviour
     //         yield return new WaitForSeconds(0.5f);
     //     }
     // }
+
+    private IEnumerator Die()
+    {
+        flashScript.Flash(Color.red);
+
+        yield return new WaitForSeconds(0.125f);
+
+        gameObject.tag = "Morto";
+        gameObject.SetActive(false);
+    }
+
+    private IEnumerator BarFlash()
+    {
+        while (!notStunned) {
+            yellowBar.GetComponent<SimpleFlash>().Flash(Color.white);
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
 }

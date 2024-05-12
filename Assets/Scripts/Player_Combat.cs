@@ -101,6 +101,7 @@ public class PlayerCombat : MonoBehaviour
             if (isParrying)
             {
                 other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                StartCoroutine(ParryAttack());
             }
         }
     }
@@ -112,6 +113,16 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
 
         followUp = false;
+    }
+
+    public IEnumerator ParryAttack()
+    {
+        anim.SetTrigger("ParryAttack");
+        GetComponent<Player_Movement>().canMove2 = false;
+
+        yield return new WaitForSeconds(0.25f);
+
+        GetComponent<Player_Movement>().canMove2 = true;
     }
     
 }

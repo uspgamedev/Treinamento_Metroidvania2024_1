@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -35,7 +37,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask layerCollision;
     public LayerMask layerPlayer;
 
-    [Header("M�quina_de_Estados")]
+    [Header("Maquina de Estados")]
     public float idleTimeMin = 1f; 
     public float idleTimeMax = 3f;
     private State currentState;
@@ -49,10 +51,11 @@ public class EnemyAI : MonoBehaviour
     private float pjdirection;
     private GameObject jogador;
 
-    private Vida_Inimiga stunScript;
-    private float stun;
+    [Header("Barra de Stun")]
     public Transform stunBar;
     public GameObject stunBarObject;
+    private Vida_Inimiga stunScript;
+    private float stun;
     private Vector2 stunBarScale;
     private float stunPercent;
     private Vector2 originalScale1;
@@ -76,6 +79,19 @@ public class EnemyAI : MonoBehaviour
         stunPercent = stunScript.currentStun/stunScript.maxStun;
         stunBarScale.x = stunPercent * originalScale1.x;
         stunBar.localScale = stunBarScale;
+
+        if (transform.localScale.x < 0f) {
+            stunBarObject.transform.localPosition = new Vector3(0.2f, 0f, 0f);
+            stunBarObject.transform.localScale = new Vector3(-1, 1f, 1f);
+        }
+        else {
+            stunBarObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+            stunBarObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+
+        // stunBarObject.transform.localScale = new Vector3(transform.localScale.x * transform.localScale.x, 1f, 1f);
+        // stunBar.localScale = new Vector3(stunBarScale.x, 1f, 1f);
+        // stunBar.localScale = new Vector3(Mathf.Abs(stunBarScale.x), 1f, 1f);
     }
     // Update is called once per frame
     void Update()
@@ -107,12 +123,17 @@ public class EnemyAI : MonoBehaviour
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
-        if (stunScript.currentStun >= stunScript.maxStun){
+        // if (stunScript.currentStun >= stunScript.maxStun){
+        if (!stunScript.notStunned) {
             currentState = State.Stunnado;
             Timer = stunScript.stunCooldownTime;
         }
 
         UpdateStunBar();
+
+        if (gameObject.tag == "enemyIsAttacking" && currentState != State.Jump) {
+            gameObject.tag = "Inimigo";
+        }
     }
 
     private void FixedUpdate()
@@ -173,7 +194,7 @@ public class EnemyAI : MonoBehaviour
 
     private void PatrollingState()
     {
-        ChangeAnim(false, true, false, false);
+        ChangeAnim(false, true, false, false, false);
 
         Vision();
 
@@ -203,7 +224,7 @@ public class EnemyAI : MonoBehaviour
 
     private void IdlingState()
     {
-        ChangeAnim(true, false, false, false);
+        ChangeAnim(true, false, false, false, false);
 
         enemyRB.velocity = new Vector2(0f, 0f);
         Vision();
@@ -268,7 +289,9 @@ public class EnemyAI : MonoBehaviour
 
         if (Timer <= 0)
         {
-            ChangeAnim(false, false, false, true);
+            ChangeAnim(false, false, false, true, false);
+
+            gameObject.tag = "enemyIsAttacking";
             
             if (pjdirection > 0)
             {
@@ -303,7 +326,7 @@ public class EnemyAI : MonoBehaviour
             }
         } else
         {
-            ChangeAnim(false, false, true, false);
+            ChangeAnim(false, false, true, false, false);
             if(pjdirection > 0)
             {
                 transform.localScale = new Vector3(1, 1, 1);
@@ -318,21 +341,27 @@ public class EnemyAI : MonoBehaviour
     }
 
 }
-    private void ChangeAnim(bool idle, bool patrol, bool prepare, bool jump)
+    private void ChangeAnim(bool idle, bool patrol, bool prepare, bool jump, bool stun)
     {
         anim.SetBool("Idle", idle);
         anim.SetBool("Patrol", patrol);
         anim.SetBool("Prepare", prepare);
         anim.SetBool("Jump", jump);
+        anim.SetBool("Stun", stun);
     }
 
     private void Stunnado_State(){
+        ChangeAnim(false, false, false, false, true);
+
         enemyRB.velocity = new Vector2(0f, 0f);
 
         Timer -= Time.deltaTime;
 
-        if (stunScript.currentStun < stunScript.maxStun && Timer <= 0f){
+        if (stunScript.notStunned){
             currentState = State.Idling;
         }
+        // if (stunScript.currentStun < stunScript.maxStun && Timer <= 0f){
+        //     currentState = State.Idling;
+        // }
     }
 }
