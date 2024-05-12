@@ -1,24 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Trocar_Lado : MonoBehaviour
 {
-    public GameObject[] listaA;
-    public GameObject[] listaB;
+    private GameObject[] listaA;
+    private GameObject[] listaB;
     private bool canChangeSides;
     private Collider2D coll;
-    // Start is called before the first frame update
+
+    [SerializeField] float transTime;
+    private Image whiteFade;
+    private float alpha;
+    private bool toFade = false;
+
     void Start()
     {
+        GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
+
+        whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
+        whiteFade.color = new Color(whiteFade.color.r, whiteFade.color.g, whiteFade.color.b, 0f);
+
+        listaA = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaA;
+        listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
+
         canChangeSides = false;
-        foreach (GameObject objeto in listaB) //disabilita todos os objetos do lado B no começo do jogo
-        {
-            objeto.SetActive(false);
-        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
@@ -28,22 +38,44 @@ public class Trocar_Lado : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.E)) 
                 {
-                    ChangeSides();
+                    StartCoroutine(ChangeSides());
                 }
+            }
+        }
+
+        if (toFade) {
+            coll.GetComponent<Health>().Fade(transTime, whiteFade, 1f, alpha);
+        }
+        else {
+            if (whiteFade.color.a > 0f) {
+                whiteFade.color = new Color (0f, 0f, 0f, 0f);
             }
         }
     }
 
-    private void ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
+    private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
+        toFade = true;
+        coll.GetComponent<Player_Movement>().canMove2 = false;
+
+        yield return new WaitForSeconds(transTime);
+
+        coll.GetComponent<Player_Movement>().canMove2 = true;
+
         foreach (GameObject objeto in listaA)
         {
+            if (objeto != null)
             objeto.SetActive(!objeto.activeInHierarchy);
         }
         foreach (GameObject objeto in listaB)
         {
+            if (objeto != null)
             objeto.SetActive(!objeto.activeInHierarchy);
         }
+
+        yield return new WaitForSeconds(transTime);
+
+        toFade = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

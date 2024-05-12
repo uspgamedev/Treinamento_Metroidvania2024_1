@@ -127,18 +127,18 @@ public class Health : MonoBehaviour
         }
 
         if (toFade) {
-            Fade(fadeDur);
+            Fade(fadeDur, blackFade, 0f, alpha);
         }
         
     }
 
-    private void Fade(float fadeDuration)
+    public void Fade(float fadeDuration, Image image, float rgb, float a)
     {
-        alpha = Mathf.Lerp(min, max, t);
+        a = Mathf.Lerp(min, max, t);
 
         t += Time.deltaTime / fadeDuration;
 
-        blackFade.color = new Color(0f, 0f, 0f, alpha);
+        image.color = new Color(rgb, rgb, rgb, a);
 
         if (t >= 1f) {
             float temp = max;

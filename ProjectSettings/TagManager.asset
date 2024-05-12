@@ -11,6 +11,9 @@ TagManager:
   - enemyIsAttacking
   - SecondCamera
   - Hazard
+  - LadoA
+  - LadoB
+  - Morto
   - MenuButton
   layers:
   - Default
@@ -48,6 +51,9 @@ TagManager:
   m_SortingLayers:
   - name: BackGround
     uniqueID: 626645977
+    locked: 0
+  - name: SceneUI
+    uniqueID: 767610575
     locked: 0
   - name: Default
     uniqueID: 0

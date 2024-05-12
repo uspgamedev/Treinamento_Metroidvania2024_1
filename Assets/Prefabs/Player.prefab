@@ -278,9 +278,9 @@ MonoBehaviour:
     m_Bits: 8
   animator: {fileID: 4013869640577056885}
   attackPoint: {fileID: 3342923446026726715}
-  attackRange: 0.3
+  attackRange: 0.4
   attackDamage: 1
-  parryDamage: 0
+  parryDamage: 3
   isAttacking: 0
   isParrying: 0
 --- !u!114 &8400267965935359251

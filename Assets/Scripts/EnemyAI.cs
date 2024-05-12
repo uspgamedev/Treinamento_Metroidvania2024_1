@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -32,10 +34,10 @@ public class EnemyAI : MonoBehaviour
     [Header("Raycast")]
     public Vector2 offSet;
     public Vector2 offSetVision;
-    public LayerMask lala;
-    public LayerMask layerVision;
+    public LayerMask layerCollision;
+    public LayerMask layerPlayer;
 
-    [Header("M�quina_de_Estados")]
+    [Header("Maquina de Estados")]
     public float idleTimeMin = 1f; 
     public float idleTimeMax = 3f;
     private State currentState;
@@ -48,8 +50,15 @@ public class EnemyAI : MonoBehaviour
     private float pjDistance;
     private float pjdirection;
     private GameObject jogador;
+
+    [Header("Barra de Stun")]
+    public Transform stunBar;
+    public GameObject stunBarObject;
     private Vida_Inimiga stunScript;
     private float stun;
+    private Vector2 stunBarScale;
+    private float stunPercent;
+    private Vector2 originalScale1;
 
 
     // Start is called before the first frame update
@@ -61,10 +70,32 @@ public class EnemyAI : MonoBehaviour
         jogador = GameObject.Find("Player");
         anim = GetComponent<Animator>();
         stunScript = GetComponent<Vida_Inimiga>();
+
+        originalScale1 = stunBar.localScale;
+        stunBarScale = stunBar.localScale;
+    }
+
+    void UpdateStunBar(){
+        stunPercent = stunScript.currentStun/stunScript.maxStun;
+        stunBarScale.x = stunPercent * originalScale1.x;
+        stunBar.localScale = stunBarScale;
+
+        if (transform.localScale.x < 0f) {
+            stunBarObject.transform.localPosition = new Vector3(0.2f, 0f, 0f);
+            stunBarObject.transform.localScale = new Vector3(-1, 1f, 1f);
+        }
+        else {
+            stunBarObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+            stunBarObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+
+        // stunBarObject.transform.localScale = new Vector3(transform.localScale.x * transform.localScale.x, 1f, 1f);
+        // stunBar.localScale = new Vector3(stunBarScale.x, 1f, 1f);
+        // stunBar.localScale = new Vector3(Mathf.Abs(stunBarScale.x), 1f, 1f);
     }
     // Update is called once per frame
     void Update()
-    {
+    {   
         switch (currentState)
         {
             case State.Patrolling:
@@ -92,9 +123,16 @@ public class EnemyAI : MonoBehaviour
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
-        if (stunScript.currentStun >= stunScript.maxStun){
+        // if (stunScript.currentStun >= stunScript.maxStun){
+        if (!stunScript.notStunned) {
             currentState = State.Stunnado;
             Timer = stunScript.stunCooldownTime;
+        }
+
+        UpdateStunBar();
+
+        if (gameObject.tag == "enemyIsAttacking" && currentState != State.Jump) {
+            gameObject.tag = "Inimigo";
         }
     }
 
@@ -115,10 +153,10 @@ public class EnemyAI : MonoBehaviour
 
     private void CheckSurroundings(){
         //Direita
-        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1f, lala);
+        rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1.33f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
 
-        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1f, lala);
+        leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1.33f, layerCollision);
         Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
 
         if (rightWall.collider != null) {
@@ -126,8 +164,9 @@ public class EnemyAI : MonoBehaviour
             direction = new Vector2(-1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = 0.5f;
-            Timer = 0.5f;
+            Timer = 0.2f;
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
+
         }
     
        
@@ -138,7 +177,7 @@ public class EnemyAI : MonoBehaviour
             direction = new Vector2(1f, 0f).normalized;
             directionVision = direction;
             offSetVision.x = -0.5f;
-            Timer = 0.5f;
+            Timer = 0.2f;
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         }
     }
@@ -155,7 +194,7 @@ public class EnemyAI : MonoBehaviour
 
     private void PatrollingState()
     {
-        ChangeAnim(false, true, false, false);
+        ChangeAnim(false, true, false, false, false);
 
         Vision();
 
@@ -185,7 +224,7 @@ public class EnemyAI : MonoBehaviour
 
     private void IdlingState()
     {
-        ChangeAnim(true, false, false, false);
+        ChangeAnim(true, false, false, false, false);
 
         enemyRB.velocity = new Vector2(0f, 0f);
         Vision();
@@ -193,7 +232,7 @@ public class EnemyAI : MonoBehaviour
         idleTimer -= Time.deltaTime;
         if (idleTimer <= 0)
         {   
-            Timer = 0.5f;
+            Timer = 0f;
             ChoosePatrolDirection();
             idleTimer = Random.Range(idleTimeMin, idleTimeMax);
             currentState = State.Patrolling;
@@ -203,7 +242,7 @@ public class EnemyAI : MonoBehaviour
     private void Vision()
     {   
         Timer2 -= Time.deltaTime;
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
@@ -213,7 +252,7 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerVision);
+        visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
         if (visionEnemy.collider != null && Timer2 <= 0)
@@ -250,16 +289,32 @@ public class EnemyAI : MonoBehaviour
 
         if (Timer <= 0)
         {
-            ChangeAnim(false, false, false, true);
+            ChangeAnim(false, false, false, true, false);
+
+            gameObject.tag = "enemyIsAttacking";
             
             if (pjdirection > 0)
             {
                 enemyRB.velocity = new Vector2(12f, 4f);
+
+                rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1.7f, layerCollision);
+                Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
+
+                if (rightWall.collider != null) {
+                    enemyRB.velocity = new Vector2(0f, 0f).normalized;
+                }
             }
             else
             {
                 enemyRB.velocity = new Vector2(-12f, 4f);
+
+                leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1.7f, layerCollision);
+                Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
+
+                if (leftWall.collider != null) {
+                enemyRB.velocity = new Vector2(2f, 0f).normalized;
             }
+            } 
 
             Timer2 -= Time.deltaTime;
 
@@ -271,7 +326,7 @@ public class EnemyAI : MonoBehaviour
             }
         } else
         {
-            ChangeAnim(false, false, true, false);
+            ChangeAnim(false, false, true, false, false);
             if(pjdirection > 0)
             {
                 transform.localScale = new Vector3(1, 1, 1);
@@ -286,21 +341,27 @@ public class EnemyAI : MonoBehaviour
     }
 
 }
-    private void ChangeAnim(bool idle, bool patrol, bool prepare, bool jump)
+    private void ChangeAnim(bool idle, bool patrol, bool prepare, bool jump, bool stun)
     {
         anim.SetBool("Idle", idle);
         anim.SetBool("Patrol", patrol);
         anim.SetBool("Prepare", prepare);
         anim.SetBool("Jump", jump);
+        anim.SetBool("Stun", stun);
     }
 
     private void Stunnado_State(){
+        ChangeAnim(false, false, false, false, true);
+
         enemyRB.velocity = new Vector2(0f, 0f);
 
         Timer -= Time.deltaTime;
 
-        if (stunScript.currentStun < stunScript.maxStun && Timer <= 0f){
+        if (stunScript.notStunned){
             currentState = State.Idling;
         }
+        // if (stunScript.currentStun < stunScript.maxStun && Timer <= 0f){
+        //     currentState = State.Idling;
+        // }
     }
 }
