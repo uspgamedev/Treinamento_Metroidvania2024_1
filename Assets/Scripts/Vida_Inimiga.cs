@@ -11,7 +11,6 @@ public class Vida_Inimiga : MonoBehaviour
     [SerializeField] private float stunDecreaseRate = 0.5f; //o quanto de currentStun o inimigo perde a cada stunTime segundos;
     [SerializeField] public float stunCooldownTime = 5f; //o tempo que leva para o inimigo parar de ficar estunado;
     // [SerializeField] private float superMaxStun = 10; //hardcap do quanto que de stun que o player pode infligir no inimigo;
-    [SerializeField] private float parryCircleRange = 2.0f; //o raio do circula que determina a area de parry do player;
     [SerializeField] public float currentStun; //a quantidade de stun que o inimigo apresenta
     //porque SerializeField e não public? public permite que as variáveis sejam acessadas por qualquer código e que elas sejam alteradas no inspetor,
     //SerializeField não permite que a variável seja acessada por qualquer código, porém permite que ela seja alterada no inspetor;
@@ -38,20 +37,6 @@ public class Vida_Inimiga : MonoBehaviour
         if(canDecreaseStun && notStunned)
         {
             StartCoroutine(StunDecrease()); //chama a função que diminui currentStun a cada stunTime segundos;
-        }
-
-        if(!notStunned) //nota faz o hitkill do inimigo estunado, porem esse codigo talvez tenha que ser alterado a depender de como vamos lidar com a animacao do hitkill
-        {
-            Collider2D[] parryRange = Physics2D.OverlapCircleAll(GetComponent<Transform>().position, parryCircleRange, playerLayer);
-
-            //se o player esta no range de parry entao é hitkill;
-            foreach (Collider2D player in parryRange)
-            {
-                if (Input.GetKeyDown(KeyCode.K)) //tem que mudar esse botao para mudar o botao do parry
-                { 
-                    StartCoroutine(Die());
-                }
-            }
         }
 
         if (timeSinceHit >= 6f) {
@@ -84,7 +69,6 @@ public class Vida_Inimiga : MonoBehaviour
             notStunned = false;
             StartCoroutine(StunCooldown());
         }
-
     }
 
     private IEnumerator StunDecrease()
@@ -112,20 +96,6 @@ public class Vida_Inimiga : MonoBehaviour
         notStunned = true;
     }
 
-    private void EnemyStun() //a ser implementado
-    {
-        // StartCoroutine(StunColorChange()); //faz o inimigo piscar
-    }
-
-    // private IEnumerator StunColorChange()
-    // {
-    //     while (currentStun > maxStun)
-    //     {
-    //         flashScript.Flash(Color.yellow);
-
-    //         yield return new WaitForSeconds(0.5f);
-    //     }
-    // }
 
     private IEnumerator Die()
     {

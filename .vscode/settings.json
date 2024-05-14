@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "metro da vania.sln"
+    "dotnet.defaultSolution": "Treinamento_Metroidvania2024_1.sln"
 }

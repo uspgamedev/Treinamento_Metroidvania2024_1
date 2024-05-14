@@ -7,20 +7,24 @@ using UnityEngine.UI;
 //fonte: https://gist.github.com/bendux/aa8f588b5123d75f07ca8e69388f40d9
 public class Player_Movement : MonoBehaviour
 {
-    private Rigidbody2D rb;
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool canMove2 = true;
+
+    private Rigidbody2D rb;
     private Collision coll;
     private Animator anim;
+
     public float jumpForce = 10;
     public float speed = 50;
+
     private bool jumpStart = false;
     private float horizontal;
     // private bool isFacingRight = true;
     private bool canDash = true;
     private bool isDashing = false;
-    private string ganchoTag = "Gancho";
-    private bool canGancho = false;
+    [HideInInspector] public bool canGancho = false;
+    [HideInInspector] public GameObject vagalumeAtual;
+
     [SerializeField] private float terminalVelocity = 24f;
     [SerializeField] private float dashingPower = 24f;
     [SerializeField] private float dashingTime = 0.2f;
@@ -66,7 +70,11 @@ public class Player_Movement : MonoBehaviour
         //Sendo assim, é só escolher ali quantos porcento da transição deve estar completa pro manito poder andar.
         }
 
-        if (!canMove || !canMove2) x = y = 0;
+        if (!canMove || !canMove2 && !GetComponent<Health>().onKnockback) {
+            x = 0;
+            y = 0;
+        }
+
         Vector2 dir = new Vector2(x, y); //cria um vetor que representa para quais direcoes o player quer se movimentar
         
         if(GetComponent<PlayerCombat>().isParrying == true && coll.onGround) // se isParrying e ele está no chão então ele fica parado
@@ -88,11 +96,11 @@ public class Player_Movement : MonoBehaviour
             anim.SetBool("OnGround", coll.onGround);
         }
 
-        if(rb.velocity.x < 0)
+        if(rb.velocity.x < 0 && !GetComponent<Health>().onKnockback)
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-        else if (rb.velocity.x > 0)
+        else if (rb.velocity.x > 0 && !GetComponent<Health>().onKnockback)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -100,6 +108,12 @@ public class Player_Movement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L) && canDash) //tem que mudar aqui se quiser mudar o botão do dash
         {
             StartCoroutine(Dash());
+        }
+
+        if (Input.GetKeyDown(KeyCode.K) && canGancho)
+        {
+            StartCoroutine(Gancho());
+            StartCoroutine(vagalumeAtual.GetComponent<Vagalume>().TakeGancho());
         }
         
         if (rb.velocity.y > terminalVelocity) rb.velocity = (new Vector2(rb.velocity.x, terminalVelocity)); //implementa a velocidade terminal do player
@@ -115,25 +129,41 @@ public class Player_Movement : MonoBehaviour
         rb.velocity = (new Vector2(dir.x * speed, rb.velocity.y)); //atualiza o vetor velocidade com o x do vetor dir, note que ele nao muda o y, uma vez que o player so se movimenta
         //verticalmente por meio do pulo
     }
-    void OnTriggerStay2D(Collider2D col)
-    {
-        if (col.gameObject.tag == ganchoTag)
-        {
-            if(GetComponent<PlayerCombat>().isParrying && canGancho)
-            {            
-                canGancho = false;
-                GetComponent<Better_Jumping>().enabled = false;
-                jump(Vector2.up*ganchoForce);
-            }
-        }
-    }
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.gameObject.tag == ganchoTag)
-        {
-            canGancho = true;
-        }
-    }
+
+    // void OnTriggerStay2D(Collider2D col)
+    // {
+    //     if (col.gameObject.tag == ganchoTag)
+    //     {
+    //         if(GetComponent<PlayerCombat>().isParrying && canGancho)
+    //         {            
+    //             canGancho = false;
+    //             GetComponent<Better_Jumping>().enabled = false;
+    //             jump(Vector2.up*ganchoForce);
+    //         }
+    //     }
+    // }
+    // void OnTriggerExit2D(Collider2D col)
+    // {
+    //     if (col.gameObject.tag == ganchoTag)
+    //     {
+    //         canGancho = true;
+    //     }
+    // }
+
+    // void OnTriggerEnter2D(Collider2D col)
+    // {
+    //     if (col.gameObject.tag == ganchoTag)
+    //     {
+    //         canGancho = true; 
+    //     }
+    // }
+    // void OnTriggerExit2D(Collider2D col)
+    // {
+    //     if (col.gameObject.tag == ganchoTag)
+    //     {
+    //         canGancho = false;
+    //     }
+    // }
 
 
     private void jump(Vector2 dir)
@@ -191,6 +221,25 @@ public class Player_Movement : MonoBehaviour
                 lastPos -= new Vector3(lastDir/2, 0, 0);
             }
         }
+    }
 
+    private IEnumerator Gancho()
+    {
+        canGancho = false;
+        canMove2 = false;
+        GetComponent<Better_Jumping>().enabled = false;
+
+        float tempGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.velocity = new Vector2(0f, 0f);
+
+        anim.SetTrigger("Gancho");
+
+        yield return new WaitForSeconds(0.25f);
+
+        canMove2 = true;
+        rb.gravityScale = tempGravity;
+
+        jump(Vector2.up * ganchoForce);
     }
 }

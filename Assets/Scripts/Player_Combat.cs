@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -33,7 +34,7 @@ public class PlayerCombat : MonoBehaviour
             Attack();
         }
 
-        if (Input.GetKeyDown(KeyCode.K)) //tem que mudar esse botao para mudar o botao do parry
+        if (Input.GetKeyDown(KeyCode.K) && !GetComponent<Player_Movement>().canGancho) //tem que mudar esse botao para mudar o botao do parry
         {
             Parry();
         }
@@ -80,8 +81,26 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!isParrying && !isAttacking)
         {
-            anim.SetTrigger("Parry");
-            StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
+            bool attack = false;
+
+            //para cada inimigo no range de ataque chame TakeDamage;
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                if (!enemy.GetComponent<Vida_Inimiga>().notStunned && ((transform.position.x - enemy.gameObject.transform.position.x) * transform.localScale.x) <= 0) {
+                    enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
+                    attack = true;
+                }
+            }
+
+            if (!attack) {
+                anim.SetTrigger("Parry");
+                StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;
+            }
+            else {
+                StartCoroutine(ParryAttack());
+            }
+        
         }
     }
 
@@ -89,7 +108,7 @@ public class PlayerCombat : MonoBehaviour
     {
         isParrying = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.75f);
 
         isParrying = false;
     }

@@ -28,6 +28,8 @@ public class Health : MonoBehaviour
 
     [SerializeField] private float immortalTime;
     [SerializeField] private float knockbackForce;
+    private float dir;
+    [HideInInspector] public bool onKnockback = false;
     private bool damageable = true;
     private SimpleFlash flashScript;
     private Animator anim;
@@ -61,7 +63,8 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (collision.gameObject.tag == "Inimigo" && damageable){
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying) {
+
                 Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
@@ -129,6 +132,10 @@ public class Health : MonoBehaviour
         if (toFade) {
             Fade(fadeDur, blackFade, 0f, alpha);
         }
+
+        if (onKnockback) {
+            rb.velocity = new Vector2(dir * knockbackForce, rb.velocity.y);
+        }
         
     }
 
@@ -152,8 +159,6 @@ public class Health : MonoBehaviour
     {
         anim.SetBool("Damaged", true);
 
-        float dir;
-
         if (enemy.transform.position.x > transform.position.x) {
             dir = -1;
         }
@@ -162,14 +167,16 @@ public class Health : MonoBehaviour
         }
 
         moveScript.canMove2 = false;
+        onKnockback = true;
 
-        rb.velocity = new Vector2(dir * knockbackForce, knockbackForce);
+        rb.velocity = new Vector2(dir * knockbackForce, knockbackForce * 1.5f);
 
         yield return new WaitForSeconds(0.4f);
 
         anim.SetBool("Damaged", false);
 
         moveScript.canMove2 = true;
+        onKnockback = false;
         damageable = false;
         StartCoroutine(Blink());
 

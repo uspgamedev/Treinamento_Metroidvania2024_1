@@ -10,6 +10,10 @@ public class ItemFloating : MonoBehaviour
     Vector3 startPos;
     float sineOffset;
 
+    float currentTime = 0f;
+
+    [HideInInspector] public bool canUpdate = true;
+
     void Awake()
     {
         startPos = transform.localPosition;
@@ -18,7 +22,11 @@ public class ItemFloating : MonoBehaviour
 
     void Update()
     {
-        sineOffset = amplitude * Mathf.Sin(frequency * Time.time) + startPos.y;
-        transform.localPosition = new Vector3(startPos.x, sineOffset, 0f);
+        if (canUpdate) {
+            currentTime += Time.deltaTime;
+            sineOffset = amplitude * Mathf.Sin(frequency * currentTime) + startPos.y;
+            // sineOffset = amplitude * Mathf.Sin(frequency * Time.time) + startPos.y;
+            transform.localPosition = new Vector3(startPos.x, sineOffset, 0f);
+        }
     }
 }

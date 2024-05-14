@@ -196,13 +196,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60c710691d15a14aaa7497999817077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 5
   healthUI: {fileID: 3606247851656254604, guid: 71730c96de7764000a814eb60ddb3972, type: 3}
   healthSize: 1
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   immortalTime: 3
   knockbackForce: 5
+  onKnockback: 0
 --- !u!114 &429157850925583163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,8 +218,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canMove: 0
   canMove2: 1
-  jumpForce: 10
+  jumpForce: 9
   speed: 6
+  canGancho: 0
+  vagalumeAtual: {fileID: 0}
   terminalVelocity: 24
   dashingPower: 16
   dashingTime: 0.2
