@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {   
-    public RaycastHit2D rightWall;
-    public RaycastHit2D leftWall;
-    public RaycastHit2D visionEnemy;
+    [SerializeField] public RaycastHit2D rightWall;
+    [SerializeField] public RaycastHit2D leftWall;
+    [SerializeField] public RaycastHit2D visionEnemy;
 
     
     private enum State {
@@ -25,17 +25,17 @@ public class EnemyAI : MonoBehaviour
     private Vector2 direction;
 
     [Header("Componentes")]
-    public Rigidbody2D enemyRB;
+    [SerializeField] public Rigidbody2D enemyRB;
     private Animator anim;
 
     [Header("Movimento")]
     public float moveSpeed;
 
     [Header("Raycast")]
-    public Vector2 offSet;
-    public Vector2 offSetVision;
-    public LayerMask layerCollision;
-    public LayerMask layerPlayer;
+    [SerializeField] public Vector2 offSet;
+    [SerializeField] public Vector2 offSetVision;
+    [SerializeField] public LayerMask layerCollision;
+    [SerializeField] public LayerMask layerPlayer;
 
     [Header("Maquina de Estados")]
     public float idleTimeMin = 1f; 
@@ -52,8 +52,8 @@ public class EnemyAI : MonoBehaviour
     private GameObject jogador;
 
     [Header("Barra de Stun")]
-    public Transform stunBar;
-    public GameObject stunBarObject;
+    [SerializeField] public Transform stunBar;
+    [SerializeField] public GameObject stunBarObject;
     private Vida_Inimiga stunScript;
     private float stun;
     private Vector2 stunBarScale;
@@ -284,6 +284,8 @@ public class EnemyAI : MonoBehaviour
 
     private void JumpState()
     {   
+        pjDistance = Mathf.Sqrt(((jogador.transform.position.x - transform.position.x)*(jogador.transform.position.x - transform.position.x) + 
+                      (jogador.transform.position.y - transform.position.y)*(jogador.transform.position.y - transform.position.y)));
 {   
         Timer -= Time.deltaTime;
 
@@ -322,7 +324,11 @@ public class EnemyAI : MonoBehaviour
             {
                 enemyRB.velocity = new Vector2(0f, 0f);
                 Timer2 = 1.5f;
+                if (pjDistance > 3f){
                 currentState = State.Idling;
+                } else {
+                    currentState = State.Attack;
+                }
             }
         } else
         {
