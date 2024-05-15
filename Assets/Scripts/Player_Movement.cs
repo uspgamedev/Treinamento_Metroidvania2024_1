@@ -130,42 +130,6 @@ public class Player_Movement : MonoBehaviour
         //verticalmente por meio do pulo
     }
 
-    // void OnTriggerStay2D(Collider2D col)
-    // {
-    //     if (col.gameObject.tag == ganchoTag)
-    //     {
-    //         if(GetComponent<PlayerCombat>().isParrying && canGancho)
-    //         {            
-    //             canGancho = false;
-    //             GetComponent<Better_Jumping>().enabled = false;
-    //             jump(Vector2.up*ganchoForce);
-    //         }
-    //     }
-    // }
-    // void OnTriggerExit2D(Collider2D col)
-    // {
-    //     if (col.gameObject.tag == ganchoTag)
-    //     {
-    //         canGancho = true;
-    //     }
-    // }
-
-    // void OnTriggerEnter2D(Collider2D col)
-    // {
-    //     if (col.gameObject.tag == ganchoTag)
-    //     {
-    //         canGancho = true; 
-    //     }
-    // }
-    // void OnTriggerExit2D(Collider2D col)
-    // {
-    //     if (col.gameObject.tag == ganchoTag)
-    //     {
-    //         canGancho = false;
-    //     }
-    // }
-
-
     private void jump(Vector2 dir)
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
@@ -181,17 +145,6 @@ public class Player_Movement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         jumpStart = false;
     }
-
-    // private void Flip()
-    // {
-    //     if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-    //     {
-    //         Vector3 localScale = transform.localScale;
-    //         isFacingRight = !isFacingRight;
-    //         localScale.x *= -1f;
-    //         transform.localScale = localScale;
-    //     }
-    // }
 
     private IEnumerator Dash()
     {
@@ -223,7 +176,7 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    private IEnumerator Gancho()
+    public IEnumerator Gancho()
     {
         canGancho = false;
         canMove2 = false;

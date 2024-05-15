@@ -132,11 +132,19 @@ public class Health : MonoBehaviour
         if (toFade) {
             Fade(fadeDur, blackFade, 0f, alpha);
         }
+        else {
+            if (blackFade.color.a > 0f || t > 0f) {
+                blackFade.color = new Color (1f, 1f, 1f, 0f);
+                alpha = 0f;
+                t = 0f;
+                min = 0f;
+                max = 1f;
+            }
+        }
 
         if (onKnockback) {
             rb.velocity = new Vector2(dir * knockbackForce, rb.velocity.y);
         }
-        
     }
 
     public void Fade(float fadeDuration, Image image, float rgb, float a)
@@ -220,7 +228,7 @@ public class Health : MonoBehaviour
     {
         GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
         hpSprites[index] = t.GetComponent<Image>();
-        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * index * healthSize * 1.5f, 0);
+        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * index * healthSize * 1.5f + 32f, -32f);
         t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
     }
 }

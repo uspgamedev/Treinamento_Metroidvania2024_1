@@ -13,9 +13,13 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public GameObject[] listaB = new GameObject[15];
 
     [SerializeField] LadoInicial ladoInicial;
+    [SerializeField] int frameRate = 60;
 
     void Awake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = frameRate;
+
         GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
         int ia = 0;
         int ib = 0;

@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   healthUI: {fileID: 3606247851656254604, guid: 71730c96de7764000a814eb60ddb3972, type: 3}
-  healthSize: 1
+  healthSize: 0.6
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   immortalTime: 3

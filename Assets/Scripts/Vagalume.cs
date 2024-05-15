@@ -41,6 +41,11 @@ public class Vagalume : MonoBehaviour
             col.GetComponent<Player_Movement>().vagalumeAtual = gameObject;
             col.GetComponent<Player_Movement>().canGancho = true; 
             ChangeSprite(true);
+
+            if (col.GetComponent<PlayerCombat>().isParrying) {
+                StartCoroutine(col.GetComponent<Player_Movement>().Gancho());
+                StartCoroutine(TakeGancho());
+            }
         }
     }
     void OnTriggerExit2D(Collider2D col)

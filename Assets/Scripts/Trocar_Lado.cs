@@ -15,10 +15,19 @@ public class Trocar_Lado : MonoBehaviour
     private Image whiteFade;
     private float alpha;
     private bool toFade = false;
+    private Health healthScript;
+
+    float min = 0f;
+    float max = 1f;
+    float t = 0f;
+
+    private Animator anim;
 
     void Start()
     {
         GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
+
+        anim = GetComponent<Animator>();
 
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(whiteFade.color.r, whiteFade.color.g, whiteFade.color.b, 0f);
@@ -44,11 +53,16 @@ public class Trocar_Lado : MonoBehaviour
         }
 
         if (toFade) {
-            coll.GetComponent<Health>().Fade(transTime, whiteFade, 1f, alpha);
+            Fade(transTime, whiteFade, 1f, alpha);
+            // healthScript.Fade(transTime, whiteFade, 1f, alpha);
         }
         else {
-            if (whiteFade.color.a > 0f) {
+            if (whiteFade.color.a > 0f || t > 0f) {
                 whiteFade.color = new Color (0f, 0f, 0f, 0f);
+                alpha = 0f;
+                t = 0f;
+                min = 0f;
+                max = 1f;
             }
         }
     }
@@ -56,11 +70,12 @@ public class Trocar_Lado : MonoBehaviour
     private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
         toFade = true;
+        canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
-        yield return new WaitForSeconds(transTime);
+        anim.SetTrigger("Start");
 
-        coll.GetComponent<Player_Movement>().canMove2 = true;
+        yield return new WaitForSeconds(transTime);
 
         foreach (GameObject objeto in listaA)
         {
@@ -73,19 +88,40 @@ public class Trocar_Lado : MonoBehaviour
             objeto.SetActive(!objeto.activeInHierarchy);
         }
 
-        yield return new WaitForSeconds(transTime);
+        yield return new WaitForSeconds(transTime/2);
+        anim.SetTrigger("End");
+        yield return new WaitForSeconds(transTime/2);
 
+        coll.GetComponent<Player_Movement>().canMove2 = true;
         toFade = false;
+        canChangeSides = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         canChangeSides = true;
         coll = collision;
+        healthScript = coll.GetComponent<Health>();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         canChangeSides = false;
+    }
+
+    public void Fade(float fadeDuration, Image image, float rgb, float a)
+    {
+        a = Mathf.Lerp(min, max, t);
+
+        t += Time.deltaTime / fadeDuration;
+
+        image.color = new Color(rgb, rgb, rgb, a);
+
+        if (t >= 1f) {
+            float temp = max;
+            max = min;
+            min = temp;
+            t = 0f;
+        }
     }
 }
