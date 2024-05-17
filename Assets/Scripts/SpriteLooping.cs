@@ -16,7 +16,6 @@ public class SpriteLooping : MonoBehaviour
     private GameObject[] listaB;
     [SerializeField] float transTime;
     private Image blackFade;
-    public bool allowSelection = false;
 
     [SerializeField] private GameObject loopingObject;
     [SerializeField] private float LOOP_SPEED = 1f;
@@ -81,9 +80,5 @@ public class SpriteLooping : MonoBehaviour
         }
 
         blackFade.DOFade(0f, transTime);
-
-        yield return new WaitForSeconds(transTime);
-
-        allowSelection = true;
     }
 }
