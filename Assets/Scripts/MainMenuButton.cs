@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class MainMenuButton : MonoBehaviour
 {
-    private const float NEXT_BUTTON_POSITION = 440;
+    private const float NEXT_BUTTON_POSITION = 440-250/2;
     private GameObject[] menuButtons;    
     private SpriteLooping spriteLooping; 
     //O motivo de impedir o click durante a transição está relacionado

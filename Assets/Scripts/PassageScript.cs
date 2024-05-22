@@ -40,11 +40,11 @@ public class PassageScript : MonoBehaviour
     [SerializeField] private PolygonCollider2D newCollider;
     [SerializeField] private LockAxis axisToLock = LockAxis.NONE;
     private bool encostou = false;
-    private bool trocarCena = false;
     private int transFrame = 0;
     private GameObject blackFade;
+    [HideInInspector] public static bool trocarCena = false;
 
-    private bool defaded = false;
+    [HideInInspector] public static bool defaded = false;
     private Image image;
     private Camera secondCamera;
 
@@ -64,6 +64,8 @@ public class PassageScript : MonoBehaviour
             transFrame++;
             float alpha = Mathf.Lerp(1f, 0f, (float)transFrame / (60 * duracaoFade));
 
+            Debug.Log(image.color.a);
+
             if (image != null)
             {
                 image.color = new Color(0f, 0f, 0f, alpha);
@@ -80,8 +82,8 @@ public class PassageScript : MonoBehaviour
         {
             transFrame++;
             float alpha = Mathf.Lerp(0f, 1f, (float) transFrame / (60 * duracaoFade));
-
-            Image image = blackFade.GetComponent<Image>();
+            
+            Debug.Log(image.color.a);
 
             if (image != null)
             {
@@ -91,8 +93,8 @@ public class PassageScript : MonoBehaviour
             if (alpha >= 1f)
             {
                 trocarCena = true;
-              GameObject worldBoundary = GameObject.FindGameObjectWithTag("WorldBoundary");
-              PolygonCollider2D worldBoundaryCollider = worldBoundary.GetComponent<PolygonCollider2D>();
+                GameObject worldBoundary = GameObject.FindGameObjectWithTag("WorldBoundary");
+                PolygonCollider2D worldBoundaryCollider = worldBoundary.GetComponent<PolygonCollider2D>();
 
               if (worldBoundaryCollider != null && newCollider != null)
               {
