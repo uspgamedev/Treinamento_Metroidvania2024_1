@@ -15,6 +15,7 @@ TagManager:
   - LadoB
   - Morto
   - MenuButton
+  - Disparo
   layers:
   - Default
   - TransparentFX
