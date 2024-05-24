@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 
 //Fonte: Otávio
+
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private LayerMask enemiesLayer; //qual a layer dos inimigos;
@@ -16,6 +17,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int parryDamage;
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isParrying = false;
+    
 
     private Animator anim;
     private bool followUp = false;
@@ -38,6 +40,7 @@ public class PlayerCombat : MonoBehaviour
         {
             Parry();
         }
+        isParryingdebug = isParrying;
     }
 
     void Attack()
@@ -83,6 +86,7 @@ public class PlayerCombat : MonoBehaviour
         {
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
             bool attack = false;
+
 
             //para cada inimigo no range de ataque chame TakeDamage;
             foreach (Collider2D enemy in hitEnemies)

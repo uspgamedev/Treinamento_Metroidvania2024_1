@@ -16,6 +16,7 @@ TagManager:
   - Morto
   - MenuButton
   - Disparo
+  - TileMap
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Ground
   - Player
   - EnemyBound
-  - 
+  - Blob
   - 
   - 
   - 

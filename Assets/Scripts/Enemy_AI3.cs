@@ -35,7 +35,10 @@ public class Enemy_AI3 : MonoBehaviour
         switch (currentState){
             case State.Shootting:
                 ShootingState();
-            break;
+                break;
+            case State.Cubing:
+                CubingState();
+                break;
         }
 
         if (playerTransform.position.x > transform.position.x){
@@ -59,5 +62,23 @@ public class Enemy_AI3 : MonoBehaviour
             nextFireTime = 1f/fireRate;
         } 
         
+    }
+
+    void CubingState()
+    {
+
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player")){
+            currentState = State.Cubing;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision){
+        if (collision.CompareTag("Player")){
+            currentState = State.Shootting;
+        }
     }
 }
