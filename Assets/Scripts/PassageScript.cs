@@ -64,8 +64,6 @@ public class PassageScript : MonoBehaviour
             transFrame++;
             float alpha = Mathf.Lerp(1f, 0f, (float)transFrame / (60 * duracaoFade));
 
-            Debug.Log(image.color.a);
-
             if (image != null)
             {
                 image.color = new Color(0f, 0f, 0f, alpha);
@@ -83,8 +81,6 @@ public class PassageScript : MonoBehaviour
             transFrame++;
             float alpha = Mathf.Lerp(0f, 1f, (float) transFrame / (60 * duracaoFade));
             
-            Debug.Log(image.color.a);
-
             if (image != null)
             {
                 image.color = new Color(0f, 0f, 0f, alpha);

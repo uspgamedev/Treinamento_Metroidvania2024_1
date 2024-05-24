@@ -35,11 +35,13 @@ public class Health : MonoBehaviour
     private Animator anim;
     private float maxBlinkTime = 0.5f;
     private float blinkTime;
-
+    private GameObject pauseMenu;
     private void Start()
     {
         currentHealth = maxHealth;
         blinkTime = maxBlinkTime;
+        pauseMenu = GameObject.Find("PauseMenu");
+
 
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
@@ -133,7 +135,7 @@ public class Health : MonoBehaviour
             Fade(fadeDur, blackFade, 0f, alpha);
         }
         else {
-            if ((blackFade.color.a > 0f || t > 0f) && PassageScript.trocarCena && PassageScript.defaded) {
+            if ((blackFade.color.a > 0f || t > 0f) && PassageScript.trocarCena && PassageScript.defaded && !pauseMenu.GetComponent<HudController>().isOnPauseMenu) {
                 blackFade.color = new Color (1f, 1f, 1f, 0f);
                 alpha = 0f;
                 t = 0f;

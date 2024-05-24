@@ -14,10 +14,12 @@ public class HudController : MonoBehaviour
     }
 
     private const float NEXT_BUTTON_POSITION = 400;
+    private bool isTweening = false;
     private GameObject[] menuButtons;
     private Image blackFade;
+    private GameObject[] pauseTiles = new GameObject[2];
     private GameObject pauseText;
-    private bool isOnPauseMenu = false;
+    [HideInInspector] public bool isOnPauseMenu = false;
 
     //Usado ao inicializar o menu e toda vez que o abrimos ou fechamos ele para garantir que os elementos
     //Não permaneçam ativos enquanto não estão sendo usados.
@@ -33,43 +35,65 @@ public class HudController : MonoBehaviour
         blackFade = GameObject.Find("BlackFade").GetComponent<Image>();
         pauseText = GameObject.Find("Pause_(text)");
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton");
+        pauseTiles[0] = GameObject.Find("LadoATiles");
+        pauseTiles[1] = GameObject.Find("LadoBTiles");
 
         setButtonStatus(false);     
     }
 
     void Update(){
-        if (Input.GetKeyDown(KeyCode.Escape)){
+        if (Input.GetKeyDown(KeyCode.Escape) && !isTweening){ //Só pra garantir que o maluco não vai ficar apertando esc igual um doido durante o tween.
             if (isOnPauseMenu){
                 ContinueGame();
             }else{
                 callPauseMenu();
             }
         }
+
+        // if (isOnPauseMenu){
+        // }
     }
 
 
 
     void callPauseMenu()
     {
-        setButtonStatus(true);
         isOnPauseMenu = true;
+        setButtonStatus(true);
         Time.timeScale = 0;
 
         
         System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
 
-        doBlackFadeTween(0.2f, 0.5f);
+        doBlackFadeTween(0.4f, 0.5f);
         tweenButtons(0.1f, InOut.IN);
+        tweenTiles(0.5f, InOut.IN);
+    }
+
+    private void tweenTiles(float tweenTime, InOut direction){
+        isTweening=true;
+        int direction_multiplier = 1;
+        if (direction == InOut.OUT)
+        {
+            direction_multiplier = -1;
+        }
+
+        foreach (var tile in pauseTiles)
+        {
+            if (tile != null && tile.activeInHierarchy){
+                tile.transform.DOMoveY(tile.transform.position.y + 14 * direction_multiplier,tweenTime)
+                .SetLoops(1, LoopType.Restart)
+                .SetEase(Ease.InOutSine)
+                .OnComplete(()=> isTweening=false)
+                .SetUpdate(true);
+            }
+        }
     }
 
     private void doBlackFadeTween(float nextAlpha, float tweenTime)
     {
         // Fade the black fade image
         blackFade.DOFade(nextAlpha, tweenTime).SetEase(Ease.InOutSine).SetUpdate(true);
-
-        Color textColor = pauseText.GetComponent<Text>().color;
-        textColor.a = 1f - nextAlpha; // Inverse alpha because we're fading out
-        pauseText.GetComponent<Text>().DOColor(textColor, tweenTime * 0.85f).From().SetEase(Ease.InOutSine).SetUpdate(true);
     }
 
     private void ReturnToMenu()
@@ -80,8 +104,10 @@ public class HudController : MonoBehaviour
 
     public void QuitGame()
     {
+        if(!isTweening) return;
         doBlackFadeTween(1f, 0.35f);
-        tweenButtons(0.1f, InOut.OUT);
+        tweenButtons(0.1f, InOut.OUT);        
+        tweenTiles(0.5f, InOut.OUT);
         StartCoroutine(resetObjects(0.4f));
     }
 
@@ -122,10 +148,11 @@ public class HudController : MonoBehaviour
 
     public void ContinueGame()
     {
+        if(!isTweening) return;
         Time.timeScale = 1;
         doBlackFadeTween(0.0f, 0.35f);
         tweenButtons(0.1f, InOut.OUT);
-        StartCoroutine(resetObjects(0.55f));
-        
+        tweenTiles(0.55f, InOut.OUT);
+        StartCoroutine(resetObjects(0.6f));   
     }
 }
