@@ -33,7 +33,7 @@ public class HudController : MonoBehaviour
     }
     void Awake(){ //PauseMenu
         blackFade = GameObject.Find("BlackFade").GetComponent<Image>();
-        pauseText = GameObject.Find("Pause_(text)");
+        pauseText = GameObject.Find("Pause (text)");
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton");
         pauseTiles[0] = GameObject.Find("LadoATiles");
         pauseTiles[1] = GameObject.Find("LadoBTiles");
@@ -148,7 +148,7 @@ public class HudController : MonoBehaviour
 
     public void ContinueGame()
     {
-        if(!isTweening) return;
+        if(isTweening) return;
         Time.timeScale = 1;
         doBlackFadeTween(0.0f, 0.35f);
         tweenButtons(0.1f, InOut.OUT);
