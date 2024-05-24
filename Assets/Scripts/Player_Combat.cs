@@ -40,7 +40,6 @@ public class PlayerCombat : MonoBehaviour
         {
             Parry();
         }
-        isParryingdebug = isParrying;
     }
 
     void Attack()

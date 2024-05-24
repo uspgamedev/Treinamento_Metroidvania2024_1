@@ -18,7 +18,7 @@ public class Disparo : MonoBehaviour
     void Awake(){
         player = GameObject.FindGameObjectWithTag("Player");
         enemyRB = gameObject.GetComponent<Rigidbody2D>();
-        s
+        //s //Poderia só ter apagado, mas quis deixar esse S como recordação. 
     }
     // Update is called once per frame
     void Update()
@@ -29,7 +29,7 @@ public class Disparo : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
-       if (isParryingdebug && collision.GameObject.CompareWithTag("Player")){
+       if (collision.gameObject.tag == "Player" && player.GetComponent<PlayerCombat>().isParrying){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
             enemyRB.velocity = new Vector2(enemyRB.velocity.x*-1f, enemyRB.velocity.y*-1f); 
        } else {
            Destroy(gameObject); 
