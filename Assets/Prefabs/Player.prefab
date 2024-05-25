@@ -17,8 +17,8 @@ GameObject:
   - component: {fileID: 429157850925583163}
   - component: {fileID: 7963062247277411838}
   - component: {fileID: 4013869640577056885}
-  - component: {fileID: 5774480323708914095}
   - component: {fileID: 8400267965935359251}
+  - component: {fileID: 427976263826445060}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   healthUI: {fileID: 3606247851656254604, guid: 71730c96de7764000a814eb60ddb3972, type: 3}
-  healthSize: 0.6
+  healthSize: 1
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   immortalTime: 3
@@ -264,31 +264,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5774480323708914095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3220496064087455316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e3bbe2892102f8439528481e5fa5d21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemiesLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  disparosLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  animator: {fileID: 4013869640577056885}
-  attackPoint: {fileID: 3342923446026726715}
-  attackRange: 0.4
-  attackDamage: 1
-  parryDamage: 3
-  isAttacking: 0
-  isParrying: 0
 --- !u!114 &8400267965935359251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +278,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
+--- !u!114 &427976263826445060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220496064087455316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e3bbe2892102f8439528481e5fa5d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemiesLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  animator: {fileID: 4013869640577056885}
+  attackPoint: {fileID: 3342923446026726715}
+  attackRange: 0.4
+  attackDamage: 1
+  parryDamage: 3
+  isAttacking: 0
+  isParrying: 0
 --- !u!1 &6605021183066097082
 GameObject:
   m_ObjectHideFlags: 0

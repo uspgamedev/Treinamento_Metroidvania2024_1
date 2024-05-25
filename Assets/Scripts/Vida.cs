@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
+    
     private int currentHealth;
     [SerializeField] private int maxHealth;
     [SerializeField] private GameObject healthUI;
@@ -65,7 +66,7 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying) {
+            if ((LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" || LayerMask.LayerToName(collision.gameObject.layer) == "Disparo") && damageable && !GetComponent<PlayerCombat>().isParrying) {
 
                 Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
@@ -109,6 +110,8 @@ public class Health : MonoBehaviour
 
     void Update()
     {
+
+
         if (currentHealth > maxHealth) {
             currentHealth = maxHealth;
         }
@@ -191,8 +194,9 @@ public class Health : MonoBehaviour
         StartCoroutine(Blink());
 
         yield return new WaitForSeconds(immortalTime);
-        
-        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
+        if (enemy != null){
+            Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
+        }
 
         damageable = true;
     }

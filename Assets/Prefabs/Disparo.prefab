@@ -99,7 +99,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 640
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 1855
@@ -173,3 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   enemyRB: {fileID: 0}
+  Timer: 0
+  projectileSpeed: 5
+  direction: 1
+  parried: 0

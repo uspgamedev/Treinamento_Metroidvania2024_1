@@ -9,11 +9,10 @@ public class Enemy_AI3 : MonoBehaviour
 
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
-    public float projectileSpeed = 5f;
-    public float fireRate = 1f;
     public float direction;
     [SerializeField] private Transform playerTransform;
     private float nextFireTime;
+    public float fireRate = 1f;
 
 
     private enum State {
@@ -54,11 +53,7 @@ public class Enemy_AI3 : MonoBehaviour
     {
         if (nextFireTime < 0){
             GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
-            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.velocity = new Vector2(projectileSpeed * direction, 0f);
-            }
+            
             nextFireTime = 1f/fireRate;
         } 
         
@@ -79,6 +74,13 @@ public class Enemy_AI3 : MonoBehaviour
     void OnTriggerExit2D(Collider2D collision){
         if (collision.gameObject.tag == "Player"){
             currentState = State.Shootting;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision){
+        if (collision.gameObject.tag == "Disparo" && collision.gameObject.GetComponent<Disparo>().parried){
+            Destroy(gameObject);
+            //Destroy(collision.gameObject);
         }
     }
 }
