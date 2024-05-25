@@ -71,13 +71,13 @@ public class Enemy_AI3 : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")){
+        if (collision.gameObject.tag == "Player"){
             currentState = State.Cubing;
         }
     }
 
     void OnTriggerExit2D(Collider2D collision){
-        if (collision.CompareTag("Player")){
+        if (collision.gameObject.tag == "Player"){
             currentState = State.Shootting;
         }
     }

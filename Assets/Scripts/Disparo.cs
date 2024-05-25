@@ -8,6 +8,7 @@ public class Disparo : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private Rigidbody2D enemyRB;
+    public float Timer;
 
     // Start is called before the first frame update
     void Start()
@@ -23,14 +24,16 @@ public class Disparo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Timer -= Time.deltaTime;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
-       if (collision.gameObject.tag == "Player" && player.GetComponent<PlayerCombat>().isParrying){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
-            enemyRB.velocity = new Vector2(enemyRB.velocity.x*-1f, enemyRB.velocity.y*-1f); 
+       
+       if (collision.gameObject.tag == "Player" && player.GetComponent<PlayerCombat>().isParrying && Timer < 0f){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
+           
+            enemyRB.velocity = new Vector2(-1f*enemyRB.velocity.x, 0f);
        } else {
            Destroy(gameObject); 
        }

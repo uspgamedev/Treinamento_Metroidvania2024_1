@@ -175,7 +175,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6204215274143909885, guid: 637a5c658f072c3449d68d75755496c6, type: 3}
   projectileSpawnPoint: {fileID: 4884208998274164273}
   projectileSpeed: 5
-  fireRate: 1
+  fireRate: 0.5
   direction: 0
   playerTransform: {fileID: 0}
 --- !u!58 &6029533105493176828
@@ -212,4 +212,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 3.5
+  m_Radius: 1.5

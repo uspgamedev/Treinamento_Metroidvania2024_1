@@ -279,6 +279,9 @@ MonoBehaviour:
   enemiesLayer:
     serializedVersion: 2
     m_Bits: 8
+  disparosLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   animator: {fileID: 4013869640577056885}
   attackPoint: {fileID: 3342923446026726715}
   attackRange: 0.4

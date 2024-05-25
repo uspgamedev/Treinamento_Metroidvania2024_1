@@ -3687,10 +3687,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Verde
       objectReference: {fileID: 0}
-    - target: {fileID: 1767110704402862373, guid: 497567fbdae11e74fb9339494fed00ed, type: 3}
-      propertyPath: m_Layer
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4884208998274164273, guid: 497567fbdae11e74fb9339494fed00ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.6

@@ -96,6 +96,8 @@ public class PlayerCombat : MonoBehaviour
                 }
             }
 
+ 
+
             if (!attack) {
                 anim.SetTrigger("Parry");
                 StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;

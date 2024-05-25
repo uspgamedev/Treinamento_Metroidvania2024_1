@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4230390295521253542}
   - component: {fileID: 1572992252983304813}
   - component: {fileID: 6808211037898171650}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Disparo
   m_TagString: Disparo
   m_Icon: {fileID: 0}
@@ -99,10 +99,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 319
+    m_Bits: 1855
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -171,3 +171,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cecfbbc680f2bc4a98462b95d7c7e07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  enemyRB: {fileID: 0}
