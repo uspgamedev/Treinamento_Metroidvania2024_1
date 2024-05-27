@@ -17,7 +17,6 @@ public class HudController : MonoBehaviour
 
     private const float NEXT_BUTTON_POSITION = 250;
     private const float BUTTONS_END_Y = 175; // Posição final dos botões
-    private const float TILES_START_Y = -14; // Posição inicial das tiles
     private const float TWEEN_TIME = 0.5f;
     private const float BLACK_FADE_ALPHA_IN = 0.4f;
     private const float BLACK_FADE_ALPHA_OUT = 1f;
@@ -25,7 +24,6 @@ public class HudController : MonoBehaviour
     private const float DELAY_BEFORE_INACTIVATION = 0.6f;
     private GameObject[] menuButtons;
     private Image blackFade;
-    private GameObject[] pauseTiles = new GameObject[2];
     private GameObject pauseText;
     private Tween currentTween; // Variável para manter uma referência ao tween atual
     [HideInInspector] public bool isOnPauseMenu = false;
@@ -46,8 +44,6 @@ public class HudController : MonoBehaviour
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton")
                     .OrderByDescending(button => button.transform.position.y)
                     .ToArray();
-        pauseTiles[0] = GameObject.Find("LadoATiles");
-        pauseTiles[1] = GameObject.Find("LadoBTiles");
 
         setButtonStatus(false);
     }
@@ -75,26 +71,6 @@ public class HudController : MonoBehaviour
 
         doBlackFadeTween(BLACK_FADE_ALPHA_IN, TWEEN_TIME);
         tweenButtons(InOut.IN);
-        tweenTiles(InOut.IN);
-    }
-
-    private void tweenTiles(InOut direction)
-    {
-        float targetY = direction == InOut.IN ? TILES_START_Y : TILES_START_Y + NEXT_BUTTON_POSITION;
-
-        foreach (var tile in pauseTiles)
-        {
-            if (tile != null && tile.activeInHierarchy)
-            {
-                // Cancelar o tween anterior, se existir
-                tile.transform.DOKill();
-
-                // Iniciar o novo tween
-                currentTween = tile.transform.DOMoveY(targetY, TWEEN_TIME)
-                    .SetEase(Ease.InOutSine)
-                    .SetUpdate(true);
-            }
-        }
     }
 
     private void doBlackFadeTween(float nextAlpha, float tweenTime)
@@ -112,7 +88,6 @@ public class HudController : MonoBehaviour
     {
         doBlackFadeTween(BLACK_FADE_ALPHA_OUT, TWEEN_TIME);
         tweenButtons(InOut.OUT);
-        tweenTiles(InOut.OUT);
         StartCoroutine(resetObjects(DELAY_BEFORE_RETURN));
     }
 
@@ -163,7 +138,6 @@ public class HudController : MonoBehaviour
         Time.timeScale = 1;
         doBlackFadeTween(0.0f, TWEEN_TIME);
         tweenButtons(InOut.OUT);
-        tweenTiles(InOut.OUT);
         StartCoroutine(resetObjects(DELAY_BEFORE_INACTIVATION));
     }
 }
