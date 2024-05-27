@@ -4,6 +4,8 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using System.Linq;
 
 public class HudController : MonoBehaviour
 {
@@ -13,48 +15,57 @@ public class HudController : MonoBehaviour
         OUT
     }
 
-    private const float NEXT_BUTTON_POSITION = 400;
-    private bool isTweening = false;
+    private const float NEXT_BUTTON_POSITION = 250;
+    private const float BUTTONS_END_Y = 175; // Posição final dos botões
+    private const float TILES_START_Y = -14; // Posição inicial das tiles
+    private const float TWEEN_TIME = 0.5f;
+    private const float BLACK_FADE_ALPHA_IN = 0.4f;
+    private const float BLACK_FADE_ALPHA_OUT = 1f;
+    private const float DELAY_BEFORE_RETURN = 0.4f;
+    private const float DELAY_BEFORE_INACTIVATION = 0.6f;
     private GameObject[] menuButtons;
     private Image blackFade;
     private GameObject[] pauseTiles = new GameObject[2];
     private GameObject pauseText;
+    private Tween currentTween; // Variável para manter uma referência ao tween atual
     [HideInInspector] public bool isOnPauseMenu = false;
 
-    //Usado ao inicializar o menu e toda vez que o abrimos ou fechamos ele para garantir que os elementos
-    //Não permaneçam ativos enquanto não estão sendo usados.
-
-    private void setButtonStatus(bool status){
+    private void setButtonStatus(bool status)
+    {
         pauseText.SetActive(status);
         foreach (var button in menuButtons)
         {
             button.SetActive(status);
         }
     }
-    void Awake(){ //PauseMenu
+
+    void Awake()
+    {
         blackFade = GameObject.Find("BlackFade").GetComponent<Image>();
         pauseText = GameObject.Find("Pause (text)");
-        menuButtons = GameObject.FindGameObjectsWithTag("MenuButton");
+        menuButtons = GameObject.FindGameObjectsWithTag("MenuButton")
+                    .OrderByDescending(button => button.transform.position.y)
+                    .ToArray();
         pauseTiles[0] = GameObject.Find("LadoATiles");
         pauseTiles[1] = GameObject.Find("LadoBTiles");
 
-        setButtonStatus(false);     
+        setButtonStatus(false);
     }
 
-    void Update(){
-        if (Input.GetKeyDown(KeyCode.Escape) && !isTweening){ //Só pra garantir que o maluco não vai ficar apertando esc igual um doido durante o tween.
-            if (isOnPauseMenu){
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isOnPauseMenu)
+            {
                 ContinueGame();
-            }else{
+            }
+            else
+            {
                 callPauseMenu();
             }
         }
-
-        // if (isOnPauseMenu){
-        // }
     }
-
-
 
     void callPauseMenu()
     {
@@ -62,37 +73,32 @@ public class HudController : MonoBehaviour
         setButtonStatus(true);
         Time.timeScale = 0;
 
-        
-        System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
-
-        doBlackFadeTween(0.4f, 0.5f);
-        tweenButtons(0.1f, InOut.IN);
-        tweenTiles(0.5f, InOut.IN);
+        doBlackFadeTween(BLACK_FADE_ALPHA_IN, TWEEN_TIME);
+        tweenButtons(InOut.IN);
+        tweenTiles(InOut.IN);
     }
 
-    private void tweenTiles(float tweenTime, InOut direction){
-        isTweening=true;
-        int direction_multiplier = 1;
-        if (direction == InOut.OUT)
-        {
-            direction_multiplier = -1;
-        }
+    private void tweenTiles(InOut direction)
+    {
+        float targetY = direction == InOut.IN ? TILES_START_Y : TILES_START_Y + NEXT_BUTTON_POSITION;
 
         foreach (var tile in pauseTiles)
         {
-            if (tile != null && tile.activeInHierarchy){
-                tile.transform.DOMoveY(tile.transform.position.y + 14 * direction_multiplier,tweenTime)
-                .SetLoops(1, LoopType.Restart)
-                .SetEase(Ease.InOutSine)
-                .OnComplete(()=> isTweening=false)
-                .SetUpdate(true);
+            if (tile != null && tile.activeInHierarchy)
+            {
+                // Cancelar o tween anterior, se existir
+                tile.transform.DOKill();
+
+                // Iniciar o novo tween
+                currentTween = tile.transform.DOMoveY(targetY, TWEEN_TIME)
+                    .SetEase(Ease.InOutSine)
+                    .SetUpdate(true);
             }
         }
     }
 
     private void doBlackFadeTween(float nextAlpha, float tweenTime)
     {
-        // Fade the black fade image
         blackFade.DOFade(nextAlpha, tweenTime).SetEase(Ease.InOutSine).SetUpdate(true);
     }
 
@@ -104,43 +110,49 @@ public class HudController : MonoBehaviour
 
     public void QuitGame()
     {
-        if(!isTweening) return;
-        doBlackFadeTween(1f, 0.35f);
-        tweenButtons(0.1f, InOut.OUT);        
-        tweenTiles(0.5f, InOut.OUT);
-        StartCoroutine(resetObjects(0.4f));
+        doBlackFadeTween(BLACK_FADE_ALPHA_OUT, TWEEN_TIME);
+        tweenButtons(InOut.OUT);
+        tweenTiles(InOut.OUT);
+        StartCoroutine(resetObjects(DELAY_BEFORE_RETURN));
     }
 
-    private IEnumerator callToReturn(float timeBeforeReturn){
+    private IEnumerator callToReturn(float timeBeforeReturn)
+    {
         yield return new WaitForSeconds(timeBeforeReturn);
         setButtonStatus(false);
         ReturnToMenu();
     }
 
-    private void tweenButtons(float init_delay, InOut direction)
+    private void tweenButtons(InOut direction)
     {
-        int direction_multiplier = 1;
-        if (direction == InOut.OUT)
+        float targetY = direction == InOut.IN ? BUTTONS_END_Y : BUTTONS_END_Y - NEXT_BUTTON_POSITION;
+
+        float targetAlpha = direction == InOut.IN ? 1f : 0f; // Alpha final desejado
+
+        TextMeshProUGUI pauseTextMeshPro = pauseText.GetComponent<TextMeshProUGUI>();
+        Color targetColor = pauseTextMeshPro.color;
+        targetColor.a = targetAlpha;
+
+        pauseTextMeshPro.DOKill(); // Cancelar o tween anterior, se existir
+
+        pauseTextMeshPro.DOColor(targetColor, TWEEN_TIME).SetUpdate(true);
+
+        int numButtons = menuButtons.Length;
+        float startY = targetY + NEXT_BUTTON_POSITION / 3f * (numButtons - 1) / 2f;
+
+        for (int i = 0; i < numButtons; i++)
         {
-            direction_multiplier = -direction_multiplier;
-        }
-        float delay = init_delay;
-        pauseText.transform.DOMoveY(pauseText.transform.position.y + NEXT_BUTTON_POSITION * direction_multiplier, 0.5f)
-            .SetDelay(init_delay/2)
-            .SetUpdate(true)
-            .SetEase(Ease.InOutSine);
-        foreach (var button in menuButtons)
-        {
-            button.transform.DOMoveY(button.transform.position.y + NEXT_BUTTON_POSITION * direction_multiplier, 0.5f)
-                .SetDelay(delay)
-                .SetLoops(1, LoopType.Restart)
+            float offsetY = NEXT_BUTTON_POSITION / 2f * i;
+            var buttonTransform = menuButtons[i].transform;
+            buttonTransform.DOKill(); // Cancelar o tween anterior, se existir
+            buttonTransform.DOMoveY(startY - offsetY, TWEEN_TIME)
                 .SetEase(Ease.InOutSine)
                 .SetUpdate(true);
-            delay += 0.1f;
         }
     }
     
-    private IEnumerator resetObjects(float timeBeforeInactivation){
+    private IEnumerator resetObjects(float timeBeforeInactivation)
+    {
         yield return new WaitForSeconds(timeBeforeInactivation);
         isOnPauseMenu = false;
         setButtonStatus(false);
@@ -148,11 +160,10 @@ public class HudController : MonoBehaviour
 
     public void ContinueGame()
     {
-        if(isTweening) return;
         Time.timeScale = 1;
-        doBlackFadeTween(0.0f, 0.35f);
-        tweenButtons(0.1f, InOut.OUT);
-        tweenTiles(0.55f, InOut.OUT);
-        StartCoroutine(resetObjects(0.6f));   
+        doBlackFadeTween(0.0f, TWEEN_TIME);
+        tweenButtons(InOut.OUT);
+        tweenTiles(InOut.OUT);
+        StartCoroutine(resetObjects(DELAY_BEFORE_INACTIVATION));
     }
 }
