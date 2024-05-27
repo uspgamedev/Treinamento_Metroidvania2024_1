@@ -26,6 +26,7 @@ public class Enemy_AI3 : MonoBehaviour
     void Start()
     {
         currentState = State.Shootting;   
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame

@@ -62,7 +62,7 @@ public class Disparo : MonoBehaviour
            projectileSpeed *= -1f; 
            parried = true;
        } else {
-           if (collision.gameObject.tag == "Blob"){
+           if (collision.gameObject.tag == "Blob" && parried){
                 Destroy(collision.gameObject); 
            }
            Destroy(gameObject);
