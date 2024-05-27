@@ -17,6 +17,7 @@ TagManager:
   - MenuButton
   - Disparo
   - TileMap
+  - Blob
   layers:
   - Default
   - TransparentFX

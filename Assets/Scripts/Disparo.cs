@@ -23,7 +23,7 @@ public class Disparo : MonoBehaviour
     }
 
     void Awake(){
-        Timer = 0.1f;
+        Timer = 0.2f;
         
         player = GameObject.FindGameObjectWithTag("Player");
         enemyRB = gameObject.GetComponent<Rigidbody2D>();
@@ -40,7 +40,7 @@ public class Disparo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Timer -= Time.deltaTime;
+        //Timer -= Time.deltaTime;
         parry = player.GetComponent<PlayerCombat>().isParrying;
 
         Move();
@@ -57,17 +57,27 @@ public class Disparo : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
        
-       if (collision.gameObject.tag == "Player" && parry && Timer < 0f && parryable){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
+       
+       if (collision.gameObject.tag == "Player" && parry && parryable){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
            projectileSpeed *= -1f; 
            parried = true;
-           Timer = 0.1f;
        } else {
-           Destroy(gameObject); 
-       }   
+           if (collision.gameObject.tag == "Blob"){
+                Destroy(collision.gameObject); 
+           }
+           Destroy(gameObject);
+       }  
     }
 
     private void Move(){
         enemyRB.velocity = new Vector2(direction*projectileSpeed, 0f);
     }
+
+    /*private void OnTriggerEnter2D(Collider2D collision){
+        if (collision.gameObject.tag=="Blob" && parried){
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+        }
+    }*/
 }
 
