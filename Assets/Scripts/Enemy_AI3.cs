@@ -9,10 +9,10 @@ public class Enemy_AI3 : MonoBehaviour
 
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
-    public float direction;
+    private float direction;
     [SerializeField] private Transform playerTransform;
     private float nextFireTime;
-    public float fireRate = 1f;
+    private float fireRate = 1f;
 
 
     private enum State {
@@ -26,6 +26,7 @@ public class Enemy_AI3 : MonoBehaviour
     void Start()
     {
         currentState = State.Shootting;   
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -52,7 +53,7 @@ public class Enemy_AI3 : MonoBehaviour
     void ShootingState()
     {
         if (nextFireTime < 0){
-            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+            GameObject projectile = Instantiate(projectilePrefab, new Vector2(projectileSpawnPoint.position.x + direction, projectileSpawnPoint.position.y), projectileSpawnPoint.rotation);
             
             nextFireTime = 1f/fireRate;
         } 
@@ -76,11 +77,5 @@ public class Enemy_AI3 : MonoBehaviour
             currentState = State.Shootting;
         }
     }
-
-    void OnCollisionEnter2D(Collision2D collision){
-        if (collision.gameObject.tag == "Disparo" && collision.gameObject.GetComponent<Disparo>().parried){
-            Destroy(gameObject);
-            //Destroy(collision.gameObject);
-        }
-    }
+    
 }

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6029533105493176828}
   m_Layer: 9
   m_Name: Verde
-  m_TagString: Untagged
+  m_TagString: Blob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -174,9 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6204215274143909885, guid: 637a5c658f072c3449d68d75755496c6, type: 3}
   projectileSpawnPoint: {fileID: 4884208998274164273}
-  direction: 0
-  playerTransform: {fileID: 0}
-  fireRate: 0.5
+  playerTransform: {fileID: 6238197152709428951, guid: c44bdabfa5efb3940ab8c169a3662004, type: 3}
 --- !u!58 &6029533105493176828
 CircleCollider2D:
   m_ObjectHideFlags: 0
