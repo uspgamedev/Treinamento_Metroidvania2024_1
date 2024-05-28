@@ -31,6 +31,7 @@ public class PassageScript : MonoBehaviour
         AUTO //Se AUTO, então a posição da camera é decidida com base na posição do player (geralmente não é problema, com exceção de salas em que as portas ficam em alturas diferentes.)
     }
 
+    [SerializeField] private BoxCollider2D boxReference;
     [SerializeField] private NextDirection nextPositionPlayer;
     // [SerializeField] private bool shouldFlip; // Deixando comentado apenas porque acho que isso não vai ser nescessário.
     // Mas qualquer coisa, tá ai um lembrete.
@@ -47,6 +48,7 @@ public class PassageScript : MonoBehaviour
     [HideInInspector] public static bool defaded = false;
     private Image image;
     private Camera secondCamera;
+    private GameObject player;
 
 
     private void Start()
@@ -55,6 +57,7 @@ public class PassageScript : MonoBehaviour
         secondCamera = GameObject.FindGameObjectWithTag("SecondCamera").GetComponent<Camera>();
         image = blackFade.GetComponent<Image>();
         resetVariables();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void FixedUpdate()
@@ -157,16 +160,13 @@ public class PassageScript : MonoBehaviour
         }
     }
 
-    private const float constantPosition = 1f; //Distância entre a porta e o próximo spawn do player
+    private const float constantPosition = 3f; //Distância entre a porta e o próximo spawn do player
 
     private void updatePlayerPosition()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Vector3 playerPosition = player.transform.position;
-
-        BoxCollider2D boxReference = GetComponent<BoxCollider2D>();
         Vector3 nextPosition = player.transform.position;
 
+        Debug.Log(boxReference.offset.x);
 
         switch (nextPositionPlayer)
         {
@@ -185,8 +185,6 @@ public class PassageScript : MonoBehaviour
                 break;
         }
 
-        playerPosition = nextPosition;
-
         if (nextPositionPlayer == NextDirection.UP)
         {
             Rigidbody2D playerRigidbody = player.GetComponent<Rigidbody2D>();
@@ -195,7 +193,7 @@ public class PassageScript : MonoBehaviour
             playerRigidbody.velocity = newVelocity;
             player.transform.localScale = new Vector3(1, 1, 1);
         }
-        player.transform.position = playerPosition;
+        player.transform.position = nextPosition;
     }
 
     private Vector2 CalculateLeftPosition(Vector2[] points)
@@ -286,7 +284,7 @@ public class PassageScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && image.color.a == 0)
+        if (collision.CompareTag("Player") && image.color.a <= 5)
         {
             encostou = true;
         }

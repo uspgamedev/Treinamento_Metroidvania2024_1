@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     
-    private int currentHealth;
+    [HideInInspector] public int currentHealth;
     [SerializeField] private int maxHealth;
     [SerializeField] private GameObject healthUI;
     [SerializeField] private float healthSize = 1f;
@@ -37,11 +37,13 @@ public class Health : MonoBehaviour
     private float maxBlinkTime = 0.5f;
     private float blinkTime;
     private GameObject pauseMenu;
+    private GameObject gameOverMenu;
     private void Start()
     {
         currentHealth = maxHealth;
         blinkTime = maxBlinkTime;
         pauseMenu = GameObject.Find("PauseMenu");
+        gameOverMenu = GameObject.Find("GameOverMenu");
 
 
         hpSprites = new Image[maxHealth];
@@ -134,11 +136,11 @@ public class Health : MonoBehaviour
             }
         }
 
-        if (toFade) {
+        if (toFade && currentHealth >= 1) {
             Fade(fadeDur, blackFade, 0f, alpha);
         }
         else {
-            if ((blackFade.color.a > 0f || t > 0f) && PassageScript.trocarCena && PassageScript.defaded && !pauseMenu.GetComponent<HudController>().isOnPauseMenu) {
+            if ((blackFade.color.a > 0f || t > 0f) && PassageScript.trocarCena && PassageScript.defaded && !pauseMenu.GetComponent<HudController>().isOnPauseMenu && !gameOverMenu.GetComponent<GameOverMenu>().isGameOver) {
                 blackFade.color = new Color (1f, 1f, 1f, 0f);
                 alpha = 0f;
                 t = 0f;
