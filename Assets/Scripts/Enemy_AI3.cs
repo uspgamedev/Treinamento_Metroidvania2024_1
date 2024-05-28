@@ -14,6 +14,11 @@ public class Enemy_AI3 : MonoBehaviour
     private float nextFireTime;
     private float fireRate = 1f;
 
+    private float Timer =0f;
+
+    [SerializeField] private Transform[] positions;
+    private int k=0;
+
 
     private enum State {
         Cubing,
@@ -27,6 +32,7 @@ public class Enemy_AI3 : MonoBehaviour
     {
         currentState = State.Shootting;   
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+        StartCoroutine(TrocarPosicao());
     }
 
     // Update is called once per frame
@@ -48,6 +54,26 @@ public class Enemy_AI3 : MonoBehaviour
         }
 
         nextFireTime -= Time.deltaTime;
+        Timer -= Time.deltaTime;
+
+        
+    }
+
+    private IEnumerator TrocarPosicao() {
+        yield return new WaitForSeconds(Random.Range(10, 15));
+
+        if (k<positions.Length-1){
+            k = k+1;
+        } else {
+            k=0;
+        }
+
+        transform.position = positions[k].position;
+
+        if (currentState != State.Cubing){
+            StartCoroutine(TrocarPosicao());
+        }
+        
     }
 
     void ShootingState()
@@ -67,6 +93,7 @@ public class Enemy_AI3 : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        Timer = 3f;
         if (collision.gameObject.tag == "Player"){
             currentState = State.Cubing;
         }
@@ -75,6 +102,10 @@ public class Enemy_AI3 : MonoBehaviour
     void OnTriggerExit2D(Collider2D collision){
         if (collision.gameObject.tag == "Player"){
             currentState = State.Shootting;
+        }
+
+        if (Timer <=0f){
+        StartCoroutine(TrocarPosicao());
         }
     }
     
