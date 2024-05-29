@@ -140,8 +140,8 @@ public class Health : MonoBehaviour
             Fade(fadeDur, blackFade, 0f, alpha);
         }
         else {
-            if ((blackFade.color.a > 0f || t > 0f) && PassageScript.trocarCena && PassageScript.defaded && !pauseMenu.GetComponent<HudController>().isOnPauseMenu && !gameOverMenu.GetComponent<GameOverMenu>().isGameOver) {
-                blackFade.color = new Color (1f, 1f, 1f, 0f);
+            if ((blackFade.color.a > 0f || t > 0f) && !pauseMenu.GetComponent<HudController>().isOnPauseMenu && !gameOverMenu.GetComponent<GameOverMenu>().isGameOver) {
+                blackFade.color = new Color (0f, 0f, 0f, 0f);
                 alpha = 0f;
                 t = 0f;
                 min = 0f;
