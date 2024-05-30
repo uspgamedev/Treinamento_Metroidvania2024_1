@@ -30,7 +30,7 @@ TagManager:
   - EnemyBound
   - Blob
   - Disparo
-  - 
+  - HpPickup
   - 
   - PostProcessing
   - 

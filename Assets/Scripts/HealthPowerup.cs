@@ -39,8 +39,8 @@ public class HealthPowerup : MonoBehaviour
     IEnumerator HpCollect()
     {
         healthScript.HealthUp();
-        healthScript.GetComponent<SimpleFlash>().Flash(flashColor);
-        hpObject.GetComponent<SimpleFlash>().Flash(flashColor);
+        healthScript.GetComponent<SimpleFlash>().Flash(Color.green);
+        hpObject.GetComponent<SimpleFlash>().Flash(Color.green);
 
         yield return new WaitForSeconds(0.125f);
 

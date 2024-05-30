@@ -210,6 +210,8 @@ MonoBehaviour:
   stunCooldownTime: 5
   currentStun: 0
   notStunned: 1
+  hpCollect: {fileID: 3346471796626931006, guid: b6027e763f3fa4332ab6446e4d6e87ac, type: 3}
+  dropChance: 0.5
 --- !u!114 &7361905325962953329
 MonoBehaviour:
   m_ObjectHideFlags: 0
