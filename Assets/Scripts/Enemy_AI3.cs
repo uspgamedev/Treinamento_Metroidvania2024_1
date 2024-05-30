@@ -12,7 +12,7 @@ public class Enemy_AI3 : MonoBehaviour
     private float direction;
     [SerializeField] private Transform playerTransform;
     private float nextFireTime;
-    private float fireRate = 1f;
+    [SerializeField] private float fireRate = 1f;
 
     private float Timer =0f;
 
@@ -60,7 +60,7 @@ public class Enemy_AI3 : MonoBehaviour
     }
 
     private IEnumerator TrocarPosicao() {
-        yield return new WaitForSeconds(Random.Range(10, 15));
+        yield return new WaitForSeconds(Random.Range(5, 15));
 
         if (k<positions.Length-1){
             k = k+1;
