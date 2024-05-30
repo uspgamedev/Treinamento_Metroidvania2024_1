@@ -1,31 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class TentativaCamera : MonoBehaviour
 {
-    [SerializeField] private GameObject lacamera;
-    // Start is called before the first frame update
+    private GameObject virtualCam;
+
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        virtualCam = transform.GetChild(0).gameObject;
     }
 
     void OnTriggerEnter2D (Collider2D coll)
     {
-        lacamera = transform.GetChild(0).gameObject;
-        lacamera.SetActive(!lacamera.activeInHierarchy);
+        if (coll.tag == "Player" && !virtualCam.activeInHierarchy) {
+            virtualCam.SetActive(true);
+        }
     }
 
     void OnTriggerExit2D (Collider2D coll)
     {
-        lacamera = transform.GetChild(0).gameObject;
-        lacamera.SetActive(!lacamera.activeInHierarchy);
+        if (coll.tag == "Player") {
+            virtualCam.SetActive(false);
+        }
     }
 }

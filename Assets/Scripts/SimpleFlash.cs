@@ -12,7 +12,7 @@ public class SimpleFlash : MonoBehaviour
         [SerializeField] private Material flashMaterial;
 
         [Tooltip("Duration of the flash.")]
-        [SerializeField] private float duration;
+        [SerializeField] public float duration;
 
         #endregion
         #region Private Fields

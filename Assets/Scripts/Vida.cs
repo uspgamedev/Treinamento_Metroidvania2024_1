@@ -112,11 +112,13 @@ public class Health : MonoBehaviour
 
     void Update()
     {
-
+        // Debug.Log(currentHealth);
 
         if (currentHealth > maxHealth) {
             currentHealth = maxHealth;
         }
+
+        // Debug.Log(hpSprites.Length);
         
 
         for (int i = 0; i < hpSprites.Length; i++)
@@ -128,12 +130,12 @@ public class Health : MonoBehaviour
                 hpSprites[i].sprite = emptyHeart;
             }
 
-            if (i < maxHealth) {
-                hpSprites[i].enabled = true;
-            }
-            else {
-                hpSprites[i].enabled = false;
-            }
+            // if (i < maxHealth) {
+            //     hpSprites[i].enabled = true;
+            // }
+            // else {
+            //     hpSprites[i].enabled = false;
+            // }
         }
 
         if (toFade && currentHealth >= 1) {
@@ -223,6 +225,10 @@ public class Health : MonoBehaviour
 
     public void HealthUp()
     {
+        foreach (Image sprite in hpSprites) {
+            Destroy(sprite.gameObject);
+        }
+        
         hpSprites = new Image[maxHealth + 1];
         
         for (int i = 0; i < maxHealth + 1; i++) {
@@ -230,6 +236,16 @@ public class Health : MonoBehaviour
         }
 
         maxHealth++;
+        currentHealth = maxHealth;
+    }
+
+    public void HealthRestore(int amount)
+    {
+        if (currentHealth < maxHealth) {
+            currentHealth += amount;
+            hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("HealthRecovered");
+        }
+        flashScript.Flash(Color.green);
     }
 
     private void InstantiateHealth(int index)
