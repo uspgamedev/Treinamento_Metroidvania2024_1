@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public class MainMenuButton : MonoBehaviour
 {
     private const float NEXT_BUTTON_POSITION = 360;
     private GameObject[] menuButtons;    
     private SpriteLooping spriteLooping; 
+    private Light2D backLight;
     //O motivo de impedir o click durante a transição está relacionado
     //A uma animação de transição especialmente para o Tutorial e New Game
     //Mas isso é coisa que faço depois.
     void Start()
     {
+        backLight = GameObject.Find("BackLight").GetComponent<Light2D>();
         spriteLooping = FindObjectOfType<SpriteLooping>();
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton");
         System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.x.CompareTo(button1.transform.position.x));
@@ -27,6 +30,7 @@ public class MainMenuButton : MonoBehaviour
                 .SetEase(Ease.InOutSine);
             delay += 0.35f; 
         }
+        DOTween.To(() => backLight.intensity, (x) => backLight.intensity = x, 2f, 2.5f);
     }
     public void StartGame()
     {

@@ -37,6 +37,8 @@ public class Player_Movement : MonoBehaviour
     private bool onGroundRec = false;
     private LayerMask groundLayer;
 
+    private SupportScript support;
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +48,7 @@ public class Player_Movement : MonoBehaviour
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
         groundLayer = LayerMask.NameToLayer("Ground");
+        support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         // groundLayer = GameObject.Find("MainTilemapA").layer;
     }
 
@@ -105,12 +108,12 @@ public class Player_Movement : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        if (Input.GetKeyDown(KeyCode.L) && canDash) //tem que mudar aqui se quiser mudar o botão do dash
+        if (Input.GetKeyDown(KeyCode.L) && canDash && support.temDash) //tem que mudar aqui se quiser mudar o botão do dash
         {
             StartCoroutine(Dash());
         }
 
-        if (Input.GetKeyDown(KeyCode.K) && canGancho)
+        if (Input.GetKeyDown(KeyCode.K) && canGancho && support.temGancho)
         {
             StartCoroutine(Gancho());
             StartCoroutine(vagalumeAtual.GetComponent<Vagalume>().TakeGancho());

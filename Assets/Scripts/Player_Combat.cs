@@ -22,9 +22,12 @@ public class PlayerCombat : MonoBehaviour
     private Animator anim;
     private bool followUp = false;
 
+    private SupportScript support;
+
     void Start()
     {
         anim = GetComponent<Animator>();
+        support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
     }
 
 
@@ -36,7 +39,7 @@ public class PlayerCombat : MonoBehaviour
             Attack();
         }
 
-        if (Input.GetKeyDown(KeyCode.K) && !GetComponent<Player_Movement>().canGancho) //tem que mudar esse botao para mudar o botao do parry
+        if (Input.GetKeyDown(KeyCode.K) && !GetComponent<Player_Movement>().canGancho && support.temParry) //tem que mudar esse botao para mudar o botao do parry
         {
             Parry();
         }

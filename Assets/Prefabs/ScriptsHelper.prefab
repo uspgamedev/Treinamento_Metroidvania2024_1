@@ -76,4 +76,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  ladoInicial: 1
+  ladoInicial: 0
+  skillsIniciais: -1
+  frameRate: 60
+  temParry: 0
+  temDash: 0
+  temGancho: 0
