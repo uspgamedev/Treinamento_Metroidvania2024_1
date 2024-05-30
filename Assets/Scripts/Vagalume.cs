@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Vagalume : MonoBehaviour
 {
     private Transform child;
+    private new Light2D light;
     private SpriteRenderer spriteRenderer;
     private SimpleFlash flashScript;
 
@@ -30,6 +32,7 @@ public class Vagalume : MonoBehaviour
     void Start()
     {
         child = transform.GetChild(0);
+        light = child.GetChild(0).GetComponent<Light2D>();
         spriteRenderer = child.GetComponent<SpriteRenderer>();
         flashScript = child.GetComponent<SimpleFlash>();
     }
@@ -62,11 +65,13 @@ public class Vagalume : MonoBehaviour
         if (toBlue) {
             flashScript.Flash(blueColor);
             spriteRenderer.sprite = blueSprite;
+            light.color = blueColor;
         }
         
         else {
             flashScript.Flash(orangeColor);
             spriteRenderer.sprite = orangeSprite;
+            light.color = orangeColor;
         }
     }
 
