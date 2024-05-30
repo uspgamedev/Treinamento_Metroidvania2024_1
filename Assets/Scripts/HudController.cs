@@ -27,6 +27,7 @@ public class HudController : MonoBehaviour
     private GameObject pauseText;
     private Tween currentTween; // Variável para manter uma referência ao tween atual
     [HideInInspector] public bool isOnPauseMenu = false;
+    private GameObject gameOverMenu;
 
     private void setButtonStatus(bool status)
     {
@@ -45,12 +46,13 @@ public class HudController : MonoBehaviour
                     .OrderByDescending(button => button.transform.position.y)
                     .ToArray();
 
+        gameOverMenu = GameObject.Find("GameOverMenu");
         setButtonStatus(false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!gameOverMenu.GetComponent<GameOverMenu>().isGameOver && Input.GetKeyDown(KeyCode.Escape))
         {
             if (isOnPauseMenu)
             {

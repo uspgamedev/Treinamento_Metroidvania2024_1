@@ -652,9 +652,25 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2390777399697245194, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_TagString
+      value: GameOverButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3017301516997966836, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_TagString
+      value: GameOverButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3312154342545571998, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitGame
+      objectReference: {fileID: 0}
     - target: {fileID: 3952369478375100843, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: m_Name
       value: CameraHandler
+      objectReference: {fileID: 0}
+    - target: {fileID: 5213317393804503159, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartGame
       objectReference: {fileID: 0}
     - target: {fileID: 5251169975964608453, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
       propertyPath: bounceHeight
@@ -739,6 +755,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6632941245181252216, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
+    - {fileID: 2412647807083077007, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6bc33206deaa247a99e9d902cbd070, type: 3}

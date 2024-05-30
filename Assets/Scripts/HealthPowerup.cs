@@ -11,7 +11,8 @@ public class HealthPowerup : MonoBehaviour
 
     void Start()
     {
-        healthScript = GameObject.Find("Player").GetComponent<Health>();
+        if (GameObject.Find("Player")!= null)
+            healthScript = GameObject.Find("Player").GetComponent<Health>();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -38,8 +39,10 @@ public class HealthPowerup : MonoBehaviour
 
     IEnumerator HpCollect()
     {
-        healthScript.HealthUp();
-        healthScript.GetComponent<SimpleFlash>().Flash(flashColor);
+        if (healthScript!=null){
+            healthScript.HealthUp();
+            healthScript.GetComponent<SimpleFlash>().Flash(flashColor);
+        }
         hpObject.GetComponent<SimpleFlash>().Flash(flashColor);
 
         yield return new WaitForSeconds(0.125f);

@@ -18,6 +18,7 @@ TagManager:
   - Disparo
   - TileMap
   - Blob
+  - GameOverButton
   layers:
   - Default
   - TransparentFX
