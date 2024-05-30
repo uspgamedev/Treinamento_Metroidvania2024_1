@@ -252,7 +252,7 @@ public class Health : MonoBehaviour
     {
         GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
         hpSprites[index] = t.GetComponent<Image>();
-        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * index * healthSize * 1.5f + 32f, -32f);
-        t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
+        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(20f * index * healthSize * 1.5f + 16f, -16f);
+        t.GetComponent<RectTransform>().sizeDelta = new Vector2(30f * healthSize, 30f * healthSize);
     }
 }

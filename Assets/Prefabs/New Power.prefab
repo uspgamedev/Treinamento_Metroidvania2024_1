@@ -280,3 +280,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillAcquired: 0
+  skillText: {fileID: 0}

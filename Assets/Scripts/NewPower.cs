@@ -16,6 +16,7 @@ public class NewPower : MonoBehaviour
     private SimpleFlash flashScript;
 
     [SerializeField] private Skills skillAcquired;
+    [SerializeField] private GameObject skillText;
 
     void Start()
     {
@@ -49,7 +50,9 @@ public class NewPower : MonoBehaviour
     {
         flashScript.Flash(Color.white);
         GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(Color.white);
-        
+
+        GetComponent<Collider2D>().enabled = false;
+
         if (skillAcquired == Skills.Parry) {
             support.temParry = true;
         }
@@ -60,8 +63,15 @@ public class NewPower : MonoBehaviour
             support.temGancho = true;
         }
 
+        skillText.SetActive(true);
+
         yield return new WaitForSeconds(flashScript.duration);
 
+        Destroy(transform.GetChild(0).gameObject);
+
+        yield return new WaitForSeconds(8f);
+
+        skillText.SetActive(false);
         Destroy(gameObject);
     }
 }

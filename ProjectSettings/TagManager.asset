@@ -19,6 +19,9 @@ TagManager:
   - TileMap
   - Blob
   - GameOverButton
+  - ParryText
+  - DashText
+  - GanchoText
   layers:
   - Default
   - TransparentFX
