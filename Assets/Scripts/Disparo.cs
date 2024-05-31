@@ -12,9 +12,8 @@ public class Disparo : MonoBehaviour
     private Animator anim;
     private new Light2D light;
 
-    public float Timer;
     private bool parry;
-    public float projectileSpeed = 5f;
+    public float projectileSpeed;
     public float direction = 1f;
     public bool parried = false;
     private bool parryable = true;
@@ -22,9 +21,7 @@ public class Disparo : MonoBehaviour
 
     private Vector2 versor;
 
-
     void Awake(){
-        Timer = 0.2f;
         
         player = GameObject.FindGameObjectWithTag("Player");
         enemyRB = gameObject.GetComponent<Rigidbody2D>();
@@ -33,19 +30,11 @@ public class Disparo : MonoBehaviour
         versor = new Vector2(player.GetComponent<Transform>().position.x - transform.position.x, player.GetComponent<Transform>().position.y - transform.position.y);
         versor = versor.normalized;
 
-        /*if (player.GetComponent<Transform>().position.x > transform.position.x){
-            direction= 1f;
-        } else {
-            direction = -1f;
-        }   */ 
-            
-        
         //s //Poderia só ter apagado, mas quis deixar esse S como recordação. 
     }
 
     void Update()
     {
-        //Timer -= Time.deltaTime;
         parry = player.GetComponent<PlayerCombat>().isParrying;
 
         Move();
@@ -66,8 +55,8 @@ public class Disparo : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-       if (collision.gameObject.tag == "Player" && parry && parryable){ //Não sei exatametne o que isso faz, só reescrevi de forma a compilar.
-           projectileSpeed *= -1f; 
+       if (collision.gameObject.tag == "Player" && parry && parryable) {
+           projectileSpeed *= -2.5f; 
            parried = true;
        } else {
            if (collision.gameObject.tag == "Blob" && parried){
@@ -89,11 +78,4 @@ public class Disparo : MonoBehaviour
             light.intensity = 1.5f;
         }
     }
-
-    /*private void OnTriggerEnter2D(Collider2D collision){
-        if (collision.gameObject.tag=="Blob" && parried){
-            Destroy(collision.gameObject);
-            Destroy(gameObject);
-        }
-    }*/
 }
