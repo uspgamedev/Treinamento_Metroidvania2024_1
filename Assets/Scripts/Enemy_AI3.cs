@@ -8,157 +8,145 @@ using DG.Tweening;
 
 public class Enemy_AI3 : MonoBehaviour
 {
-
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileSpeed;
     private float direction;
     private Transform playerTransform;
-    private float nextFireTime;
-    [SerializeField] private float fireRate = 1f;
 
-    [SerializeField] private Transform[] positions;
+    private Transform[] positions;
     private Vector3[] pos;
-    private int k = 0;
+    private int index = 0;
 
     private bool cubing = false;
-    private bool shooting = false;
-    private bool changing = false;
-    private bool willChange = false;
-    private float timeSinceChange = 0f;
-    private bool changingRunning = false;
-    private bool shootRunning = false;
 
     private Animator anim;
     private new Light2D light;
 
+    [SerializeField] private float actionTime = 8.5f;
+    private float nextChoiceTimer;
+    private float baseChoiceMark = 0.5f;
+    private float choiceMark;
+    private float choice;
+
+    private Coroutine activeCoroutine;
+
     void Start()
     {   
-        pos = new Vector3[positions.Length];
+        int j = 0;
+        foreach (Transform child in transform) {
+            if (child.GetComponent<Light2D>() == null) {
+                j++;
+            }
+        }
+        positions = new Transform[j];
+        j = 0;
+        foreach (Transform child in transform) {
+            if (child.GetComponent<Light2D>() == null) {
+                positions[j] = child.transform;
+                j++;
+            }
+        }
+        pos = new Vector3[positions.Length + 1];
+        pos[0] = transform.position;
+
         for (int i = 0; i < positions.Length; i++) {
-            pos[i] = transform.position + positions[i].localPosition;
+            pos[i+1] = transform.position + positions[i].localPosition;
         }
 
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         light = transform.GetChild(0).GetComponent<Light2D>();
         anim = GetComponent<Animator>();
-        StartCoroutine(TrocarPosicao());
 
-        nextFireTime = 1f/fireRate;
+        nextChoiceTimer = actionTime;
+        choiceMark = baseChoiceMark;
     }
 
     void Update()
     {
         if (playerTransform.position.x > transform.position.x){
             direction = 1f;
+            transform.localScale = new Vector3(1f, 1f, 1f);
         } else {
             direction = -1f;
+            transform.localScale = new Vector3(-1f, 1f, 1f);
         }
 
-        nextFireTime -= Time.deltaTime;
-        timeSinceChange += Time.deltaTime;
-
-        if (nextFireTime < 0f && !shooting && !changing) {
-            StartCoroutine(Shoot());
+        nextChoiceTimer -= Time.deltaTime;
+        if (cubing) {
+            nextChoiceTimer = actionTime * 0.6f;
         }
 
-        if (timeSinceChange > 25f && !shooting && !changing && !cubing && !changingRunning) {
-            StartCoroutine(TrocarPosicao());
+        if (nextChoiceTimer < 0f) {
+            nextChoiceTimer = Random.Range(actionTime - 2f, actionTime + 2f);
+            choice = Random.Range(0f, 1f);
+
+            if (choice > choiceMark) {
+                StartNewCoroutine(Shoot());
+                choiceMark = baseChoiceMark;
+            }
+            else {
+                StartNewCoroutine(TrocarPosicao());
+                choiceMark /= 2;
+            }
         }
-        Debug.Log("changing: " + changing);
-        Debug.Log("shooting: " + shooting);
-        Debug.Log("cubing: " + cubing);
-        // if (willChange && !shooting && !changing && !cubing) {
-        //     willChange = false;
-        //     StartCoroutine(TrocarPosicao());
-        // }
     }
 
     private IEnumerator TrocarPosicao() {
-        changingRunning = true;
+        anim.SetTrigger("Teleport");
 
-        if (pos.Length > 0) {
-
-            yield return new WaitForSeconds(1.4f);
-
-            changing = false;
-
-            yield return new WaitForSeconds(Random.Range(5, 15));
-
-
-            if (pos.Length > 0 && !shooting) {
-                anim.SetTrigger("Teleport");
-                timeSinceChange = 0f;
-                changing = true;
-
-                if (k<pos.Length-1){
-                    k++;
-                } else {
-                    k=0;
-                }
-
-                Debug.Log("Tp");
-
-                yield return new WaitForSeconds(1.4f);
-                OnTeleport(false);
-
-                yield return new WaitForSeconds(2.5f);
-                OnTeleport(true);
-
-                anim.SetTrigger("Appear");
-
-                transform.position = pos[k];
-
-                if (!cubing){
-                    StartCoroutine(TrocarPosicao());
-                }
-                if (shooting) {
-                    willChange = true;
-                }
-            }
-            else {
-                willChange = true;
-                changing = false;
-            }
+        index += Random.Range(1, pos.Length);
+        if (index >= pos.Length) {
+            index -= pos.Length;
         }
-        changingRunning = false;
+
+        yield return new WaitForSeconds(1.4f);
+        OnTeleport(false);
+
+        yield return new WaitForSeconds(2.5f);
+        OnTeleport(true);
+        anim.SetTrigger("Appear");
+
+        transform.position = pos[index];
+
+        activeCoroutine = null;
     }
 
     private IEnumerator Shoot()
     {
-        shootRunning = true;
+        anim.SetTrigger("Prepare");
+        light.gameObject.SetActive(true);
+        light.intensity = 0f;
+        DOTween.To(() => light.intensity, (x) => light.intensity = x, 1.6f, 1f);
 
-        nextFireTime = 1f/fireRate;
-        shooting = true;
+        yield return new WaitForSeconds(2f);
 
-        if (!cubing && !changing) {
+        light.intensity = 0f;
+        light.gameObject.SetActive(false);
 
-            Debug.Log("Tiro");
-            
-            anim.SetTrigger("Prepare");
-            light.gameObject.SetActive(true);
-            light.intensity = 0f;
-            DOTween.To(() => light.intensity, (x) => light.intensity = x, 1.6f, 1f);
+        anim.SetTrigger("Attack");
+        GameObject projectile = Instantiate(projectilePrefab, new Vector2(transform.position.x + direction, transform.position.y), Quaternion.identity);
+        Disparo disparo = projectile.GetComponent<Disparo>();
+        disparo.projectileSpeed = projectileSpeed;
 
-            yield return new WaitForSeconds(2f);
+        activeCoroutine = null;
+    }
 
-            light.intensity = 0f;
-            light.gameObject.SetActive(false);
-
-            if (!cubing) {
-                anim.SetTrigger("Attack");
-                GameObject projectile = Instantiate(projectilePrefab, new Vector2(transform.position.x + direction, transform.position.y), Quaternion.identity);
-                Disparo disparo = projectile.GetComponent<Disparo>();
-                disparo.projectileSpeed = projectileSpeed;
-            }
+    private void StartNewCoroutine(IEnumerator coroutine)
+    {
+        if (activeCoroutine != null)
+        {
+            StopCoroutine(activeCoroutine);
         }
-        shooting = false;
-
-        shootRunning = false;
+        if (coroutine != null)
+        {
+            activeCoroutine = StartCoroutine(coroutine);
+        }
     }
 
     private void OnTeleport(bool to) {
         GetComponent<SpriteRenderer>().enabled = to;
         GetComponent<BoxCollider2D>().enabled = to;
+        GetComponent<CircleCollider2D>().enabled = to;
         if (!to) {
             GetComponent<Rigidbody2D>().gravityScale = 0f;
         }
@@ -167,15 +155,12 @@ public class Enemy_AI3 : MonoBehaviour
         }
     }
 
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player"){
             anim.SetTrigger("Cube");
             cubing = true;
-            StopCoroutine(TrocarPosicao());
-            changing = false;
-            changingRunning = false;
+            StartNewCoroutine(null); // Stop any active coroutine
         }
     }
 
@@ -183,7 +168,6 @@ public class Enemy_AI3 : MonoBehaviour
         if (collision.gameObject.tag == "Player"){
             anim.SetTrigger("Decube");
             cubing = false;
-            shooting = false;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,11 +50,6 @@ public class Health : MonoBehaviour
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
         {
-            // GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
-            // hpSprites[i] = t.GetComponent<Image>();
-            // t.GetComponent<RectTransform>().anchoredPosition = new Vector2(65 * i * healthSize * 1.5f, 0);
-            // t.GetComponent<RectTransform>().sizeDelta = new Vector2(100f * healthSize, 100f * healthSize);
-
             InstantiateHealth(i);
         }
 
@@ -68,13 +64,22 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if ((LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" || LayerMask.LayerToName(collision.gameObject.layer) == "Disparo") && damageable && !GetComponent<PlayerCombat>().isParrying) {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying) {
 
                 Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
 
                 StartCoroutine(DamageKnockback(collision.gameObject));
+            }
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo") {
+                if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0)) {
+                    Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
+                    hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+                    currentHealth--;
+
+                    StartCoroutine(DamageKnockback(collision.gameObject));
+                }
             }
     }
 

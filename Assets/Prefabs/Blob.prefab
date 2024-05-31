@@ -176,8 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6204215274143909885, guid: 637a5c658f072c3449d68d75755496c6, type: 3}
   projectileSpeed: 5
-  fireRate: 0.1
-  positions: []
+  actionTime: 8.5
 --- !u!58 &6029533105493176828
 CircleCollider2D:
   m_ObjectHideFlags: 0
