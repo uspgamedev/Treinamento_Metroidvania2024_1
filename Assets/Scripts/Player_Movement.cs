@@ -119,7 +119,7 @@ public class Player_Movement : MonoBehaviour
             StartCoroutine(vagalumeAtual.GetComponent<Vagalume>().TakeGancho());
         }
         
-        if (rb.velocity.y > terminalVelocity) rb.velocity = (new Vector2(rb.velocity.x, terminalVelocity)); //implementa a velocidade terminal do player
+        if (Mathf.Abs(rb.velocity.y) > terminalVelocity) rb.velocity = new Vector2(rb.velocity.x, terminalVelocity); //implementa a velocidade terminal do player
 
 
         CalculateLastPos();

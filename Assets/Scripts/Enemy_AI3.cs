@@ -14,38 +14,34 @@ public class Enemy_AI3 : MonoBehaviour
     private float nextFireTime;
     [SerializeField] private float fireRate = 1f;
 
-    private float Timer =0f;
+    private float timer =0f;
 
     [SerializeField] private Transform[] positions;
+    private Vector3[] pos;
     private int k=0;
 
+    private bool cubing = false;
+    private bool shooting = false;
+    private bool changing = false;
+    private bool willChange = false;
 
-    private enum State {
-        Cubing,
-        Shootting
-    }
+    private Animator anim;
 
-    private State currentState;
-
-    // Start is called before the first frame update
     void Start()
-    {
-        currentState = State.Shootting;   
+    {   
+        pos = new Vector3[positions.Length];
+        for (int i = 0; i < positions.Length; i++) {
+            pos[i] = transform.position + positions[i].localPosition;
+        }
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+        anim = GetComponent<Animator>();
         StartCoroutine(TrocarPosicao());
+
+        Debug.Log(pos.Length);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        switch (currentState){
-            case State.Shootting:
-                ShootingState();
-                break;
-            case State.Cubing:
-                CubingState();
-                break;
-        }
 
         if (playerTransform.position.x > transform.position.x){
             direction = 1f;
@@ -54,59 +50,105 @@ public class Enemy_AI3 : MonoBehaviour
         }
 
         nextFireTime -= Time.deltaTime;
-        Timer -= Time.deltaTime;
+        timer -= Time.deltaTime;
 
-        
+        if (nextFireTime < 0f && !shooting && !changing) {
+            StartCoroutine(Shoot());
+        }
+
+        if (willChange && !shooting && !changing) {
+            willChange = false;
+            StartCoroutine(TrocarPosicao());
+        }
     }
 
     private IEnumerator TrocarPosicao() {
+
+        yield return new WaitForSeconds(1.4f);
+
+        changing = false;
+
         yield return new WaitForSeconds(Random.Range(5, 15));
-
-        if (k<positions.Length-1){
-            k = k+1;
-        } else {
-            k=0;
-        }
-
-        transform.position = positions[k].position;
-
-        if (currentState != State.Cubing){
-            StartCoroutine(TrocarPosicao());
-        }
         
-    }
+        changing = true;
 
-    void ShootingState()
-    {
-        if (nextFireTime < 0){
-            GameObject projectile = Instantiate(projectilePrefab, new Vector2(projectileSpawnPoint.position.x + direction, projectileSpawnPoint.position.y), projectileSpawnPoint.rotation);
+        Debug.Log(pos.Length);
+
+        if (pos.Length > 0 && !shooting) {
+            anim.SetTrigger("Teleport");
             
-            nextFireTime = 1f/fireRate;
-        } 
-        
+            if (k<pos.Length-1){
+                k++;
+            } else {
+                k=0;
+            }
+
+            yield return new WaitForSeconds(1.4f);
+            OnTeleport(false);
+
+            yield return new WaitForSeconds(2.5f);
+            OnTeleport(true);
+
+            anim.SetTrigger("Appear");
+
+            transform.position = pos[k];
+
+            if (!cubing){
+                StartCoroutine(TrocarPosicao());
+            }
+            if (shooting) {
+                willChange = true;
+            }
+        }
     }
 
-    void CubingState()
+    private IEnumerator Shoot()
     {
+        nextFireTime = 1f/fireRate;
+        shooting = true;
 
+        if (!cubing && !changing) {
+            anim.SetTrigger("Prepare");
+
+            yield return new WaitForSeconds(2f);
+
+            if (!cubing) {
+                anim.SetTrigger("Attack");
+                GameObject projectile = Instantiate(projectilePrefab, new Vector2(projectileSpawnPoint.position.x + direction, projectileSpawnPoint.position.y), projectileSpawnPoint.rotation);
+
+                shooting = false;
+            }
+        }
     }
+
+    private void OnTeleport(bool to) {
+        GetComponent<SpriteRenderer>().enabled = to;
+        GetComponent<BoxCollider2D>().enabled = to;
+        if (!to) {
+            GetComponent<Rigidbody2D>().gravityScale = 0f;
+        }
+        else {
+            GetComponent<Rigidbody2D>().gravityScale = 1f;
+        }
+    }
+
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Timer = 3f;
+        timer = 3f;
         if (collision.gameObject.tag == "Player"){
-            currentState = State.Cubing;
+            anim.SetTrigger("Cube");
+            cubing = true;
+            StopCoroutine(TrocarPosicao());
         }
     }
 
     void OnTriggerExit2D(Collider2D collision){
         if (collision.gameObject.tag == "Player"){
-            currentState = State.Shootting;
-        }
-
-        if (Timer <=0f){
-        StartCoroutine(TrocarPosicao());
+            anim.SetTrigger("Decube");
+            cubing = false;
+            shooting = false;
+            StartCoroutine(TrocarPosicao());
         }
     }
-    
 }
