@@ -8,7 +8,6 @@ using UnityEngine.Rendering.Universal;
 
 public class MainMenuButton : MonoBehaviour
 {
-    private const float NEXT_BUTTON_POSITION = 360;
     private GameObject[] menuButtons;    
     private SpriteLooping spriteLooping; 
     private Light2D backLight;
@@ -24,7 +23,7 @@ public class MainMenuButton : MonoBehaviour
         float delay = 0f;
         foreach (var button in menuButtons)
         {
-            button.transform.DOMoveX(button.transform.position.x + NEXT_BUTTON_POSITION, 0.5f)
+            button.transform.DOMoveX(0, 0.5f)
                 .SetDelay(delay)
                 .SetLoops(1, LoopType.Restart)
                 .SetEase(Ease.InOutSine);
