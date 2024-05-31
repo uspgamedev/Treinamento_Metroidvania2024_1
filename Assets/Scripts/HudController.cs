@@ -50,6 +50,10 @@ public class HudController : MonoBehaviour
         setButtonStatus(false);
     }
 
+    void Start(){
+        tweenButtons(InOut.OUT);
+    }
+
     void Update()
     {
         if (!gameOverMenu.GetComponent<GameOverMenu>().isGameOver && Input.GetKeyDown(KeyCode.Escape))
@@ -102,27 +106,40 @@ public class HudController : MonoBehaviour
 
     private void tweenButtons(InOut direction)
     {
-        float targetY = direction == InOut.IN ? BUTTONS_END_Y : BUTTONS_END_Y - NEXT_BUTTON_POSITION;
-
-        float targetAlpha = direction == InOut.IN ? 1f : 0f; // Alpha final desejado
-
         TextMeshProUGUI pauseTextMeshPro = pauseText.GetComponent<TextMeshProUGUI>();
         Color targetColor = pauseTextMeshPro.color;
-        targetColor.a = targetAlpha;
+        targetColor.a = direction == InOut.IN ? 1f : 0f;
 
         pauseTextMeshPro.DOKill(); // Cancelar o tween anterior, se existir
 
         pauseTextMeshPro.DOColor(targetColor, TWEEN_TIME).SetUpdate(true);
 
         int numButtons = menuButtons.Length;
-        float startY = targetY + NEXT_BUTTON_POSITION / 3f * (numButtons - 1) / 2f;
 
         for (int i = 0; i < numButtons; i++)
         {
-            float offsetY = NEXT_BUTTON_POSITION / 2f * i;
-            var buttonTransform = menuButtons[i].transform;
-            buttonTransform.DOKill(); // Cancelar o tween anterior, se existir
-            buttonTransform.DOMoveY(startY - offsetY, TWEEN_TIME)
+            var rectTransform = menuButtons[i].GetComponent<RectTransform>();
+            rectTransform.DOKill(); // Cancelar o tween anterior, se existir
+
+            Vector2 targetAnchorMin = rectTransform.anchorMin;
+            Vector2 targetAnchorMax = rectTransform.anchorMax;
+
+            if (direction == InOut.IN)
+            {
+                targetAnchorMin.y = 0.5f; 
+                targetAnchorMax.y = 0.5f; 
+            }
+            else
+            {
+                targetAnchorMin.y = -1.5f;
+                targetAnchorMax.y = -1.5f; 
+            }
+
+            rectTransform.DOAnchorMin(targetAnchorMin, TWEEN_TIME)
+                .SetEase(Ease.InOutSine)
+                .SetUpdate(true);
+
+            rectTransform.DOAnchorMax(targetAnchorMax, TWEEN_TIME)
                 .SetEase(Ease.InOutSine)
                 .SetUpdate(true);
         }
