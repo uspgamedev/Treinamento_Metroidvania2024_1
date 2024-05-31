@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class BossAi : MonoBehaviour
 {   
-    Rigidbody2D bossRB;
+    private Rigidbody2D bossRB;
+    private GameObject player;
 
-    float direction;
+
+
+    [SerializeField] private float dashSpeed = 5f;
+
+    private float direction;
 
     float Timer;
     private enum State {
@@ -20,7 +25,9 @@ public class BossAi : MonoBehaviour
     void Start()
     {
         bossRB = gameObject.GetComponent<Rigidbody2D>();
-
+        player = GameObject.Find("Player");
+        currentState = State.Idling;
+        bossRB.velocity = new Vector2(0f, 0f);
 
     }
 
@@ -36,18 +43,35 @@ public class BossAi : MonoBehaviour
                 break;
         }
 
+        if (transform.position.x < player.GetComponent<Transform>().position.x){
+            direction = 1f;
+        } else {
+            direction = -1f;
+        }
+
         Timer -= Time.deltaTime;
     }
-
+    
     void IdleState(){
-
+     
     }
 
     void DashState(){
-        Timer = 0.5f;
+        
 
         if (Timer>0f){
-            bossRB.velocity = new Vector2();
+            bossRB.velocity = new Vector2(direction*dashSpeed, 0f);
+        } else {
+            bossRB.velocity = new Vector2(0f, 0f);
+            currentState = State.Idling;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        if (collision.gameObject.tag == "Player"){
+            currentState = State.Dashing;
+            Timer = 0.5f;
+        }
+        
     }
 }
