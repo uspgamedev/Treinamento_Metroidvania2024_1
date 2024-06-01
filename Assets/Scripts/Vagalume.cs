@@ -28,6 +28,9 @@ public class Vagalume : MonoBehaviour
     private Vector3 pos;
     private Coroutine co;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem hitParticles;
+
 
     void Start()
     {
@@ -79,6 +82,8 @@ public class Vagalume : MonoBehaviour
     {
         child.GetComponent<ItemFloating>().canUpdate = false;
         yield return new WaitForSeconds(0.25f);
+        hitParticles.Play();
+
 
         if (movingChild) {
             StopCoroutine(co);
