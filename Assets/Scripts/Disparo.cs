@@ -13,13 +13,18 @@ public class Disparo : MonoBehaviour
     private new Light2D light;
 
     private bool parry;
-    public float projectileSpeed;
-    public float direction = 1f;
-    public bool parried = false;
+    [HideInInspector] public float projectileSpeed;
+    [HideInInspector] public float direction = 1f;
+    [HideInInspector] public bool parried = false;
     private bool parryable = true;
     private float blinkTime = 0.5f;
 
     private Vector2 versor;
+
+    [SerializeField] private ParticleSystem trailParticles;
+    [SerializeField] private ParticleSystem dieParticles;
+    private ParticleSystem.VelocityOverLifetimeModule partVel;
+    private ParticleSystem.VelocityOverLifetimeModule dieVel;
 
     void Awake(){
         
@@ -30,6 +35,9 @@ public class Disparo : MonoBehaviour
         versor = new Vector2(player.GetComponent<Transform>().position.x - transform.position.x, player.GetComponent<Transform>().position.y - transform.position.y);
         versor = versor.normalized;
 
+        partVel = trailParticles.velocityOverLifetime;
+        dieVel = dieParticles.velocityOverLifetime;
+
         //s //Poderia só ter apagado, mas quis deixar esse S como recordação. 
     }
 
@@ -39,9 +47,9 @@ public class Disparo : MonoBehaviour
 
         Move();
 
-        if (player.GetComponent<Transform>().localScale.x > 0 && transform.position.x - player.GetComponent<Transform>().position.x > 0) {
+        if (player.GetComponent<Transform>().localScale.x > 0 && transform.position.x > player.GetComponent<Transform>().position.x) {
             parryable = true;
-        } else if(player.GetComponent<Transform>().localScale.x < 0 && transform.position.x - player.GetComponent<Transform>().position.x < 0){
+        } else if(player.GetComponent<Transform>().localScale.x < 0 && transform.position.x < player.GetComponent<Transform>().position.x){
             parryable = true;
         } else {
             parryable = false;
@@ -51,18 +59,22 @@ public class Disparo : MonoBehaviour
             blinkTime = 0f;
             Blink();
         }
+
+        partVel.x = new ParticleSystem.MinMaxCurve(-2 * versor.x);
+        partVel.y = new ParticleSystem.MinMaxCurve(-2 * versor.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
        if (collision.gameObject.tag == "Player" && parry && parryable) {
-           projectileSpeed *= -2.5f; 
+           versor *= -2.5f; 
            parried = true;
        } else {
            if (collision.gameObject.tag == "Blob" && parried){
-                Destroy(collision.gameObject); 
+                Enemy_AI3 enemyScript = collision.gameObject.GetComponent<Enemy_AI3>();
+                enemyScript.StartNewCoroutine(enemyScript.Die());
            }
-           Destroy(gameObject);
+           StartCoroutine(Die());
        }  
     }
 
@@ -77,5 +89,25 @@ public class Disparo : MonoBehaviour
         if (light.intensity < 1.25f) {
             light.intensity = 1.5f;
         }
+    }
+
+    private IEnumerator Die() {
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        light.gameObject.SetActive(false);
+        trailParticles.gameObject.SetActive(false);
+        
+        if (versor.x > 0f) {
+            dieVel.x = new ParticleSystem.MinMaxCurve(-0.4f);
+        }
+        else {
+            dieVel.x = new ParticleSystem.MinMaxCurve(0.4f);
+        }
+
+        dieParticles.Play();
+
+        yield return new WaitForSeconds(dieParticles.main.startLifetime.constant);
+
+        Destroy(gameObject);
     }
 }

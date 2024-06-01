@@ -8,6 +8,7 @@ using DG.Tweening;
 
 public class Enemy_AI3 : MonoBehaviour
 {
+    [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileSpeed;
     private float direction;
@@ -18,10 +19,13 @@ public class Enemy_AI3 : MonoBehaviour
     private int index = 0;
 
     private bool cubing = false;
+    private bool dying = false;
 
     private Animator anim;
     private new Light2D light;
+    private SimpleFlash flashScript;
 
+    [Header("State Machine")]
     [SerializeField] private float actionTime = 8.5f;
     private float nextChoiceTimer;
     private float baseChoiceMark = 0.5f;
@@ -30,7 +34,11 @@ public class Enemy_AI3 : MonoBehaviour
 
     private Coroutine activeCoroutine;
 
-    void Start()
+    [Header("Hp Drop")]
+    [SerializeField] private GameObject hpCollect;
+    [Range(0f, 1f)] [SerializeField] private float dropChance;
+
+    void Awake()
     {   
         int j = 0;
         foreach (Transform child in transform) {
@@ -56,6 +64,11 @@ public class Enemy_AI3 : MonoBehaviour
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         light = transform.GetChild(0).GetComponent<Light2D>();
         anim = GetComponent<Animator>();
+        flashScript = GetComponent<SimpleFlash>();
+
+        if (pos.Length <= 1) {
+            baseChoiceMark = 0f;
+        }
 
         nextChoiceTimer = actionTime;
         choiceMark = baseChoiceMark;
@@ -80,7 +93,7 @@ public class Enemy_AI3 : MonoBehaviour
             nextChoiceTimer = Random.Range(actionTime - 2f, actionTime + 2f);
             choice = Random.Range(0f, 1f);
 
-            if (choice > choiceMark) {
+            if (choice >= choiceMark) {
                 StartNewCoroutine(Shoot());
                 choiceMark = baseChoiceMark;
             }
@@ -131,7 +144,7 @@ public class Enemy_AI3 : MonoBehaviour
         activeCoroutine = null;
     }
 
-    private void StartNewCoroutine(IEnumerator coroutine)
+    public void StartNewCoroutine(IEnumerator coroutine)
     {
         if (activeCoroutine != null)
         {
@@ -160,7 +173,12 @@ public class Enemy_AI3 : MonoBehaviour
         if (collision.gameObject.tag == "Player"){
             anim.SetTrigger("Cube");
             cubing = true;
-            StartNewCoroutine(null); // Stop any active coroutine
+            if (!dying) {
+                StartNewCoroutine(null);
+            }
+            if (light.intensity > 0f) {
+                light.intensity = 0f;
+            }
         }
     }
 
@@ -169,5 +187,23 @@ public class Enemy_AI3 : MonoBehaviour
             anim.SetTrigger("Decube");
             cubing = false;
         }
+    }
+
+    public IEnumerator Die() {
+        dying = true;
+        flashScript.Flash(Color.green);
+
+        float willDrop = Random.Range(0f, 1f);
+
+        if (willDrop <= dropChance) {
+            GameObject hp = Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+            hp.GetComponent<HealthRecover>().goRight = GameObject.Find("Player").transform.position.x < transform.position.x;
+        }
+
+        yield return new WaitForSeconds(0.125f);
+
+        gameObject.tag = "Morto";
+        dying = false;
+        gameObject.SetActive(false);
     }
 }

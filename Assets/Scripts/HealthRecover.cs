@@ -11,13 +11,23 @@ public class HealthRecover : MonoBehaviour
     private Rigidbody2D rb;
     private CircleCollider2D col;
 
+    [HideInInspector] public bool goRight;
+
     void Awake()
     {
         despawnTime = GetComponent<SimpleFlash>().duration;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CircleCollider2D>();
 
-        rb.velocity = new Vector2(Random.Range(-2.5f, 2.5f), Random.Range(0.5f, 2f));
+        StartCoroutine(ColliderInit());
+
+
+        if (goRight) {
+            rb.velocity = new Vector2(Random.Range(0.5f, 2.5f), Random.Range(0.5f, 2f));
+        }
+        else {
+            rb.velocity = new Vector2(Random.Range(-2.5f, -0.5f), Random.Range(0.5f, 2f));
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -49,5 +59,11 @@ public class HealthRecover : MonoBehaviour
         player.GetComponent<Health>().HealthRestore(hpRecovered);
         GetComponent<SimpleFlash>().Flash(Color.green);
         StartCoroutine(Despawn());
+    }
+
+    private IEnumerator ColliderInit() {
+        col.enabled = false;
+        yield return new WaitForSeconds(0.15f);
+        col.enabled = true;
     }
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7808271098666740088}
   - component: {fileID: 6029533105493176828}
   - component: {fileID: 5517960147953102737}
+  - component: {fileID: 3978828451639592281}
   m_Layer: 6
   m_Name: Blob
   m_TagString: Blob
@@ -177,6 +178,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6204215274143909885, guid: 637a5c658f072c3449d68d75755496c6, type: 3}
   projectileSpeed: 5
   actionTime: 8.5
+  hpCollect: {fileID: 3346471796626931006, guid: b6027e763f3fa4332ab6446e4d6e87ac, type: 3}
+  dropChance: 0.5
 --- !u!58 &6029533105493176828
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -233,6 +236,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3978828451639592281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767110704402862373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0a571ea052e4bce992b3bb86c60381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 077447a337efe4ccb94103a350bce60d, type: 2}
+  duration: 0.125
 --- !u!1 &2808016433166609495
 GameObject:
   m_ObjectHideFlags: 0

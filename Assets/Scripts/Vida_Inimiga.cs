@@ -103,12 +103,13 @@ public class Vida_Inimiga : MonoBehaviour
 
     private IEnumerator Die()
     {
-        flashScript.Flash(Color.red);
+        flashScript.Flash(Color.blue);
 
         float willDrop = Random.Range(0f, 1f);
 
         if (willDrop <= dropChance) {
-            Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+            GameObject hp = Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+            hp.GetComponent<HealthRecover>().goRight = GameObject.Find("Player").transform.position.x < transform.position.x;
         }
 
         yield return new WaitForSeconds(0.125f);
