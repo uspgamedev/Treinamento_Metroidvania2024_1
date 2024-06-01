@@ -14,6 +14,7 @@ public class Player_Movement : MonoBehaviour
     private Collision coll;
     private Animator anim;
 
+    [Header("Movement")]
     public float jumpForce = 10;
     public float speed = 50;
 
@@ -26,6 +27,8 @@ public class Player_Movement : MonoBehaviour
     [HideInInspector] public GameObject vagalumeAtual;
 
     [SerializeField] private float terminalVelocity = 24f;
+
+    [Header("Skills")]
     [SerializeField] private float dashingPower = 24f;
     [SerializeField] private float dashingTime = 0.2f;
     [SerializeField] private float dashingCooldown = 1f;
@@ -38,6 +41,10 @@ public class Player_Movement : MonoBehaviour
     private LayerMask groundLayer;
 
     private SupportScript support;
+
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem landParticle;
+    [SerializeField] private ParticleSystem jumpParticle;
 
 
     // Start is called before the first frame update
@@ -89,6 +96,7 @@ public class Player_Movement : MonoBehaviour
         {
             if (coll.onGround) { //checa se o player esta no chao
                 jump(Vector2.up);
+                PlayJump();
             }
         }
 
@@ -122,9 +130,10 @@ public class Player_Movement : MonoBehaviour
         if (Mathf.Abs(rb.velocity.y) > terminalVelocity) rb.velocity = new Vector2(rb.velocity.x, -terminalVelocity); //implementa a velocidade terminal do player
 
 
+        CalculateParticles();
+
         CalculateLastPos();
         
-        // Flip();
     }
 
     private void walk(Vector2 dir) 
@@ -197,5 +206,20 @@ public class Player_Movement : MonoBehaviour
         rb.gravityScale = tempGravity;
 
         jump(Vector2.up * ganchoForce);
+    }
+
+    private void CalculateParticles() {
+        if (!onGroundRec && coll.onGround) {
+            StartCoroutine(PlayLand());
+        }
+    }
+
+    private IEnumerator PlayLand() {
+        yield return new WaitForSeconds(0.08f);
+        landParticle.Play();
+    }
+
+    private void PlayJump() {
+        jumpParticle.Play();
     }
 }

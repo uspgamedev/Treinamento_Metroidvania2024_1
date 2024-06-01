@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3255156136623806934
 Transform:
   m_ObjectHideFlags: 0
@@ -128,9 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cecfbbc680f2bc4a98462b95d7c7e07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  enemyRB: {fileID: 0}
-  Timer: 0
   projectileSpeed: 5
   direction: 1
   parried: 0
@@ -242,7 +239,7 @@ MonoBehaviour:
   m_Intensity: 1.5
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: d9db5925cfcec02d00000000
+  m_ApplyToSortingLayers: d9db5925cfcec02d000000002573dee4
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
