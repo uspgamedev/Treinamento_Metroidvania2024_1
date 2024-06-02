@@ -27,6 +27,8 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public bool temParry = false;
     [HideInInspector] public bool temDash = false;
     [HideInInspector] public bool temGancho = false;
+
+    [HideInInspector] public Coroutine textCoroutine;
     
     void Awake()
     {

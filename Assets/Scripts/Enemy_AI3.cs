@@ -91,15 +91,18 @@ public class Enemy_AI3 : MonoBehaviour
 
         if (nextChoiceTimer < 0f) {
             nextChoiceTimer = Random.Range(actionTime - 2f, actionTime + 2f);
-            choice = Random.Range(0f, 1f);
 
-            if (choice >= choiceMark) {
-                StartNewCoroutine(Shoot());
-                choiceMark = baseChoiceMark;
-            }
-            else {
-                StartNewCoroutine(TrocarPosicao());
-                choiceMark /= 2;
+            if (PlayerClose()) {
+                choice = Random.Range(0f, 1f);
+
+                if (choice >= choiceMark) {
+                    StartNewCoroutine(Shoot());
+                    choiceMark = baseChoiceMark;
+                }
+                else {
+                    StartNewCoroutine(TrocarPosicao());
+                    choiceMark /= 2;
+                }
             }
         }
     }
@@ -205,5 +208,11 @@ public class Enemy_AI3 : MonoBehaviour
         gameObject.tag = "Morto";
         dying = false;
         gameObject.SetActive(false);
+    }
+
+    private bool PlayerClose() {
+        Vector3 vector = playerTransform.position - transform.position;
+        float magnitude = vector.magnitude;
+        return magnitude < 35f;
     }
 }
