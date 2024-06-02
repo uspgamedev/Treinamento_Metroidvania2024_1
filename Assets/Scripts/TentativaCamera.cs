@@ -6,11 +6,13 @@ using UnityEngine;
 public class TentativaCamera : MonoBehaviour
 {
     private GameObject virtualCam;
-
-
+    private Transform player;
+    
     void Start()
     {
         virtualCam = transform.GetChild(0).gameObject;
+        player = GameObject.Find("Player").transform;
+        virtualCam.GetComponent<CinemachineVirtualCamera>().Follow = player;
     }
 
     void OnTriggerEnter2D (Collider2D coll)
