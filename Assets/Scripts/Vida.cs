@@ -66,19 +66,21 @@ public class Health : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying) {
 
-                Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
-                hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
-                currentHealth--;
+                TomarDano(collision.gameObject);
+                // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
+                // hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+                // currentHealth--;
 
-                StartCoroutine(DamageKnockback(collision.gameObject));
+                // StartCoroutine(DamageKnockback(collision.gameObject));
             }
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo") {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0)) {
-                    Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
-                    hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
-                    currentHealth--;
+                    TomarDano(collision.gameObject);
+                    // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
+                    // hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+                    // currentHealth--;
 
-                    StartCoroutine(DamageKnockback(collision.gameObject));
+                    // StartCoroutine(DamageKnockback(collision.gameObject));
                 }
             }
     }
@@ -90,6 +92,14 @@ public class Health : MonoBehaviour
 
                 StartCoroutine(HazardDamage());
             }
+    }
+
+    public void TomarDano(GameObject enemy) {
+        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
+        hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+        currentHealth--;
+
+        StartCoroutine(DamageKnockback(enemy));
     }
 
     private IEnumerator HazardDamage()

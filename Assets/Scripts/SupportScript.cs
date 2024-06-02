@@ -35,6 +35,9 @@ public class SupportScript : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = frameRate;
 
+        GameObject canvas = GameObject.Find("CameraHandler").transform.Find("Canvas").gameObject;
+        canvas.GetComponent<Canvas>().enabled = true;
+
         GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
         int ia = 0;
         int ib = 0;

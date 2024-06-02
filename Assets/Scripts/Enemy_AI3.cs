@@ -37,6 +37,8 @@ public class Enemy_AI3 : MonoBehaviour
     [Header("Hp Drop")]
     [SerializeField] private GameObject hpCollect;
     [Range(0f, 1f)] [SerializeField] private float dropChance;
+    
+    [SerializeField] private GameObject deathParticles;
 
     void Awake()
     {   
@@ -202,6 +204,9 @@ public class Enemy_AI3 : MonoBehaviour
             GameObject hp = Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
             hp.GetComponent<HealthRecover>().goRight = GameObject.Find("Player").transform.position.x < transform.position.x;
         }
+
+        GameObject part = Instantiate(deathParticles, transform.position, Quaternion.identity);
+        part.GetComponent<DeathParticles>().enemy = DeathParticles.Enemy.Blob;
 
         yield return new WaitForSeconds(0.125f);
 

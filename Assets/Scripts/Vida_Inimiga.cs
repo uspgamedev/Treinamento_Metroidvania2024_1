@@ -26,6 +26,8 @@ public class Vida_Inimiga : MonoBehaviour
     [SerializeField] private GameObject hpCollect;
     [Range(0f, 1f)] [SerializeField] private float dropChance;
 
+    [SerializeField] private GameObject deathParticles;
+
     void Start()
     {
         currentStun = 0f;
@@ -103,14 +105,16 @@ public class Vida_Inimiga : MonoBehaviour
 
     private IEnumerator Die()
     {
-        flashScript.Flash(Color.blue);
+        flashScript.Flash(Color.blue - new Color(-0.25f, 0f, 0.35f, 0f));
 
         float willDrop = Random.Range(0f, 1f);
 
         if (willDrop <= dropChance) {
-            GameObject hp = Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+            GameObject hp = Instantiate(hpCollect, transform.position, Quaternion.identity);
             hp.GetComponent<HealthRecover>().goRight = GameObject.Find("Player").transform.position.x < transform.position.x;
         }
+        GameObject part = Instantiate(deathParticles, transform.position, Quaternion.identity);
+        part.GetComponent<DeathParticles>().enemy = DeathParticles.Enemy.Rat;
 
         yield return new WaitForSeconds(0.125f);
 

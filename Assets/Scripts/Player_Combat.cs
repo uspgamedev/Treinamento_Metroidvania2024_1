@@ -9,25 +9,29 @@ using UnityEngine.PlayerLoop;
 
 public class PlayerCombat : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private LayerMask enemiesLayer; //qual a layer dos inimigos;
-    [SerializeField] private Animator animator;
     [SerializeField] private Transform attackPoint; //define um ponto (um objeto) de referência para calcular o alcance do ataque;
+    [SerializeField] private ParticleSystem parryParticles;
+    private Animator anim;
+
+    [Header("Stats")]
     [SerializeField] private float attackRange; //range de ataque (perceba que ele é calculado a partir do attackPoint);
     [SerializeField] private int attackDamage; //dano de stun do ataque;
     [SerializeField] private int parryDamage;
+
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isParrying = false;
-    
-
-    private Animator anim;
     private bool followUp = false;
-
+    
     private SupportScript support;
+    private Health healthScript;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
+        healthScript = GetComponent<Health>();
     }
 
 
@@ -86,29 +90,8 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!isParrying && !isAttacking)
         {
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
-            bool attack = false;
-
-
-            //para cada inimigo no range de ataque chame TakeDamage;
-            foreach (Collider2D enemy in hitEnemies)
-            {
-                if (!enemy.GetComponent<Vida_Inimiga>().notStunned && ((transform.position.x - enemy.gameObject.transform.position.x) * transform.localScale.x) <= 0) {
-                    enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
-                    attack = true;
-                }
-            }
-
- 
-
-            if (!attack) {
-                anim.SetTrigger("Parry");
-                StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;
-            }
-            else {
-                StartCoroutine(ParryAttack());
-            }
-        
+            anim.SetTrigger("Parry");
+            StartCoroutine(OnParry()); //chama função que torna isParrying = true até que o limite de tempo entre parries passe;
         }
     }
 
@@ -125,10 +108,15 @@ public class PlayerCombat : MonoBehaviour
     {
         if (other.gameObject.tag == "enemyIsAttacking") //note que para o parry funcionar o inimigo tem que ter essa tag quando ataca;
         { 
-            if (isParrying)
-            {
-                other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
-                StartCoroutine(ParryAttack());
+            if (isParrying) {
+                if ((other.transform.position.x - transform.position.x) * transform.localScale.x > 0)
+                {
+                    other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                    StartCoroutine(ParryAttack());
+                }
+                else {
+                    healthScript.TomarDano(other.gameObject);
+                }
             }
         }
     }
@@ -145,11 +133,24 @@ public class PlayerCombat : MonoBehaviour
     public IEnumerator ParryAttack()
     {
         anim.SetTrigger("ParryAttack");
-        GetComponent<Player_Movement>().canMove2 = false;
+        UpdateParticles();
+        parryParticles.Play();
 
+        GetComponent<Player_Movement>().canMove2 = false;
+        
         yield return new WaitForSeconds(0.25f);
 
         GetComponent<Player_Movement>().canMove2 = true;
+    }
+
+    private void UpdateParticles() {
+        var vel = parryParticles.velocityOverLifetime;
+        vel.x = new ParticleSystem.MinMaxCurve(4f * transform.localScale.x);
+
+        var shape = parryParticles.shape;
+        shape.position = new Vector3(0.72f * transform.localScale.x, -0.06f, 0f);
+        shape.rotation = new Vector3(0f, 0f, 22.86f * transform.localScale.x);
+
     }
     
 }
