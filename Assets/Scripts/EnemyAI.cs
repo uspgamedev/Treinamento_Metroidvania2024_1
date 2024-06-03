@@ -154,10 +154,10 @@ public class EnemyAI : MonoBehaviour
     private void CheckSurroundings(){
         //Direita
         rightWall = Physics2D.Raycast(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, 1.33f, layerCollision);
-        Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
+        // Debug.DrawRay(new Vector2(transform.position.x + offSet.x, transform.position.y + offSet.y), Vector2.right, Color.yellow);
 
         leftWall = Physics2D.Raycast(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, 1.33f, layerCollision);
-        Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
+        // Debug.DrawRay(new Vector2(transform.position.x - offSet.x, transform.position.y + offSet.y), Vector2.left, Color.yellow);
 
         if (rightWall.collider != null) {
             enemyRB.velocity = new Vector2(-2f, 0f).normalized;
@@ -270,7 +270,7 @@ public class EnemyAI : MonoBehaviour
         if (pjDistance < 3f){
             currentState = State.Jump;
             enemyRB.velocity = new Vector2(0f, 0f);
-            Timer = 1f;
+            Timer = 1.5f;
             Timer2 = 0.5f;
         } else if (pjdirection > 0){
             direction = new Vector2(1f, 0f);

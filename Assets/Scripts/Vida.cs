@@ -77,7 +77,7 @@ public class Health : MonoBehaviour
                 // StartCoroutine(DamageKnockback(collision.gameObject));
             }
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && !onHazard) {
-                if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0)) {
+                if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
                     TomarDano(collision.gameObject);
                     // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
                     // hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");

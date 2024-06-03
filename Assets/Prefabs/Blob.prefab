@@ -176,8 +176,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6204215274143909885, guid: 637a5c658f072c3449d68d75755496c6, type: 3}
-  projectileSpeed: 5
+  projectileSpeed: 6
   actionTime: 8.5
+  onlyTeleports: 0
   hpCollect: {fileID: 3346471796626931006, guid: b6027e763f3fa4332ab6446e4d6e87ac, type: 3}
   dropChance: 0.5
   deathParticles: {fileID: 5143540793174024862, guid: 3e1c6a00851e54a0fb4b1c7a0dcbf84b, type: 3}

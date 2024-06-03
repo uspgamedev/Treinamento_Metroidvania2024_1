@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2047082542459107052}
   - component: {fileID: 4067585006184566105}
   - component: {fileID: 4788041019184438660}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SalaHorizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}

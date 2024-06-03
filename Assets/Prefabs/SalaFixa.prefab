@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 7151947890772096436}
   - component: {fileID: 463393944997664449}
   - component: {fileID: 2240450935169549954}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SalaFixa
   m_TagString: Untagged
   m_Icon: {fileID: 0}

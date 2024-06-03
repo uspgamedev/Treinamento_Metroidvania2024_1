@@ -14,8 +14,8 @@ public class Trocar_Lado : MonoBehaviour
     [SerializeField] float transTime;
     private Image whiteFade;
     private float alpha;
-    private bool toFade = false;
     private Health healthScript;
+    private SupportScript support;
 
     float min = 0f;
     float max = 1f;
@@ -36,6 +36,8 @@ public class Trocar_Lado : MonoBehaviour
         listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
 
         canChangeSides = false;
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
     }
 
     void Update()
@@ -52,7 +54,7 @@ public class Trocar_Lado : MonoBehaviour
             }
         }
 
-        if (toFade) {
+        if (support.toFadeWhite) {
             Fade(transTime, whiteFade, 1f, alpha);
             // healthScript.Fade(transTime, whiteFade, 1f, alpha);
         }
@@ -69,7 +71,7 @@ public class Trocar_Lado : MonoBehaviour
 
     private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
-        toFade = true;
+        support.toFadeWhite = true;
         canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
@@ -93,7 +95,7 @@ public class Trocar_Lado : MonoBehaviour
         yield return new WaitForSeconds(transTime/2);
 
         coll.GetComponent<Player_Movement>().canMove2 = true;
-        toFade = false;
+        support.toFadeWhite = false;
         canChangeSides = true;
     }
 

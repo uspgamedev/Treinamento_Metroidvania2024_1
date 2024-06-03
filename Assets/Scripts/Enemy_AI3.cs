@@ -27,10 +27,13 @@ public class Enemy_AI3 : MonoBehaviour
 
     [Header("State Machine")]
     [SerializeField] private float actionTime = 8.5f;
+    [SerializeField] private bool onlyTeleports = false;
+    [SerializeField] private bool shootsForward = false;
     private float nextChoiceTimer;
     private float baseChoiceMark = 0.5f;
     private float choiceMark;
     private float choice;
+    private float minPlayerDist = 35f;
 
     private Coroutine activeCoroutine;
 
@@ -74,6 +77,10 @@ public class Enemy_AI3 : MonoBehaviour
 
         nextChoiceTimer = actionTime;
         choiceMark = baseChoiceMark;
+
+        if (shootsForward) {
+            minPlayerDist *= 2;
+        }
     }
 
     void Update()
@@ -92,18 +99,28 @@ public class Enemy_AI3 : MonoBehaviour
         }
 
         if (nextChoiceTimer < 0f) {
-            nextChoiceTimer = Random.Range(actionTime - 2f, actionTime + 2f);
+            float randomDeviation = Random.Range(-2f, 2f);
+            if (shootsForward) {
+                randomDeviation = 0f;
+            }
+            nextChoiceTimer = actionTime + randomDeviation;
 
             if (PlayerClose()) {
-                choice = Random.Range(0f, 1f);
 
-                if (choice >= choiceMark) {
-                    StartNewCoroutine(Shoot());
-                    choiceMark = baseChoiceMark;
-                }
-                else {
+                if (onlyTeleports) {
                     StartNewCoroutine(TrocarPosicao());
-                    choiceMark /= 2;
+                }
+
+                else {
+                    choice = Random.Range(0f, 1f);
+                    if (choice >= choiceMark) {
+                        StartNewCoroutine(Shoot());
+                        choiceMark = baseChoiceMark;
+                    }
+                    else {
+                        StartNewCoroutine(TrocarPosicao());
+                        choiceMark /= 2;
+                    }
                 }
             }
         }
@@ -145,6 +162,7 @@ public class Enemy_AI3 : MonoBehaviour
         GameObject projectile = Instantiate(projectilePrefab, new Vector2(transform.position.x + direction, transform.position.y), Quaternion.identity);
         Disparo disparo = projectile.GetComponent<Disparo>();
         disparo.projectileSpeed = projectileSpeed;
+        disparo.shotForward = shootsForward;
 
         activeCoroutine = null;
     }
@@ -218,6 +236,6 @@ public class Enemy_AI3 : MonoBehaviour
     private bool PlayerClose() {
         Vector3 vector = playerTransform.position - transform.position;
         float magnitude = vector.magnitude;
-        return magnitude < 35f;
+        return magnitude < minPlayerDist;
     }
 }

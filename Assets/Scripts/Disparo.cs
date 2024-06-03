@@ -16,6 +16,7 @@ public class Disparo : MonoBehaviour
     [HideInInspector] public float projectileSpeed;
     [HideInInspector] public float direction = 1f;
     [HideInInspector] public bool parried = false;
+    [HideInInspector] public bool shotForward = false;
     private bool parryable = true;
     private float blinkTime = 0.5f;
 
@@ -26,6 +27,8 @@ public class Disparo : MonoBehaviour
     private ParticleSystem.VelocityOverLifetimeModule partVel;
     private ParticleSystem.VelocityOverLifetimeModule dieVel;
 
+    private List<GameObject> salas = new List<GameObject>();
+
     void Awake(){
         
         player = GameObject.FindGameObjectWithTag("Player");
@@ -33,10 +36,13 @@ public class Disparo : MonoBehaviour
         light = transform.GetChild(0).GetComponent<Light2D>();
 
         versor = new Vector2(player.GetComponent<Transform>().position.x - transform.position.x, player.GetComponent<Transform>().position.y - transform.position.y);
+
         versor = versor.normalized;
 
         partVel = trailParticles.velocityOverLifetime;
         dieVel = dieParticles.velocityOverLifetime;
+
+        StartCoroutine(AdjustTrajectory());
 
         //s //Poderia só ter apagado, mas quis deixar esse S como recordação. 
     }
@@ -77,6 +83,17 @@ public class Disparo : MonoBehaviour
            StartCoroutine(Die());
        }  
     }
+    
+    private void OnTriggerEnter2D(Collider2D coll) {
+        if (LayerMask.LayerToName(coll.gameObject.layer) == "Sala") {
+            if (!salas.Contains(coll.gameObject)) {
+                salas.Add(coll.gameObject);
+            }
+            if (salas.Count >= 2) {
+                Destroy(gameObject);
+            }
+        } 
+    }
 
     private void Move(){
         enemyRB.velocity = new Vector2(versor.x*projectileSpeed, versor.y*projectileSpeed);
@@ -109,5 +126,13 @@ public class Disparo : MonoBehaviour
         yield return new WaitForSeconds(dieParticles.main.startLifetime.constant);
 
         Destroy(gameObject);
+    }
+
+    private IEnumerator AdjustTrajectory() {
+        yield return new WaitForEndOfFrame();
+        if (shotForward) {
+            versor *= new Vector2(1f, 0f);
+            versor = versor.normalized;
+        }
     }
 }

@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 1870069548627790575}
   - component: {fileID: 8351448283948290473}
   - component: {fileID: 7146911869323373442}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SalaVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
