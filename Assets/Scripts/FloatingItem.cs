@@ -14,9 +14,12 @@ public class ItemFloating : MonoBehaviour
 
     [HideInInspector] public bool canUpdate = true;
 
+    private float heightOffset;
+
     void Awake()
     {
         startPos = transform.localPosition;
+        heightOffset = Random.Range(0f, 3f);
     }
 
 
@@ -24,7 +27,7 @@ public class ItemFloating : MonoBehaviour
     {
         if (canUpdate) {
             currentTime += Time.deltaTime;
-            sineOffset = amplitude * Mathf.Sin(frequency * currentTime) + startPos.y;
+            sineOffset = amplitude * Mathf.Sin(frequency * (currentTime + heightOffset)) + startPos.y;
             // sineOffset = amplitude * Mathf.Sin(frequency * Time.time) + startPos.y;
             transform.localPosition = new Vector3(startPos.x, sineOffset, 0f);
         }
