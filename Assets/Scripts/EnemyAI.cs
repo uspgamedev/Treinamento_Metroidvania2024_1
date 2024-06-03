@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] public RaycastHit2D rightWall;
     [SerializeField] public RaycastHit2D leftWall;
     [SerializeField] public RaycastHit2D visionEnemy;
+    public bool damaged = false;
 
     
     private enum State {
@@ -133,6 +134,11 @@ public class EnemyAI : MonoBehaviour
 
         if (gameObject.tag == "enemyIsAttacking" && currentState != State.Jump) {
             gameObject.tag = "Inimigo";
+        }
+
+        if (damaged){
+            currentState = State.Attack;
+            damaged = false;
         }
     }
 
@@ -324,7 +330,7 @@ public class EnemyAI : MonoBehaviour
             {
                 enemyRB.velocity = new Vector2(0f, 0f);
                 Timer2 = 1.5f;
-                if (pjDistance > 3f){
+                if (pjDistance > 4f){
                 currentState = State.Idling;
                 } else {
                     currentState = State.Attack;

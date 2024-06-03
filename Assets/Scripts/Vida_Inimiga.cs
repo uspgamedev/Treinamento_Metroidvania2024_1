@@ -58,6 +58,8 @@ public class Vida_Inimiga : MonoBehaviour
     public void TakeDamage(int damage) //da dano de stun ao inimigo
     {
         timeSinceHit = 0f;
+        
+        gameObject.GetComponent<EnemyAI>().damaged = true;
 
         if (notStunned)
         {
