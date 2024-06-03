@@ -39,6 +39,7 @@ public class Player_Movement : MonoBehaviour
     [HideInInspector] public float lastDir;
     private bool onGroundRec = false;
     private LayerMask groundLayer;
+    private float initialGravity;
 
     private SupportScript support;
 
@@ -56,6 +57,7 @@ public class Player_Movement : MonoBehaviour
         flashScript = GetComponent<SimpleFlash>();
         groundLayer = LayerMask.NameToLayer("Ground");
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
+        initialGravity = rb.gravityScale;
         // groundLayer = GameObject.Find("MainTilemapA").layer;
     }
 
@@ -163,11 +165,10 @@ public class Player_Movement : MonoBehaviour
         //esse codigo zera a gravidade e impulsiona o inimigo para o sentido que ele está apontado
         canDash = false;
         isDashing = true;
-        float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f); 
         yield return new WaitForSeconds(dashingTime);
-        rb.gravityScale = originalGravity;
+        rb.gravityScale = initialGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         
@@ -194,7 +195,6 @@ public class Player_Movement : MonoBehaviour
         canMove2 = false;
         GetComponent<Better_Jumping>().enabled = false;
 
-        float tempGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(0f, 0f);
 
@@ -203,7 +203,7 @@ public class Player_Movement : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         canMove2 = true;
-        rb.gravityScale = tempGravity;
+        rb.gravityScale = initialGravity;
 
         jump(Vector2.up * ganchoForce);
     }

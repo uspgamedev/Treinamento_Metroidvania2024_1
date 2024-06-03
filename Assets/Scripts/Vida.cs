@@ -39,6 +39,9 @@ public class Health : MonoBehaviour
     private float blinkTime;
     private GameObject pauseMenu;
     private GameObject gameOverMenu;
+
+    private bool onHazard = false;
+    
     private void Start()
     {
         currentHealth = maxHealth;
@@ -64,7 +67,7 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying) {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
 
                 TomarDano(collision.gameObject);
                 // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
@@ -73,7 +76,7 @@ public class Health : MonoBehaviour
 
                 // StartCoroutine(DamageKnockback(collision.gameObject));
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo") {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0)) {
                     TomarDano(collision.gameObject);
                     // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
@@ -86,7 +89,7 @@ public class Health : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-            if (other.gameObject.tag == "Hazard"){
+            if (other.gameObject.tag == "Hazard" && !onHazard){
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
 
@@ -104,6 +107,8 @@ public class Health : MonoBehaviour
 
     private IEnumerator HazardDamage()
     {
+        onHazard = true;
+
         currentLastPos = moveScript.lastPos;
         currentLastDir = new Vector3(moveScript.lastDir, 1f, 1f);
 
@@ -123,6 +128,7 @@ public class Health : MonoBehaviour
         yield return new WaitForSeconds(0.5f * fadeDur);
         
         toFade = false;
+        onHazard = false;
     }
 
     void Update()
