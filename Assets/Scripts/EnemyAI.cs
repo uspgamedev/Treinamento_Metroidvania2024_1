@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] public RaycastHit2D leftWall;
     [SerializeField] public RaycastHit2D visionEnemy;
     public bool damaged = false;
+    private const float TIME_BEFORE_SOUND = 5f;
 
     
     private enum State {
@@ -43,6 +44,9 @@ public class EnemyAI : MonoBehaviour
     public float idleTimeMax = 3f;
     private State currentState;
     private float idleTimer;
+    private AudioManager audioPlayer;
+    private bool playSound = true; //Só porque eu acho que seria muito irritante ter um rato gritando 
+                                   //toda vez que ele mirar em você.
     private float Timer;
     private float Timer2;
     private int randomValue;
@@ -66,6 +70,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         ChoosePatrolDirection();
+        audioPlayer = GameObject.FindObjectOfType<SupportScript>().GetComponent<AudioManager>();
         currentState = State.Patrolling;
         idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         jogador = GameObject.Find("Player");
@@ -251,22 +256,31 @@ public class EnemyAI : MonoBehaviour
         visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x - offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
-        if (visionEnemy.collider != null && Timer2 <= 0)
-        {
-            if (visionEnemy.collider.CompareTag("Player")){
-                currentState = State.Attack;
-            }
-        }
+        visionCheck();
 
         visionEnemy = Physics2D.Raycast(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, 4f, layerPlayer);
         Debug.DrawRay(new Vector2(transform.position.x + offSetVision.x, transform.position.y + offSetVision.y), directionVision, Color.blue);
 
+        visionCheck(); //Só pra eu não ter que colocar o som duas vezes :D
+    }
+
+    private void visionCheck(){
         if (visionEnemy.collider != null && Timer2 <= 0)
         {
             if (visionEnemy.collider.CompareTag("Player")){
                 currentState = State.Attack;
+                if (playSound){
+                    audioPlayer.Play("RatAttack");
+                    playSound = false;
+                    StartCoroutine(TimeSoundReplay(TIME_BEFORE_SOUND));            
+                }
             }
         }
+    }
+
+    private IEnumerator TimeSoundReplay(float time){
+        yield return new WaitForSeconds(time);
+        playSound = true;
     }
 
     private void AttackState(){ 

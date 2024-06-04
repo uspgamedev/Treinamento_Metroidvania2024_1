@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1081625136270152537}
   - component: {fileID: 4457060231785597574}
+  - component: {fileID: 8746094712450867065}
   m_Layer: 0
   m_Name: ScriptsHelper
   m_TagString: Untagged
@@ -77,8 +78,52 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   ladoInicial: 0
-  skillsIniciais: 0
+  skillsIniciais: -1
   frameRate: 60
   temParry: 0
   temDash: 0
   temGancho: 0
+  toFadeWhite: 0
+--- !u!114 &8746094712450867065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836068624931551646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34b82358f7f76547bcfb7585b04d0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: AttackMiss
+    loop: 0
+    clip: {fileID: 8300000, guid: f9a06b178d9151d4388dc215ba0ff5d0, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: Jump
+    loop: 0
+    clip: {fileID: 8300000, guid: a6edc68f3d4d3c049b89a9578c390849, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: Landing
+    loop: 0
+    clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
+    volume: 0.1
+    pitch: 0.5
+    source: {fileID: 0}
+  - name: GanchoGrab
+    loop: 0
+    clip: {fileID: 8300000, guid: 8912f4b998fe8bc4aae0948e1c307f0e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+  - name: RatAttack
+    loop: 0
+    clip: {fileID: 8300000, guid: 120a8bb67aaba924a990d7d60921f12d, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
