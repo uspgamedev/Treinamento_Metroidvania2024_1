@@ -10,6 +10,7 @@ public class Vagalume : MonoBehaviour
     private new Light2D light;
     private SpriteRenderer spriteRenderer;
     private SimpleFlash flashScript;
+    private SupportScript support;
 
     [Header("Sprites")]
     [SerializeField] private Sprite orangeSprite;
@@ -38,6 +39,8 @@ public class Vagalume : MonoBehaviour
         light = child.GetChild(0).GetComponent<Light2D>();
         spriteRenderer = child.GetComponent<SpriteRenderer>();
         flashScript = child.GetComponent<SimpleFlash>();
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -48,7 +51,7 @@ public class Vagalume : MonoBehaviour
             col.GetComponent<Player_Movement>().canGancho = true; 
             ChangeSprite(true);
 
-            if (col.GetComponent<PlayerCombat>().isParrying) {
+            if (col.GetComponent<PlayerCombat>().isParrying && support.temGancho) {
                 StartCoroutine(col.GetComponent<Player_Movement>().Gancho());
                 StartCoroutine(TakeGancho());
             }
