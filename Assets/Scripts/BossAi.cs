@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class BossAi : MonoBehaviour
 {   
-    private Transform[] positions;
+    private Vector2[] positions;
     
     private Rigidbody2D bossRB;
     private GameObject player;
@@ -70,11 +70,11 @@ public class BossAi : MonoBehaviour
             j++;
             }
         }
-        positions = new Transform[j];
+        positions = new Vector2[j];
         j=0;
         foreach(Transform child in transform){
             if (child.transform != transform){
-            positions[j] = child.transform;
+            positions[j] = child.transform.position;
             j++;
             }
         }
@@ -218,12 +218,12 @@ public class BossAi : MonoBehaviour
 
     private IEnumerator AteandoFogo(){
          for (int i=(int)primeiro; i<j;i++){
-             chamas[i] = Instantiate(fogoPrefab, positions[i].position, Quaternion.identity);
+             chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity);
              yield return new WaitForSeconds(0.5f);
          }
          if (primeiro != 0){
              for (int i=0; i<primeiro; i++){
-                 chamas[i] = Instantiate(fogoPrefab, positions[i].position, Quaternion.identity);
+                 chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity);
                  yield return new WaitForSeconds(0.5f);
              }
          }
