@@ -23,15 +23,15 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isParrying = false;
     private bool followUp = false;
-    
+    private AudioManager audioPlayer;
     private SupportScript support;
     private Health healthScript;
-
     void Start()
     {
         anim = GetComponent<Animator>();
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         healthScript = GetComponent<Health>();
+        audioPlayer = GameObject.FindObjectOfType<AudioManager>().GetComponent<AudioManager>();
     }
 
 
@@ -80,6 +80,7 @@ public class PlayerCombat : MonoBehaviour
     private IEnumerator OnAttack() //implementa tempo entre ataques
     {
         isAttacking = true;
+        audioPlayer.Play("AttackMiss");
 
         yield return new WaitForSeconds(0.2f);
 

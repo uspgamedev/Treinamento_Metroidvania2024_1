@@ -40,6 +40,7 @@ public class Player_Movement : MonoBehaviour
     private bool onGroundRec = false;
     private LayerMask groundLayer;
     private float initialGravity;
+    private AudioManager audioPlayer;
 
     private SupportScript support;
 
@@ -58,6 +59,7 @@ public class Player_Movement : MonoBehaviour
         groundLayer = LayerMask.NameToLayer("Ground");
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         initialGravity = rb.gravityScale;
+        audioPlayer = GameObject.FindObjectOfType<SupportScript>().GetComponent<AudioManager>();
         // groundLayer = GameObject.Find("MainTilemapA").layer;
     }
 
@@ -199,6 +201,7 @@ public class Player_Movement : MonoBehaviour
         rb.velocity = new Vector2(0f, 0f);
 
         anim.SetTrigger("Gancho");
+        audioPlayer.Play("GanchoGrab");
 
         yield return new WaitForSeconds(0.25f);
 
@@ -210,6 +213,7 @@ public class Player_Movement : MonoBehaviour
 
     private void CalculateParticles() {
         if (!onGroundRec && coll.onGround) {
+            audioPlayer.Play("Landing");        
             StartCoroutine(PlayLand());
         }
     }
@@ -220,6 +224,7 @@ public class Player_Movement : MonoBehaviour
     }
 
     private void PlayJump() {
+        audioPlayer.Play("Jump");
         jumpParticle.Play();
     }
 }
