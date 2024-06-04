@@ -23,6 +23,7 @@ TagManager:
   - DashText
   - GanchoText
   - Raio
+  - Fogo
   layers:
   - Default
   - TransparentFX
@@ -39,7 +40,7 @@ TagManager:
   - Sala
   - PostProcessing
   - Raio
-  - 
+  - Fogo
   - 
   - 
   - 
