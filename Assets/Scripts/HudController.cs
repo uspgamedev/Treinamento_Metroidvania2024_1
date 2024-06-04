@@ -86,7 +86,6 @@ public class HudController : MonoBehaviour
 
     private void ReturnToMenu()
     {
-        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -94,11 +93,13 @@ public class HudController : MonoBehaviour
     {
         doBlackFadeTween(BLACK_FADE_ALPHA_OUT, TWEEN_TIME);
         tweenButtons(InOut.OUT);
-        StartCoroutine(resetObjects(DELAY_BEFORE_RETURN));
+        StartCoroutine(callToReturn(DELAY_BEFORE_RETURN));
+        // StartCoroutine(resetObjects(DELAY_BEFORE_RETURN));
     }
 
     private IEnumerator callToReturn(float timeBeforeReturn)
     {
+        Time.timeScale = 1;
         yield return new WaitForSeconds(timeBeforeReturn);
         setButtonStatus(false);
         ReturnToMenu();
