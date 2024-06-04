@@ -24,8 +24,13 @@ public class BossAi : MonoBehaviour
     [SerializeField] private float dashSpeed = 5f;
     [SerializeField] private Transform[] limites; 
 
-    private float direction;
+    public float direction;
     [SerializeField] private float dashDistance = 2f;
+    [SerializeField] private float TimerRaio = 2f;
+
+    [SerializeField]private GameObject Raio25;
+    [SerializeField]private GameObject Raio100;
+
 
 
 
@@ -48,6 +53,9 @@ public class BossAi : MonoBehaviour
         currentState = State.Idling;
         bossRB.velocity = new Vector2(0f, 0f);
         g = 10*bossRB.gravityScale;
+
+        //Raio25 = GameObject.Find("Raio25");
+        //Raio100 = GameObject.Find("Raio100");
 
     }
 
@@ -106,7 +114,13 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator Pulando(){
-        yield return new WaitForSeconds(TimerPulando + 3f);
+        yield return new WaitForSeconds(TimerPulando);
+
+        Raio100.SetActive(true);
+
+        yield return new WaitForSeconds(TimerRaio);
+
+        Raio100.SetActive(false);
 
         currentState = State.Controller;
         canPular = true;
@@ -127,14 +141,6 @@ public class BossAi : MonoBehaviour
 
 
     void DashState(){
-        
-        /*if (TimerEmDash > 0f){
-            bossRB.velocity = new Vector2(dashSpeed*direction, 0f);
-
-        } else {
-            bossRB.velocity = new Vector2(0f, 0f);
-            currentState = State.Controller;
-        }*/
         if (canDash){
             StartCoroutine(EmDash());
             canDash = false;
@@ -155,10 +161,16 @@ public class BossAi : MonoBehaviour
             dist = limites[1].GetComponent<Transform>().position.x - transform.position.x;
         }
         if (canPular){
+            if (direction > 0f){
+            transform.localScale = new Vector3(1, 1, 1);
+            } else {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
            vely = Mathf.Sqrt(g*Mathf.Abs(dist));
            bossRB.velocity = new Vector2((g/2)*dist/vely, vely);
            TimerPulando = 2*vely/g;
            canPular = false;
+           
            StartCoroutine(Pulando());
         }
     }
