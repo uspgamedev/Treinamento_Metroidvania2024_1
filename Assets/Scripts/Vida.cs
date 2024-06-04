@@ -76,6 +76,12 @@ public class Health : MonoBehaviour
                     TomarDano(collision.gameObject);
                 }
             }
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Fogo" && damageable && !onHazard) {
+                if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
+                    TomarDano(collision.gameObject);
+                    Destroy(collision.gameObject);
+                }
+            }
         
     }
 

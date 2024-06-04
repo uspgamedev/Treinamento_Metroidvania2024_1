@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BossAi : MonoBehaviour
 {   
+    private Vector2[] positions;
+    
     private Rigidbody2D bossRB;
     private GameObject player;
     private float dist;
@@ -16,6 +19,7 @@ public class BossAi : MonoBehaviour
 
     private bool canDash = true;
     private bool estaEmDash = false;
+    private bool emFogo = false;
 
     private bool canPular = true;
 
@@ -28,10 +32,16 @@ public class BossAi : MonoBehaviour
     [SerializeField] private float dashDistance = 2f;
     [SerializeField] private float TimerRaio = 2f;
 
-    [SerializeField]private GameObject Raio25;
-    [SerializeField]private GameObject Raio100;
+    [SerializeField] private GameObject Raio100;
+    [SerializeField] private GameObject fogoPrefab;
 
+    private int j = 0;
 
+    private float primeiro = 0;
+
+    
+
+    private GameObject[] chamas;
 
 
     float Timer;
@@ -39,7 +49,8 @@ public class BossAi : MonoBehaviour
         Controller,
         Idling,
         Dashing, 
-        Jumping
+        Jumping,
+        Firing
     }
 
     private State currentState;
@@ -52,10 +63,22 @@ public class BossAi : MonoBehaviour
         player = GameObject.Find("Player");
         currentState = State.Idling;
         bossRB.velocity = new Vector2(0f, 0f);
-        g = 10*bossRB.gravityScale;
-
-        //Raio25 = GameObject.Find("Raio25");
-        //Raio100 = GameObject.Find("Raio100");
+        g = 10*bossRB.gravityScale; 
+        
+        foreach (Transform child in transform){
+            if (child.transform != transform){
+            j++;
+            }
+        }
+        positions = new Vector2[j];
+        j=0;
+        foreach(Transform child in transform){
+            if (child.transform != transform){
+            positions[j] = child.transform.position;
+            j++;
+            }
+        }
+        chamas = new GameObject[j];
 
     }
 
@@ -72,9 +95,13 @@ public class BossAi : MonoBehaviour
             case State.Jumping:
                 JumpState();
                 break;
+            case State.Firing:
+                FireState();
+                break;
             case State.Controller:
                 ChoiceState();
                 break;
+
         }
 
         if (transform.position.x < player.GetComponent<Transform>().position.x){
@@ -94,11 +121,14 @@ public class BossAi : MonoBehaviour
     private void ChoiceState(){
         nextState = Random.Range(1, 101);
 
-        if (nextState < 80f){
+        if (nextState < 50f){
             currentState = State.Dashing;
         }
-        if (nextState >=80f ){
+        if (nextState >=50f && nextState < 75f ){
             currentState = State.Jumping;
+        }
+        if (nextState >= 75f){
+            currentState = State.Firing;
         }
     }
 
@@ -132,7 +162,9 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(dashDistance/dashSpeed);
 
         estaEmDash = false;
-        bossRB.velocity = new Vector2(0f, 0f);
+
+        Vector2 velocidade = bossRB.velocity;
+        DOTween.To(() => velocidade, (x) => bossRB.velocity = x/4, new Vector2(0f, 0f), 2f);
 
         yield return new WaitForSeconds(2f);
         currentState = State.Controller;
@@ -173,5 +205,30 @@ public class BossAi : MonoBehaviour
            
            StartCoroutine(Pulando());
         }
+    }
+
+    private void FireState(){
+        if (!emFogo){
+            Debug.Log("EM FOGO");
+            primeiro = Random.Range(0, j);
+            emFogo = true;
+            StartCoroutine(AteandoFogo());
+        }
+    }
+
+    private IEnumerator AteandoFogo(){
+         for (int i=(int)primeiro; i<j;i++){
+             chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity);
+             yield return new WaitForSeconds(0.5f);
+         }
+         if (primeiro != 0){
+             for (int i=0; i<primeiro; i++){
+                 chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity);
+                 yield return new WaitForSeconds(0.5f);
+             }
+         }
+         emFogo = false;
+         currentState = State.Controller;
+
     }
 }
