@@ -70,23 +70,23 @@ public class Health : MonoBehaviour
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
 
                 TomarDano(collision.gameObject);
-                // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
-                // hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
-                // currentHealth--;
-
-                // StartCoroutine(DamageKnockback(collision.gameObject));
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && !onHazard) {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
                     TomarDano(collision.gameObject);
-                    // Physics2D.IgnoreLayerCollision(gameObject.layer, collision.gameObject.layer, true);
-                    // hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
-                    // currentHealth--;
-
-                    // StartCoroutine(DamageKnockback(collision.gameObject));
                 }
             }
+        
     }
+
+    private void OnTriggerStay2D(Collider2D other){
+        if (other.gameObject.tag=="Raio" && damageable){
+                damageable=false;
+                TomarDano(other.gameObject);
+        }
+    }
+
+    
 
     private void OnTriggerEnter2D(Collider2D other) {
             if (other.gameObject.tag == "Hazard" && !onHazard){
