@@ -124,10 +124,10 @@ public class BossAi : MonoBehaviour
         if (nextState < 50f){
             currentState = State.Dashing;
         }
-        if (nextState >=50f && nextState < 75f ){
+        if (nextState >=50f && nextState < 70f ){
             currentState = State.Jumping;
         }
-        if (nextState >= 75f){
+        if (nextState >= 70f){
             currentState = State.Firing;
         }
     }

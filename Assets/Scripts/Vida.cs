@@ -42,8 +42,14 @@ public class Health : MonoBehaviour
 
     private bool onHazard = false;
     
+    private LayerMask enemyLayer;
+
+    [SerializeField] private GameObject objectImmortality;
+    private LayerMask layerPlayer;
     private void Start()
     {
+        layerPlayer = gameObject.layer;
+
         currentHealth = maxHealth;
         blinkTime = maxBlinkTime;
         pauseMenu = GameObject.Find("PauseMenu");
@@ -67,27 +73,30 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
-
+            enemyLayer = collision.gameObject.layer;
+            if (LayerMask.LayerToName(enemyLayer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
+                damageable = false;
+                gameObject.layer = objectImmortality.layer;
                 TomarDano(collision.gameObject);
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && damageable && !onHazard) {
+             if (LayerMask.LayerToName(enemyLayer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
+                    gameObject.layer = objectImmortality.layer;
+                    damageable = false;
                     TomarDano(collision.gameObject);
                 }
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Fogo" && damageable && !onHazard) {
-                if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
-                    TomarDano(collision.gameObject);
-                    Destroy(collision.gameObject);
-                }
+           if (LayerMask.LayerToName(enemyLayer) == "Fogo" && damageable && !onHazard) {
+                damageable = false;
+                gameObject.layer = objectImmortality.layer;
+                TomarDano(collision.gameObject);
+                Destroy(collision.gameObject);
             }
         
     }
 
     private void OnTriggerStay2D(Collider2D other){
         if (other.gameObject.tag=="Raio" && damageable){
-                damageable=false;
                 TomarDano(other.gameObject);
         }
     }
@@ -104,7 +113,9 @@ public class Health : MonoBehaviour
     }
 
     public void TomarDano(GameObject enemy) {
-        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
+        if (LayerMask.LayerToName(enemyLayer) != "Fogo"){
+            //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
+        }
         hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
         currentHealth--;
 
@@ -226,9 +237,9 @@ public class Health : MonoBehaviour
 
         yield return new WaitForSeconds(immortalTime);
         if (enemy != null){
-            Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, false);
         }
-
+        gameObject.layer = layerPlayer;
         damageable = true;
     }
 
