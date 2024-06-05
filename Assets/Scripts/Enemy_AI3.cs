@@ -52,7 +52,7 @@ public class Enemy_AI3 : MonoBehaviour
     void Awake()
     {
         if (respawnTime < 2f) {
-            respawnTime = 60f;
+            respawnTime = 150f;
         }
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
 

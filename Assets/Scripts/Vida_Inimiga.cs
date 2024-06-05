@@ -28,12 +28,15 @@ public class Vida_Inimiga : MonoBehaviour
 
     [SerializeField] private GameObject deathParticles;
 
-    [SerializeField] private float respawnTime = 60f;
+    [SerializeField] private float respawnTime = 150f;
 
     private SupportScript support;
 
     void Start()
     {
+        if (respawnTime < 2f) {
+            respawnTime = 150f;
+        }
         currentStun = 0f;
 
         stunBar = transform.GetChild(0).gameObject;
