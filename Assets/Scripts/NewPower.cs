@@ -18,10 +18,18 @@ public class NewPower : MonoBehaviour
     [SerializeField] private Skills skillAcquired;
     [SerializeField] private GameObject skillText;
 
+    [SerializeField] private int powerID;
+
     void Start()
     {
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         flashScript = transform.GetChild(0).GetComponent<SimpleFlash>();
+
+        foreach (int id in support.powerupIDToDeactivate) {
+            if (id == powerID) {
+                gameObject.SetActive(false);
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -50,6 +58,8 @@ public class NewPower : MonoBehaviour
     {
         flashScript.Flash(Color.white);
         GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(Color.white);
+
+        support.powerupIDToDeactivate.Add(powerID);
 
         GetComponent<Collider2D>().enabled = false;
 

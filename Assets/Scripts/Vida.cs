@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    
     [HideInInspector] public int currentHealth;
-    [SerializeField] private int maxHealth;
+    private int maxHealth;
     [SerializeField] private GameObject healthUI;
     [SerializeField] private float healthSize = 1f;
     private Image[] hpSprites;
@@ -24,6 +23,7 @@ public class Health : MonoBehaviour
     private float fadeDur = 1f;
 
     private Player_Movement moveScript;
+    private SupportScript support;
     private Vector3 currentLastPos;
     private Vector3 currentLastDir;
     private Rigidbody2D rb;
@@ -42,25 +42,21 @@ public class Health : MonoBehaviour
 
     private bool onHazard = false;
     
-    private LayerMask enemyLayer;
-
-    [SerializeField] private GameObject objectImmortality;
-    private LayerMask layerPlayer;
     private void Start()
     {
-        layerPlayer = gameObject.layer;
-
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        maxHealth = support.maxHealth;
         currentHealth = maxHealth;
-        blinkTime = maxBlinkTime;
-        pauseMenu = GameObject.Find("PauseMenu");
-        gameOverMenu = GameObject.Find("GameOverMenu");
-
 
         hpSprites = new Image[maxHealth];
         for (int i = 0; i < maxHealth; i++)
         {
             InstantiateHealth(i);
         }
+
+        blinkTime = maxBlinkTime;
+        pauseMenu = GameObject.Find("PauseMenu");
+        gameOverMenu = GameObject.Find("GameOverMenu");
 
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
         moveScript = GetComponent<Player_Movement>();
@@ -69,26 +65,21 @@ public class Health : MonoBehaviour
         flashScript = GetComponent<SimpleFlash>();
 
         moveScript.canMove2 = true;
+
     }
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            enemyLayer = collision.gameObject.layer;
-            if (LayerMask.LayerToName(enemyLayer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
-                damageable = false;
-                gameObject.layer = objectImmortality.layer;
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
+
                 TomarDano(collision.gameObject);
             }
-             if (LayerMask.LayerToName(enemyLayer) == "Disparo" && damageable && !onHazard) {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
-                    gameObject.layer = objectImmortality.layer;
-                    damageable = false;
                     TomarDano(collision.gameObject);
                 }
             }
-           if (LayerMask.LayerToName(enemyLayer) == "Fogo" && damageable && !onHazard) {
-                damageable = false;
-                gameObject.layer = objectImmortality.layer;
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Fogo" && damageable && !onHazard) {
                 TomarDano(collision.gameObject);
                 Destroy(collision.gameObject);
             }
@@ -97,11 +88,11 @@ public class Health : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other){
         if (other.gameObject.tag=="Raio" && damageable){
+                damageable=false;
                 TomarDano(other.gameObject);
         }
     }
 
-    
 
     private void OnTriggerEnter2D(Collider2D other) {
             if (other.gameObject.tag == "Hazard" && !onHazard){
@@ -113,9 +104,7 @@ public class Health : MonoBehaviour
     }
 
     public void TomarDano(GameObject enemy) {
-        if (LayerMask.LayerToName(enemyLayer) != "Fogo"){
-            //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
-        }
+        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
         hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
         currentHealth--;
 
@@ -237,9 +226,9 @@ public class Health : MonoBehaviour
 
         yield return new WaitForSeconds(immortalTime);
         if (enemy != null){
-            Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, false);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
         }
-        gameObject.layer = layerPlayer;
+
         damageable = true;
     }
 

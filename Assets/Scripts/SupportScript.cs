@@ -17,8 +17,8 @@ public class SupportScript : MonoBehaviour
         Gancho = 1 << 2
     }
 
-    [HideInInspector] public GameObject[] listaA = new GameObject[100];
-    [HideInInspector] public GameObject[] listaB = new GameObject[100];
+    [HideInInspector] public GameObject[] listaA = new GameObject[15];
+    [HideInInspector] public GameObject[] listaB = new GameObject[15];
 
     [SerializeField] LadoInicial ladoInicial;
     [SerializeField] Skills skillsIniciais;
@@ -30,9 +30,17 @@ public class SupportScript : MonoBehaviour
 
     [HideInInspector] public bool toFadeWhite = false;
     [HideInInspector] public Coroutine textCoroutine;
+
+    [SerializeField] public int maxHealth = 3;
+
+    [SerializeField] public List<int> healthIDToDeactivate;
+    [SerializeField] public List<int> powerupIDToDeactivate;
+
     
-    void Awake()
+    void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = frameRate;
 
