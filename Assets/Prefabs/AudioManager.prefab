@@ -48,19 +48,19 @@ MonoBehaviour:
   - name: AttackMiss
     loop: 0
     clip: {fileID: 8300000, guid: f9a06b178d9151d4388dc215ba0ff5d0, type: 3}
-    volume: 0.15
+    volume: 0.25
     pitch: 1
     source: {fileID: 0}
   - name: Jump
     loop: 0
     clip: {fileID: 8300000, guid: a6edc68f3d4d3c049b89a9578c390849, type: 3}
-    volume: 0.15
+    volume: 0.8
     pitch: 1
     source: {fileID: 0}
   - name: Landing
     loop: 0
     clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
-    volume: 0.1
+    volume: 0.3
     pitch: 0.5
     source: {fileID: 0}
   - name: GanchoGrab
@@ -72,6 +72,6 @@ MonoBehaviour:
   - name: RatAttack
     loop: 0
     clip: {fileID: 8300000, guid: 120a8bb67aaba924a990d7d60921f12d, type: 3}
-    volume: 0.1
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}

@@ -33,10 +33,10 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        Debug.Log("AudioManager is being destroyed.");
-    }
+    // private void OnDestroy()
+    // {
+    //     Debug.Log("AudioManager is being destroyed.");
+    // }
 
     public void Play(string name)
     {
