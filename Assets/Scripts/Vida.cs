@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     [HideInInspector] public int currentHealth;
-    [HideInInspector] public int maxHealth;
+    public int maxHealth;
     [SerializeField] private GameObject healthUI;
     [SerializeField] private float healthSize = 1f;
     private Image[] hpSprites;
@@ -41,9 +41,14 @@ public class Health : MonoBehaviour
     private GameObject gameOverMenu;
 
     private bool onHazard = false;
+
+    private LayerMask enemyLayer;
+    [SerializeField] private GameObject buscaLayerImmortality;
+    private LayerMask playerLayer;
     
     private void Start()
     {
+        playerLayer = gameObject.layer;
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         maxHealth = support.maxHealth;
         currentHealth = maxHealth;
@@ -70,16 +75,30 @@ public class Health : MonoBehaviour
     
 
     private void OnCollisionEnter2D(Collision2D collision) {
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
-
+            Debug.Log("colisão");
+            if (damageable){
+                Debug.Log("DAmageable: ");
+            }
+            enemyLayer = collision.gameObject.layer;
+            if (LayerMask.LayerToName(enemyLayer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
+                gameObject.layer = buscaLayerImmortality.layer;
+                damageable = false;
+                Debug.Log("enemies");
+                
                 TomarDano(collision.gameObject);
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Disparo" && damageable && !onHazard) {
+            if (LayerMask.LayerToName(enemyLayer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
-                    TomarDano(collision.gameObject);
+                gameObject.layer = buscaLayerImmortality.layer;
+                damageable = false;
+                    Debug.Log("disparo");
+                TomarDano(collision.gameObject);
                 }
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Fogo" && damageable && !onHazard) {
+            if (LayerMask.LayerToName(enemyLayer) == "Fogo" && damageable && !onHazard) {
+                Debug.Log("fogo");
+                damageable = false;
+                gameObject.layer = buscaLayerImmortality.layer;
                 TomarDano(collision.gameObject);
                 Destroy(collision.gameObject);
             }
@@ -88,6 +107,7 @@ public class Health : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other){
         if (other.gameObject.tag=="Raio" && damageable){
+                Debug.Log("raio");
                 damageable=false;
                 TomarDano(other.gameObject);
         }
@@ -104,13 +124,18 @@ public class Health : MonoBehaviour
     }
 
     public void TomarDano(GameObject enemy) {
-        if (currentHealth > 0) {
-            Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
+        Debug.Log("dano");
+        
+        //if (currentHealth > 0) {
+            //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
             hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
             currentHealth--;
-
+            
+            Debug.Log("DANO");
             StartCoroutine(DamageKnockback(enemy));
-        }
+
+        //}
+        
     }
 
     private IEnumerator HazardDamage()
@@ -141,6 +166,10 @@ public class Health : MonoBehaviour
 
     void Update()
     {
+
+        if (damageable){
+            gameObject.layer = playerLayer;
+        }
         // Debug.Log(currentHealth);
 
         if (currentHealth > maxHealth) {
@@ -203,6 +232,7 @@ public class Health : MonoBehaviour
 
     private IEnumerator DamageKnockback(GameObject enemy)
     {
+        Debug.Log("knockbacks");
         anim.SetBool("Damaged", true);
 
         if (enemy.transform.position.x > transform.position.x) {
@@ -227,11 +257,12 @@ public class Health : MonoBehaviour
         StartCoroutine(Blink());
 
         yield return new WaitForSeconds(immortalTime);
-        if (enemy != null){
+        /*if (enemy != null){
             Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, false);
-        }
+        }*/
 
         damageable = true;
+        gameObject.layer = playerLayer;
     }
 
     private IEnumerator Blink()
@@ -285,3 +316,4 @@ public class Health : MonoBehaviour
         t.GetComponent<RectTransform>().sizeDelta = new Vector2(30f * healthSize, 30f * healthSize);
     }
 }
+
