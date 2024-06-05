@@ -50,7 +50,7 @@ public class Player_Movement : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         coll = GetComponent<Collision>(); //pega o componente Collision do objeto
         rb = GetComponent<Rigidbody2D>(); //pega o componente do objeto

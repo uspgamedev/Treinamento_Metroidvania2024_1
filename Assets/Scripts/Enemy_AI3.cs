@@ -36,6 +36,7 @@ public class Enemy_AI3 : MonoBehaviour
     private float minPlayerDist = 35f;
 
     private Coroutine activeCoroutine;
+    private GameObject cubeRange;
 
     [Header("Hp Drop")]
     [SerializeField] private GameObject hpCollect;
@@ -47,14 +48,14 @@ public class Enemy_AI3 : MonoBehaviour
     {   
         int j = 0;
         foreach (Transform child in transform) {
-            if (child.GetComponent<Light2D>() == null) {
+            if (child.GetComponent<Light2D>() == null && child.GetComponent<BlobCubeRange>() == null) {
                 j++;
             }
         }
         positions = new Transform[j];
         j = 0;
         foreach (Transform child in transform) {
-            if (child.GetComponent<Light2D>() == null) {
+            if (child.GetComponent<Light2D>() == null && child.GetComponent<BlobCubeRange>() == null) {
                 positions[j] = child.transform;
                 j++;
             }
@@ -70,6 +71,8 @@ public class Enemy_AI3 : MonoBehaviour
         light = transform.GetChild(0).GetComponent<Light2D>();
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
+
+        cubeRange = transform.Find("Cube Range").gameObject;
 
         if (pos.Length <= 1) {
             baseChoiceMark = 0f;
@@ -179,11 +182,12 @@ public class Enemy_AI3 : MonoBehaviour
         }
     }
 
-    private void OnTeleport(bool to) {
-        GetComponent<SpriteRenderer>().enabled = to;
-        GetComponent<BoxCollider2D>().enabled = to;
-        GetComponent<CircleCollider2D>().enabled = to;
-        if (!to) {
+    private void OnTeleport(bool state) {
+        GetComponent<SpriteRenderer>().enabled = state;
+        GetComponent<BoxCollider2D>().enabled = state;
+        // GetComponent<CircleCollider2D>().enabled = state;
+        cubeRange.SetActive(state);
+        if (!state) {
             GetComponent<Rigidbody2D>().gravityScale = 0f;
         }
         else {
@@ -191,26 +195,26 @@ public class Enemy_AI3 : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player"){
-            anim.SetTrigger("Cube");
-            cubing = true;
-            if (!dying) {
-                StartNewCoroutine(null);
-            }
-            if (light.intensity > 0f) {
-                light.intensity = 0f;
-            }
-        }
-    }
+    // void OnTriggerEnter2D(Collider2D collision)
+    // {
+    //     if (collision.gameObject.tag == "Player"){
+    //         anim.SetTrigger("Cube");
+    //         cubing = true;
+    //         if (!dying) {
+    //             StartNewCoroutine(null);
+    //         }
+    //         if (light.intensity > 0f) {
+    //             light.intensity = 0f;
+    //         }
+    //     }
+    // }
 
-    void OnTriggerExit2D(Collider2D collision){
-        if (collision.gameObject.tag == "Player"){
-            anim.SetTrigger("Decube");
-            cubing = false;
-        }
-    }
+    // void OnTriggerExit2D(Collider2D collision){
+    //     if (collision.gameObject.tag == "Player"){
+    //         anim.SetTrigger("Decube");
+    //         cubing = false;
+    //     }
+    // }
 
     public IEnumerator Die() {
         dying = true;
@@ -237,5 +241,21 @@ public class Enemy_AI3 : MonoBehaviour
         Vector3 vector = playerTransform.position - transform.position;
         float magnitude = vector.magnitude;
         return magnitude < minPlayerDist;
+    }
+
+    public void Cube() {
+        anim.SetTrigger("Cube");
+        cubing = true;
+        if (!dying) {
+            StartNewCoroutine(null);
+        }
+        if (light.intensity > 0f) {
+            light.intensity = 0f;
+        }
+    }
+
+    public void Decube() {
+        anim.SetTrigger("Decube");
+        cubing = false;
     }
 }
