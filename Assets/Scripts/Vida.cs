@@ -104,11 +104,13 @@ public class Health : MonoBehaviour
     }
 
     public void TomarDano(GameObject enemy) {
-        Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
-        hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
-        currentHealth--;
+        if (currentHealth > 0) {
+            Physics2D.IgnoreLayerCollision(gameObject.layer, enemy.layer, true);
+            hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+            currentHealth--;
 
-        StartCoroutine(DamageKnockback(enemy));
+            StartCoroutine(DamageKnockback(enemy));
+        }
     }
 
     private IEnumerator HazardDamage()

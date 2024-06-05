@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
 
@@ -20,6 +21,7 @@ public class GameOverMenu : MonoBehaviour
     private GameObject[] menuButtons;
     private SupportScript support;
     private GameObject player;
+    private EventSystem events;
     void Awake()
     {
         if (playerHealth == null) {
@@ -43,6 +45,7 @@ public class GameOverMenu : MonoBehaviour
         }
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        events = EventSystem.current;
     }
 
     void Start()
@@ -76,12 +79,16 @@ public class GameOverMenu : MonoBehaviour
 
     public void RestartGame()
     {
-        player.transform.position = support.lastRespawn;
-        playerHealth.maxHealth = support.maxHealth;
-        playerHealth.HealthRestore(support.maxHealth);
+        if (isGameOver) {
+            player.transform.position = support.lastRespawn;
+            playerHealth.maxHealth = support.maxHealth;
+            playerHealth.HealthRestore(support.maxHealth);
 
-        // Scene scene = SceneManager.GetActiveScene();
-        // SceneManager.LoadScene(scene.name);
+            isGameOver = false;
+
+            ButtonsDisappear();
+            events.SetSelectedGameObject(null);
+        }
     }
 
     public void ExitGame()
@@ -141,6 +148,12 @@ public class GameOverMenu : MonoBehaviour
             RectTransform rectTransform = button.GetComponent<RectTransform>();
             rectTransform.anchoredPosition += new Vector2(0f, -BUTTON_DISTANCE);
         }
+    }
+
+    private void ButtonsDisappear() {
+        blackBG.DOFade(0f, 2f);
+        setupButtons();
+        gameOverText.gameObject.SetActive(false);
     }
 
     private void AnimateButtons()

@@ -34,8 +34,10 @@ public class SupportScript : MonoBehaviour
 
     [SerializeField] public int maxHealth = 3;
 
-    [SerializeField] public List<int> healthIDToDeactivate;
-    [SerializeField] public List<int> powerupIDToDeactivate;
+    [HideInInspector] public List<int> healthIDToDeactivate;
+    [HideInInspector] public List<int> powerupIDToDeactivate;
+
+    [HideInInspector] public Vector3 lastRespawn;
 
     
     void Start()
@@ -69,13 +71,17 @@ public class SupportScript : MonoBehaviour
         if (ladoInicial == LadoInicial.A) {
             foreach (GameObject objeto in listaA)
             {
-                if (objeto != null)
-                    objeto.SetActive(true);
+                if (objeto != null) {
+                    if (objeto.tag != "Morto")
+                        objeto.SetActive(true);
+                }
             }
             foreach (GameObject objeto in listaB)
             {
-                if (objeto != null)
+                if (objeto != null) {
+                    if (objeto.tag != "Morto")
                     objeto.SetActive(false);
+                }
             }
         }
         
@@ -112,6 +118,22 @@ public class SupportScript : MonoBehaviour
             GameObject newAudioManager = Instantiate(audioPrefab, Vector3.zero, Quaternion.identity);
             DontDestroyOnLoad(newAudioManager);
             return newAudioManager.GetComponent<AudioManager>();
+        }
+    }
+
+    public void StartEnemyRespawn(GameObject objectToRespawn, float respawnTime, string originalTag) {
+        StartCoroutine(RespawnEnemy(objectToRespawn, respawnTime, originalTag));
+    }
+
+    private IEnumerator RespawnEnemy(GameObject objectToRespawn, float respawnTime, string originalTag) {
+
+        yield return new WaitForSeconds(respawnTime);
+
+        objectToRespawn.tag = originalTag;
+        string objectSide = objectToRespawn.transform.parent.gameObject.tag;
+
+        if ((objectSide == "LadoA" && listaA[0].activeInHierarchy) || (objectSide == "LadoB" && listaB[0].activeInHierarchy)) {
+            objectToRespawn.SetActive(true);
         }
     }
 }
