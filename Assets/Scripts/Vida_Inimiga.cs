@@ -28,14 +28,23 @@ public class Vida_Inimiga : MonoBehaviour
 
     [SerializeField] private GameObject deathParticles;
 
+    [SerializeField] private float respawnTime = 150f;
+
+    private SupportScript support;
+
     void Start()
     {
+        if (respawnTime < 2f) {
+            respawnTime = 150f;
+        }
         currentStun = 0f;
 
         stunBar = transform.GetChild(0).gameObject;
         yellowBar = transform.GetChild(0).GetChild(0).gameObject;
 
         flashScript = GetComponent<SimpleFlash>();
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
     }
 
     void Update()
@@ -119,6 +128,12 @@ public class Vida_Inimiga : MonoBehaviour
         part.GetComponent<DeathParticles>().enemy = DeathParticles.Enemy.Rat;
 
         yield return new WaitForSeconds(0.125f);
+
+        currentStun = 0f;
+        notStunned = true;
+        timeSinceHit = 50f;
+
+        support.StartEnemyRespawn(gameObject, respawnTime, gameObject.tag);
 
         gameObject.tag = "Morto";
         gameObject.SetActive(false);

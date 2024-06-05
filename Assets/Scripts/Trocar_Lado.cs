@@ -8,7 +8,7 @@ public class Trocar_Lado : MonoBehaviour
 {
     private GameObject[] listaA;
     private GameObject[] listaB;
-    private bool canChangeSides;
+    [HideInInspector] public bool canChangeSides;
     private Collider2D coll;
 
     [SerializeField] float transTime;
@@ -22,6 +22,9 @@ public class Trocar_Lado : MonoBehaviour
     float t = 0f;
 
     private Animator anim;
+
+    [SerializeField] private GameObject otherSideChanger;
+    private GameObject player;
 
     void Start()
     {
@@ -38,6 +41,7 @@ public class Trocar_Lado : MonoBehaviour
         canChangeSides = false;
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        player = GameObject.Find("Player");
     }
 
     void Update()
@@ -75,7 +79,11 @@ public class Trocar_Lado : MonoBehaviour
         canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
+        otherSideChanger.SetActive(true);
+        otherSideChanger.GetComponent<Trocar_Lado>().canChangeSides = false;
+
         anim.SetTrigger("Start");
+        otherSideChanger.GetComponent<Animator>().SetTrigger("End");
 
         yield return new WaitForSeconds(transTime);
 
@@ -87,16 +95,22 @@ public class Trocar_Lado : MonoBehaviour
         foreach (GameObject objeto in listaB)
         {
             if (objeto != null)
-            objeto.SetActive(!objeto.activeInHierarchy);
+                objeto.SetActive(!objeto.activeInHierarchy);
         }
+
+        player.transform.position = otherSideChanger.transform.position;
+        
 
         yield return new WaitForSeconds(transTime/2);
         anim.SetTrigger("End");
+        otherSideChanger.GetComponent<Animator>().SetTrigger("End");
         yield return new WaitForSeconds(transTime/2);
 
         coll.GetComponent<Player_Movement>().canMove2 = true;
         support.toFadeWhite = false;
         canChangeSides = true;
+
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

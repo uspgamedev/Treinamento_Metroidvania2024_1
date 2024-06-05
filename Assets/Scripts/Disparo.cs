@@ -27,6 +27,8 @@ public class Disparo : MonoBehaviour
     private ParticleSystem.VelocityOverLifetimeModule partVel;
     private ParticleSystem.VelocityOverLifetimeModule dieVel;
 
+    private SimpleFlash flashScript;
+
     private List<GameObject> salas = new List<GameObject>();
 
     void Awake(){
@@ -34,6 +36,7 @@ public class Disparo : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         enemyRB = gameObject.GetComponent<Rigidbody2D>();
         light = transform.GetChild(0).GetComponent<Light2D>();
+        flashScript = GetComponent<SimpleFlash>();
 
         versor = new Vector2(player.GetComponent<Transform>().position.x - transform.position.x, player.GetComponent<Transform>().position.y - transform.position.y);
 
@@ -75,6 +78,8 @@ public class Disparo : MonoBehaviour
        if (collision.gameObject.tag == "Player" && parry && parryable) {
            versor *= -2.5f; 
            parried = true;
+           flashScript.Flash(Color.white);
+           collision.gameObject.GetComponent<SimpleFlash>().Flash(Color.white);
        } else {
            if (collision.gameObject.tag == "Blob" && parried){
                 Enemy_AI3 enemyScript = collision.gameObject.GetComponent<Enemy_AI3>();

@@ -41,11 +41,21 @@ public class Enemy_AI3 : MonoBehaviour
     [Header("Hp Drop")]
     [SerializeField] private GameObject hpCollect;
     [Range(0f, 1f)] [SerializeField] private float dropChance;
-    
+
     [SerializeField] private GameObject deathParticles;
 
+    private SupportScript support;
+
+    [SerializeField] private float respawnTime;
+
+
     void Awake()
-    {   
+    {
+        if (respawnTime < 2f) {
+            respawnTime = 150f;
+        }
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+
         int j = 0;
         foreach (Transform child in transform) {
             if (child.GetComponent<Light2D>() == null && child.GetComponent<BlobCubeRange>() == null) {
@@ -195,27 +205,6 @@ public class Enemy_AI3 : MonoBehaviour
         }
     }
 
-    // void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //     if (collision.gameObject.tag == "Player"){
-    //         anim.SetTrigger("Cube");
-    //         cubing = true;
-    //         if (!dying) {
-    //             StartNewCoroutine(null);
-    //         }
-    //         if (light.intensity > 0f) {
-    //             light.intensity = 0f;
-    //         }
-    //     }
-    // }
-
-    // void OnTriggerExit2D(Collider2D collision){
-    //     if (collision.gameObject.tag == "Player"){
-    //         anim.SetTrigger("Decube");
-    //         cubing = false;
-    //     }
-    // }
-
     public IEnumerator Die() {
         dying = true;
         flashScript.Flash(Color.green);
@@ -231,6 +220,8 @@ public class Enemy_AI3 : MonoBehaviour
         part.GetComponent<DeathParticles>().enemy = DeathParticles.Enemy.Blob;
 
         yield return new WaitForSeconds(0.125f);
+
+        support.StartEnemyRespawn(gameObject, respawnTime, gameObject.tag);
 
         gameObject.tag = "Morto";
         dying = false;

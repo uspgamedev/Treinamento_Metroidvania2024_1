@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
 
@@ -18,10 +19,15 @@ public class GameOverMenu : MonoBehaviour
     private TMP_TextInfo textInfo;
     private Vector3[][] originalVertices;
     private GameObject[] menuButtons;
+    private SupportScript support;
+    private GameObject player;
+    private EventSystem events;
     void Awake()
     {
-        if (playerHealth == null)
+        if (playerHealth == null) {
             playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+            player = playerHealth.gameObject;
+        }
 
         if (whiteFlashImage == null)
             whiteFlashImage = GameObject.Find("WhiteFade").GetComponent<Image>();
@@ -37,6 +43,9 @@ public class GameOverMenu : MonoBehaviour
             menuButtons = GameObject.FindGameObjectsWithTag("GameOverButton");
             System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
         }
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        events = EventSystem.current;
     }
 
     void Start()
@@ -70,8 +79,16 @@ public class GameOverMenu : MonoBehaviour
 
     public void RestartGame()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        if (isGameOver) {
+            player.transform.position = support.lastRespawn;
+            playerHealth.maxHealth = support.maxHealth;
+            playerHealth.HealthRestore(support.maxHealth);
+
+            isGameOver = false;
+
+            ButtonsDisappear();
+            events.SetSelectedGameObject(null);
+        }
     }
 
     public void ExitGame()
@@ -131,6 +148,12 @@ public class GameOverMenu : MonoBehaviour
             RectTransform rectTransform = button.GetComponent<RectTransform>();
             rectTransform.anchoredPosition += new Vector2(0f, -BUTTON_DISTANCE);
         }
+    }
+
+    private void ButtonsDisappear() {
+        blackBG.DOFade(0f, 2f);
+        setupButtons();
+        gameOverText.gameObject.SetActive(false);
     }
 
     private void AnimateButtons()
