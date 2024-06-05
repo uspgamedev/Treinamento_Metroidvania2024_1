@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     [HideInInspector] public int currentHealth;
-    private int maxHealth;
+    [HideInInspector] public int maxHealth;
     [SerializeField] private GameObject healthUI;
     [SerializeField] private float healthSize = 1f;
     private Image[] hpSprites;

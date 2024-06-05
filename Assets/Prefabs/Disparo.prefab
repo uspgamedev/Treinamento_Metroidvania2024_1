@@ -4844,6 +4844,7 @@ GameObject:
   - component: {fileID: 6808211037898171650}
   - component: {fileID: 4123364730608721550}
   - component: {fileID: 6967155080655307678}
+  - component: {fileID: 8292075904296306127}
   m_Layer: 10
   m_Name: Disparo
   m_TagString: Disparo
@@ -4963,6 +4964,7 @@ MonoBehaviour:
   projectileSpeed: 5
   direction: 1
   parried: 0
+  shotForward: 0
   trailParticles: {fileID: 6358612530601846647}
   dieParticles: {fileID: 7711129332374203931}
 --- !u!95 &4123364730608721550
@@ -5021,6 +5023,20 @@ CircleCollider2D:
   m_Offset: {x: 0.03, y: -0.03}
   serializedVersion: 2
   m_Radius: 0.25
+--- !u!114 &8292075904296306127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6204215274143909885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0a571ea052e4bce992b3bb86c60381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 077447a337efe4ccb94103a350bce60d, type: 2}
+  duration: 0.125
 --- !u!1 &6941970451444063272
 GameObject:
   m_ObjectHideFlags: 0

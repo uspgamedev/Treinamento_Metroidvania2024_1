@@ -18,10 +18,14 @@ public class GameOverMenu : MonoBehaviour
     private TMP_TextInfo textInfo;
     private Vector3[][] originalVertices;
     private GameObject[] menuButtons;
+    private SupportScript support;
+    private GameObject player;
     void Awake()
     {
-        if (playerHealth == null)
+        if (playerHealth == null) {
             playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+            player = playerHealth.gameObject;
+        }
 
         if (whiteFlashImage == null)
             whiteFlashImage = GameObject.Find("WhiteFade").GetComponent<Image>();
@@ -37,6 +41,8 @@ public class GameOverMenu : MonoBehaviour
             menuButtons = GameObject.FindGameObjectsWithTag("GameOverButton");
             System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
         }
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
     }
 
     void Start()
@@ -70,8 +76,12 @@ public class GameOverMenu : MonoBehaviour
 
     public void RestartGame()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        player.transform.position = support.lastRespawn;
+        playerHealth.maxHealth = support.maxHealth;
+        playerHealth.HealthRestore(support.maxHealth);
+
+        // Scene scene = SceneManager.GetActiveScene();
+        // SceneManager.LoadScene(scene.name);
     }
 
     public void ExitGame()
