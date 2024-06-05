@@ -59,7 +59,7 @@ public class Player_Movement : MonoBehaviour
         groundLayer = LayerMask.NameToLayer("Ground");
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         initialGravity = rb.gravityScale;
-        audioPlayer = GameObject.FindObjectOfType<SupportScript>().GetComponent<AudioManager>();
+        audioPlayer = support.getAudioManagerInstance();
         // groundLayer = GameObject.Find("MainTilemapA").layer;
     }
 

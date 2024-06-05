@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SupportScript : MonoBehaviour
 {
+    [SerializeField] private GameObject audioPrefab;
     private enum LadoInicial {
         A,
         B
@@ -99,6 +100,18 @@ public class SupportScript : MonoBehaviour
         }
         if ((skillsIniciais & Skills.Gancho) == Skills.Gancho) {
             temGancho = true;
+        }
+    }
+
+    public AudioManager getAudioManagerInstance()
+    {
+        GameObject audioManagerObj = GameObject.Find("AudioManager");
+        if (audioManagerObj != null) {
+            return audioManagerObj.GetComponent<AudioManager>();
+        } else {
+            GameObject newAudioManager = Instantiate(audioPrefab, Vector3.zero, Quaternion.identity);
+            DontDestroyOnLoad(newAudioManager);
+            return newAudioManager.GetComponent<AudioManager>();
         }
     }
 }

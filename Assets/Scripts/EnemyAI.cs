@@ -70,7 +70,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         ChoosePatrolDirection();
-        audioPlayer = GameObject.FindObjectOfType<SupportScript>().GetComponent<AudioManager>();
+        audioPlayer = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().getAudioManagerInstance();
         currentState = State.Patrolling;
         idleTimer = Random.Range(idleTimeMin, idleTimeMax);
         jogador = GameObject.Find("Player");

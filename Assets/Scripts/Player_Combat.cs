@@ -31,7 +31,7 @@ public class PlayerCombat : MonoBehaviour
         anim = GetComponent<Animator>();
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         healthScript = GetComponent<Health>();
-        audioPlayer = GameObject.FindObjectOfType<AudioManager>().GetComponent<AudioManager>();
+        audioPlayer = support.getAudioManagerInstance();
     }
 
 

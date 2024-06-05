@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3204409109730040359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1223737790952143494}
+  - component: {fileID: 7013341046765876522}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1223737790952143494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3204409109730040359}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7013341046765876522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3204409109730040359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34b82358f7f76547bcfb7585b04d0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: AttackMiss
+    loop: 0
+    clip: {fileID: 8300000, guid: f9a06b178d9151d4388dc215ba0ff5d0, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: Jump
+    loop: 0
+    clip: {fileID: 8300000, guid: a6edc68f3d4d3c049b89a9578c390849, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: Landing
+    loop: 0
+    clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
+    volume: 0.1
+    pitch: 0.5
+    source: {fileID: 0}
+  - name: GanchoGrab
+    loop: 0
+    clip: {fileID: 8300000, guid: 8912f4b998fe8bc4aae0948e1c307f0e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+  - name: RatAttack
+    loop: 0
+    clip: {fileID: 8300000, guid: 120a8bb67aaba924a990d7d60921f12d, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
