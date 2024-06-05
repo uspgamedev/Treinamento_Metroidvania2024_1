@@ -43,7 +43,7 @@ public class Health : MonoBehaviour
     private bool onHazard = false;
 
     private LayerMask enemyLayer;
-    [SerializeField] private GameObject buscaLayerImmortality;
+    [SerializeField] private LayerMask layerImmortality;
     private LayerMask playerLayer;
     
     private void Start()
@@ -81,7 +81,7 @@ public class Health : MonoBehaviour
             }
             enemyLayer = collision.gameObject.layer;
             if (LayerMask.LayerToName(enemyLayer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
-                gameObject.layer = buscaLayerImmortality.layer;
+                gameObject.layer = layerImmortality;
                 damageable = false;
                 Debug.Log("enemies");
                 
@@ -89,7 +89,7 @@ public class Health : MonoBehaviour
             }
             if (LayerMask.LayerToName(enemyLayer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
-                gameObject.layer = buscaLayerImmortality.layer;
+                gameObject.layer = layerImmortality;
                 damageable = false;
                     Debug.Log("disparo");
                 TomarDano(collision.gameObject);
@@ -98,7 +98,7 @@ public class Health : MonoBehaviour
             if (LayerMask.LayerToName(enemyLayer) == "Fogo" && damageable && !onHazard) {
                 Debug.Log("fogo");
                 damageable = false;
-                gameObject.layer = buscaLayerImmortality.layer;
+                gameObject.layer = layerImmortality;
                 TomarDano(collision.gameObject);
                 Destroy(collision.gameObject);
             }
@@ -126,7 +126,7 @@ public class Health : MonoBehaviour
     public void TomarDano(GameObject enemy) {
         Debug.Log("dano");
         
-        //if (currentHealth > 0) {
+        if (currentHealth > 0) {
             //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
             hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
             currentHealth--;
@@ -134,7 +134,7 @@ public class Health : MonoBehaviour
             Debug.Log("DANO");
             StartCoroutine(DamageKnockback(enemy));
 
-        //}
+        }
         
     }
 

@@ -9980,7 +9980,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.6
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: b1ca616f1bbd4425a9ffe05b2caecc25, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -10068,7 +10068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
-  maxHealth: 3
+  maxHealth: 15
   healthUI: {fileID: 3606247851656254604, guid: 71730c96de7764000a814eb60ddb3972, type: 3}
   healthSize: 1.25
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
@@ -10076,6 +10076,9 @@ MonoBehaviour:
   immortalTime: 3
   knockbackForce: 5
   onKnockback: 0
+  layerImmortality:
+    serializedVersion: 2
+    m_Bits: 65536
 --- !u!114 &429157850925583163
 MonoBehaviour:
   m_ObjectHideFlags: 0

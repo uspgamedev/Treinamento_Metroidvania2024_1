@@ -20,6 +20,7 @@ public class BossAi : MonoBehaviour
     private bool canDash = true;
     private bool estaEmDash = false;
     private bool emFogo = false;
+    private bool invocando = false;
 
     private bool canPular = true;
 
@@ -42,6 +43,7 @@ public class BossAi : MonoBehaviour
     
 
     private GameObject[] chamas;
+    private GameObject[] inimigos;
 
 
     float Timer;
@@ -229,6 +231,24 @@ public class BossAi : MonoBehaviour
          }
          emFogo = false;
          currentState = State.Controller;
+
+    }
+
+    private void Invocando(){
+        if (!invocando){
+            float numerodebichos = Random.Range(3, 6);
+            inimigos = new GameObject[(int)numerodebichos];
+            StartCoroutine(ChamandoBicho(numerodebichos));
+
+        }
+    }
+
+    private IEnumerator ChamandoBicho(float N){
+        //animação antes de invocar
+        yield return new WaitForSeconds(1.5f);
+        float enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
+        //inimigos[numerodebichos - N] = Instantiate()
+
 
     }
 }
