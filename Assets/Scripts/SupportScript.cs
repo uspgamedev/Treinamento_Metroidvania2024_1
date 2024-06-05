@@ -36,6 +36,7 @@ public class SupportScript : MonoBehaviour
 
     [HideInInspector] public List<int> healthIDToDeactivate;
     [HideInInspector] public List<int> powerupIDToDeactivate;
+    [HideInInspector] public List<int> gemIDToDeactivate;
 
     [HideInInspector] public Vector3 lastRespawn;
 
