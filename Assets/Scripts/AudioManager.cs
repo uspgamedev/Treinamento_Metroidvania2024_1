@@ -1,17 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance { get; private set; }
     public Sound[] sounds;
+
     private void Awake()
     {
-        InitializeSounds();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            InitializeSounds();
+        }
     }
 
     private void InitializeSounds()
@@ -32,11 +38,6 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
     }
-
-    // private void OnDestroy()
-    // {
-    //     Debug.Log("AudioManager is being destroyed.");
-    // }
 
     public void Play(string name)
     {

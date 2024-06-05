@@ -109,15 +109,15 @@ public class SupportScript : MonoBehaviour
             temGancho = true;
         }
     }
-
     public AudioManager getAudioManagerInstance()
     {
-        GameObject audioManagerObj = GameObject.Find("AudioManager");
-        if (audioManagerObj != null) {
-            return audioManagerObj.GetComponent<AudioManager>();
-        } else {
+        if (AudioManager.Instance != null)
+        {
+            return AudioManager.Instance;
+        }
+        else
+        {
             GameObject newAudioManager = Instantiate(audioPrefab, Vector3.zero, Quaternion.identity);
-            DontDestroyOnLoad(newAudioManager);
             return newAudioManager.GetComponent<AudioManager>();
         }
     }
