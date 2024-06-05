@@ -17,8 +17,8 @@ public class SupportScript : MonoBehaviour
         Gancho = 1 << 2
     }
 
-    [HideInInspector] public GameObject[] listaA = new GameObject[15];
-    [HideInInspector] public GameObject[] listaB = new GameObject[15];
+    [HideInInspector] public GameObject[] listaA = new GameObject[100];
+    [HideInInspector] public GameObject[] listaB = new GameObject[100];
 
     [SerializeField] LadoInicial ladoInicial;
     [SerializeField] Skills skillsIniciais;
