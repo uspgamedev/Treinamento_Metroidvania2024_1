@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class Fogo : MonoBehaviour
 {
+    private BoxCollider2D col;
+    private Rigidbody2D rb;
 
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private ParticleSystem destroyParticles;
 
+    private float originalGravity;
     void Awake(){
-
+        rb = GetComponent<Rigidbody2D>();
+        originalGravity = rb.gravityScale;
     }
 
     // Update is called once per frame
@@ -22,7 +21,15 @@ public class Fogo : MonoBehaviour
         
     }
 
-    void OnCollisionEnter2D(Collision2D collision){
-        Destroy(gameObject);
-    }
+    // private IEnumerator InitializeFogo() {
+    //     rb.gravityScale = 0f;
+    //     yield return new WaitforSeconds(2f);
+    //     rb.gravityScale = originalGravity;
+    //     yield return new WaitforSeconds(0.5f);
+    //     col.enabled = true;
+    // }
+
+    // private void OnCollisionEnter2D(Collision2D collision) {
+
+    // }
 }

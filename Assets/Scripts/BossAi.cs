@@ -23,6 +23,7 @@ public class BossAi : MonoBehaviour
 
     private bool canDash = true;
     private bool estaEmDash = false;
+    private bool travarScaleDash = false;
     private bool emFogo = false;
     private bool invocando = false;
 
@@ -142,9 +143,9 @@ public class BossAi : MonoBehaviour
 
         }
 
-        if (transform.position.x < player.GetComponent<Transform>().position.x){
+        if (transform.position.x < player.GetComponent<Transform>().position.x && !travarScaleDash){
             direction = 1f;
-        } else {
+        } else if (transform.position.x >= player.GetComponent<Transform>().position.x && !travarScaleDash) {
             direction = -1f;
         }
 
@@ -154,20 +155,21 @@ public class BossAi : MonoBehaviour
             bossRB.velocity = new Vector2(dashSpeed*direction, 0f);
         }
 
-        if (!dormindo) 
-        transform.localScale = new Vector3(-direction, 1f, 1f);
+        if (!dormindo && !travarScaleDash && canPular) {
+            transform.localScale = new Vector3(-direction, 1f, 1f);
+        }
     }
     
     private void ChoiceState(){ // Fun��o com as chances de cada novo estado aparecer
         nextState = Random.Range(1, 101);
 
-        if (nextState < 55f){
+        if (nextState < 45f){
             currentState = State.Dashing;
         }
-        if (nextState >=55f && nextState < 75f ){
+        if (nextState >=45f && nextState < 65f ){
             currentState = State.Jumping;
         }
-        if (nextState >= 75f && nextState < 85f){
+        if (nextState >= 65f && nextState < 85f){
             currentState = State.Firing;
         }
         if (nextState>=85f && nextState <90f){
@@ -214,6 +216,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(dashDistance/dashSpeed);
 
         estaEmDash = false;
+        travarScaleDash = true;
 
         Vector2 velocidade = bossRB.velocity; // velocidade inicial para ser usada no DOTween, meio in�til
         DOTween.To(() => velocidade, (x) => bossRB.velocity = x/4, new Vector2(0f, 0f), 2f);
@@ -221,6 +224,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(2f);
         currentState = State.Controller;
         canDash = true;
+        travarScaleDash = false;
     }
 
     private void JumpState(){
@@ -232,9 +236,9 @@ public class BossAi : MonoBehaviour
         }
         if (canPular){ // Flag que inicia a atribui��o das velocidades usando umas f�rmulas
             if (direction > 0f){
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(-1, 1, 1);
             } else {
-                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale = new Vector3(1, 1, 1);
             }
            vely = Mathf.Sqrt(g*Mathf.Abs(dist));
            bossRB.velocity = new Vector2((g/2)*dist/vely, vely);
@@ -246,7 +250,9 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator Pulando(){
-        yield return new WaitForSeconds(TimerPulando+3f); // espera um pouco depois que o pulo acaba
+        yield return new WaitForSeconds(TimerPulando + 0.5f);
+        anim.SetTrigger("Laser");
+        yield return new WaitForSeconds(1.5f); // espera um pouco depois que o pulo acaba
 
         Raio100.GetComponent<Animator>().SetTrigger("Activate");
         Raio100.SetActive(true); // raio
@@ -254,6 +260,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(TimerRaio);
 
         Raio100.SetActive(false); // desraio
+        anim.SetTrigger("StopLaser");
 
         currentState = State.Controller;
         canPular = true;
@@ -295,8 +302,7 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator ChamandoBicho(int N){
-        //anima��o antes de invocar
-        
+        //anima¿¿¿o antes de invocar
             
             for (int i=0;i<N;i++){
             do {
@@ -311,9 +317,9 @@ public class BossAi : MonoBehaviour
             }
             }
             
-            invocando = false;
             yield return new WaitForSeconds(3f);
             currentState = State.Controller;
+            invocando = false;
     }
 
     private IEnumerator ChangeSides(){ //troca de lados
@@ -338,6 +344,8 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(transTime/2);
         //anima��o
         yield return new WaitForSeconds(transTime/2);
+
+        anim.SetTrigger("StopChange");
 
         canChangeSides = true;
         currentState = State.Controller;

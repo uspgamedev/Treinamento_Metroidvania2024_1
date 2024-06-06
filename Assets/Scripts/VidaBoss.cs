@@ -5,16 +5,16 @@ using UnityEngine;
 public class VidaBoss : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer; //qual a layer do player;
-    [SerializeField] public int maxStun = 1; //número que define a quantidade de stun damage necessária para deixar o inimigo em stun;
+    [SerializeField] public int maxStun = 1; //nï¿½mero que define a quantidade de stun damage necessï¿½ria para deixar o inimigo em stun;
     [SerializeField] private float stunTime = 0.5f; //a cada stunTime o currentStun do inimigo diminui em uma quantidade stunDecreaseRate;
     [SerializeField] private float stunDecreaseRate = 0.5f; //o quanto de currentStun o inimigo perde a cada stunTime segundos;
     [SerializeField] public float stunCooldownTime = 5f; //o tempo que leva para o inimigo parar de ficar estunado;
     // [SerializeField] private float superMaxStun = 10; //hardcap do quanto que de stun que o player pode infligir no inimigo;
     [SerializeField] public float currentStun; //a quantidade de stun que o inimigo apresenta
-    //porque SerializeField e não public? public permite que as variáveis sejam acessadas por qualquer código e que elas sejam alteradas no inspetor,
-    //SerializeField não permite que a variável seja acessada por qualquer código, porém permite que ela seja alterada no inspetor;
-    [HideInInspector] public bool notStunned = true; //true se o inimigo está ativo (não está estunado);
-    private bool canDecreaseStun = true; //true se a função StunDecrease deve ser chamada, para que a função seja chamada baseado no tempo e não no frame;
+    //porque SerializeField e nï¿½o public? public permite que as variï¿½veis sejam acessadas por qualquer cï¿½digo e que elas sejam alteradas no inspetor,
+    //SerializeField nï¿½o permite que a variï¿½vel seja acessada por qualquer cï¿½digo, porï¿½m permite que ela seja alterada no inspetor;
+    [HideInInspector] public bool notStunned = true; //true se o inimigo estï¿½ ativo (nï¿½o estï¿½ estunado);
+    private bool canDecreaseStun = true; //true se a funï¿½ï¿½o StunDecrease deve ser chamada, para que a funï¿½ï¿½o seja chamada baseado no tempo e nï¿½o no frame;
 
     private SimpleFlash flashScript;
     private float timeSinceHit = 100f;
@@ -25,7 +25,7 @@ public class VidaBoss : MonoBehaviour
     void Start()
     {
         currentStun = 0f;
-
+        flashScript = GetComponent<SimpleFlash>();
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class VidaBoss : MonoBehaviour
     {
         if(canDecreaseStun && notStunned)
         {
-            StartCoroutine(StunDecrease()); //chama a função que diminui currentStun a cada stunTime segundos;
+            StartCoroutine(StunDecrease()); //chama a funï¿½ï¿½o que diminui currentStun a cada stunTime segundos;
         }
 
 
@@ -44,6 +44,8 @@ public class VidaBoss : MonoBehaviour
     public void TakeDamage(int damage) //da dano de stun ao inimigo
     {
         timeSinceHit = 0f;
+
+        flashScript.Flash(Color.white);
 
         if (notStunned)
         {
@@ -79,7 +81,7 @@ public class VidaBoss : MonoBehaviour
         canDecreaseStun = true;
     }
 
-    private IEnumerator StunCooldown() //para de diminuir o stun até o inimigo para de estar estunado
+    private IEnumerator StunCooldown() //para de diminuir o stun atï¿½ o inimigo para de estar estunado
     {
         yield return new WaitForSeconds(stunCooldownTime);
         currentStun = 0f;
