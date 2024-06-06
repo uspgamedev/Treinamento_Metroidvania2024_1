@@ -5,10 +5,13 @@ using UnityEngine;
 public class SupportScript : MonoBehaviour
 {
     [SerializeField] private GameObject audioPrefab;
-    private enum LadoInicial {
+    public enum LadoInicial {
         A,
         B
     }
+
+    public LadoInicial LadoInicialA;
+    public LadoInicial LadoInicialB;
 
     [System.Flags]
     private enum Skills {
@@ -21,7 +24,7 @@ public class SupportScript : MonoBehaviour
     [SerializeField] public GameObject[] listaA = new GameObject[100];
     [SerializeField] public GameObject[] listaB = new GameObject[100];
 
-    [SerializeField] LadoInicial ladoInicial;
+    public LadoInicial ladoInicial;
     [SerializeField] Skills skillsIniciais;
     [SerializeField] int frameRate = 60;
 
@@ -117,13 +120,18 @@ public class SupportScript : MonoBehaviour
         listaBTL = GameObject.FindGameObjectWithTag("ListaBTL");
 
         if (ladoInicial == LadoInicial.B) {
-            listaATL.SetActive(false);
+            if (listaATL != null){
+                listaATL.SetActive(false);
+            }
         }
         else {
-            listaBTL.SetActive(false);
+            if (listaBTL != null){
+                listaBTL.SetActive(false);
+            }
         }
 
-        
+        LadoInicialA = LadoInicial.A;
+        LadoInicialB = LadoInicial.B;        
     }
     public AudioManager getAudioManagerInstance()
     {
