@@ -39,12 +39,14 @@ public class BossAi : MonoBehaviour
     private int j = 0;
 
     private float primeiro = 0;
-
+    private float numerodebichos;
     
 
     private GameObject[] chamas;
     private GameObject[] inimigos;
 
+    [SerializeField] private GameObject blobPrefab;
+    [SerializeField] private GameObject ratoPrefab;
 
     float Timer;
     private enum State {
@@ -236,7 +238,7 @@ public class BossAi : MonoBehaviour
 
     private void Invocando(){
         if (!invocando){
-            float numerodebichos = Random.Range(3, 6);
+            numerodebichos = Random.Range(3, 6);
             inimigos = new GameObject[(int)numerodebichos];
             StartCoroutine(ChamandoBicho(numerodebichos));
 
@@ -247,7 +249,15 @@ public class BossAi : MonoBehaviour
         //animação antes de invocar
         yield return new WaitForSeconds(1.5f);
         float enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
-        //inimigos[numerodebichos - N] = Instantiate()
+        nextState = Random.Range(-1, 1);
+        if (nextState < 0){
+            inimigos[(int)numerodebichos - (int)N] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+0.5f), Quaternion.identity);
+        } else {
+            inimigos[(int)numerodebichos - (int)N] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+0.5f), Quaternion.identity);
+        }
+        if (N-1 > 0){
+            StartCoroutine(ChamandoBicho(N-1));
+        }
 
 
     }

@@ -81,7 +81,7 @@ public class Health : MonoBehaviour
             }
             enemyLayer = collision.gameObject.layer;
             if (LayerMask.LayerToName(enemyLayer) == "Enemies" && damageable && !GetComponent<PlayerCombat>().isParrying && !onHazard) {
-                gameObject.layer = layerImmortality;
+                
                 damageable = false;
                 Debug.Log("enemies");
                 
@@ -89,7 +89,7 @@ public class Health : MonoBehaviour
             }
             if (LayerMask.LayerToName(enemyLayer) == "Disparo" && damageable && !onHazard) {
                 if ((collision.transform.position.x > transform.position.x && transform.localScale.x < 0) || (collision.transform.position.x < transform.position.x && transform.localScale.x > 0) || !GetComponent<PlayerCombat>().isParrying) {
-                gameObject.layer = layerImmortality;
+               
                 damageable = false;
                     Debug.Log("disparo");
                 TomarDano(collision.gameObject);
@@ -98,7 +98,6 @@ public class Health : MonoBehaviour
             if (LayerMask.LayerToName(enemyLayer) == "Fogo" && damageable && !onHazard) {
                 Debug.Log("fogo");
                 damageable = false;
-                gameObject.layer = layerImmortality;
                 TomarDano(collision.gameObject);
                 Destroy(collision.gameObject);
             }
@@ -125,7 +124,7 @@ public class Health : MonoBehaviour
 
     public void TomarDano(GameObject enemy) {
         Debug.Log("dano");
-        
+        gameObject.layer = LayerMask.NameToLayer("Immortality");
         if (currentHealth > 0) {
             //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
             hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
@@ -167,9 +166,6 @@ public class Health : MonoBehaviour
     void Update()
     {
 
-        if (damageable){
-            gameObject.layer = playerLayer;
-        }
         // Debug.Log(currentHealth);
 
         if (currentHealth > maxHealth) {
