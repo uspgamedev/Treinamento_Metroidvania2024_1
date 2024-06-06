@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6186391214189030664
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 8904418230314067099}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 46.4, y: -44.4, z: 0}
+  m_LocalPosition: {x: -8.9, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -91,9 +91,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFinalSequence: 0
-  VagalumesFinais: []
+  VagalumesFinais:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   objetoGameOver: {fileID: 0}
   timerMax: 120
   timer: 60
   textCanvas: {fileID: 0}
+  firstTextBox: {fileID: 0}
+  panelFirstText: {fileID: 0}
   textBox: {fileID: 0}
+  panel1: {fileID: 0}
