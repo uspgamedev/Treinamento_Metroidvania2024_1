@@ -247,6 +247,7 @@ public class Enemy_AI3 : MonoBehaviour
 
     public void Cube() {
         if (!teleporting) {
+            Debug.Log("a");
             anim.SetTrigger("Cube");
             cubing = true;
             if (!dying) {
