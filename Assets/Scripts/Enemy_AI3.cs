@@ -45,6 +45,7 @@ public class Enemy_AI3 : MonoBehaviour
     [SerializeField] private GameObject deathParticles;
 
     private SupportScript support;
+    private AudioManager audioPlayer;
 
     [SerializeField] private float respawnTime;
 
@@ -55,6 +56,7 @@ public class Enemy_AI3 : MonoBehaviour
             respawnTime = 150f;
         }
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
 
         int j = 0;
         foreach (Transform child in transform) {
@@ -141,6 +143,7 @@ public class Enemy_AI3 : MonoBehaviour
 
     private IEnumerator TrocarPosicao() {
         anim.SetTrigger("Teleport");
+        audioPlayer.Play("BlobDisappear");
 
         index += Random.Range(1, pos.Length);
         if (index >= pos.Length) {
@@ -153,6 +156,7 @@ public class Enemy_AI3 : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         OnTeleport(true);
         anim.SetTrigger("Appear");
+        audioPlayer.Play("BlobAppear");
 
         transform.position = pos[index];
 
@@ -161,6 +165,7 @@ public class Enemy_AI3 : MonoBehaviour
 
     private IEnumerator Shoot()
     {
+        audioPlayer.Play("BlobPreShoot");
         anim.SetTrigger("Prepare");
         light.gameObject.SetActive(true);
         light.intensity = 0f;
@@ -172,6 +177,7 @@ public class Enemy_AI3 : MonoBehaviour
         light.gameObject.SetActive(false);
 
         anim.SetTrigger("Attack");
+        audioPlayer.Play("BlobShoot");
         GameObject projectile = Instantiate(projectilePrefab, new Vector2(transform.position.x + direction, transform.position.y), Quaternion.identity);
         Disparo disparo = projectile.GetComponent<Disparo>();
         disparo.projectileSpeed = projectileSpeed;
@@ -217,6 +223,7 @@ public class Enemy_AI3 : MonoBehaviour
         }
 
         GameObject part = Instantiate(deathParticles, transform.position, Quaternion.identity);
+        audioPlayer.Play("BlobDie");
         part.GetComponent<DeathParticles>().enemy = DeathParticles.Enemy.Blob;
 
         yield return new WaitForSeconds(0.125f);

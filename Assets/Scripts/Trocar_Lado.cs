@@ -25,6 +25,7 @@ public class Trocar_Lado : MonoBehaviour
 
     [SerializeField] private GameObject otherSideChanger;
     private GameObject player;
+    private AudioManager audioPlayer;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class Trocar_Lado : MonoBehaviour
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         player = GameObject.Find("Player");
+        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
     }
 
     void Update()
@@ -53,6 +55,7 @@ public class Trocar_Lado : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.E)) 
                 {
+                    audioPlayer.Play("ChangeSideSFX");
                     StartCoroutine(ChangeSides());
                 }
             }

@@ -269,11 +269,6 @@ public class EnemyAI : MonoBehaviour
         {
             if (visionEnemy.collider.CompareTag("Player")){
                 currentState = State.Attack;
-                if (playSound){
-                    audioPlayer.Play("RatAttack");
-                    playSound = false;
-                    StartCoroutine(TimeSoundReplay(TIME_BEFORE_SOUND));            
-                }
             }
         }
     }
@@ -362,6 +357,11 @@ public class EnemyAI : MonoBehaviour
                 transform.localScale = new Vector3(-1, 1, 1);
             }
             Timer2 = 0.25f; // Reinicia o Timer2 enquanto o Timer ainda est� ativo
+            if (playSound){
+                audioPlayer.Play("RatAttack");
+                playSound = false;
+                StartCoroutine(TimeSoundReplay(TIME_BEFORE_SOUND));            
+            }
         }
 
     }

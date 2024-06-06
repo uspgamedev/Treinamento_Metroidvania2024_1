@@ -75,3 +75,39 @@ MonoBehaviour:
     volume: 0.15
     pitch: 1
     source: {fileID: 0}
+  - name: BlobPreShoot
+    loop: 0
+    clip: {fileID: 8300000, guid: ca15bca41b3b424488155322fd162a7d, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+  - name: BlobShoot
+    loop: 0
+    clip: {fileID: 8300000, guid: eb6bd1d91a07fac43aad7c1096b8f06c, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: BlobAppear
+    loop: 0
+    clip: {fileID: 8300000, guid: 840615e7be6d8b8449f8f7b01cfa7178, type: 3}
+    volume: 0.15
+    pitch: 1.1
+    source: {fileID: 0}
+  - name: BlobDisappear
+    loop: 0
+    clip: {fileID: 8300000, guid: 66b56ce391a32734d8904006ed498e56, type: 3}
+    volume: 0.15
+    pitch: 1
+    source: {fileID: 0}
+  - name: BlobDie
+    loop: 0
+    clip: {fileID: 8300000, guid: 9d2b23a84f2efb343892d14d7e3d6845, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+  - name: ChangeSideSFX
+    loop: 0
+    clip: {fileID: 8300000, guid: 132a5096433a39241adde8d3d0697b56, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
