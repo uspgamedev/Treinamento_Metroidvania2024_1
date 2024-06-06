@@ -34,7 +34,8 @@ public class Enemy_AI3 : MonoBehaviour
     private float baseChoiceMark = 0.5f;
     private float choiceMark;
     private float choice;
-    private float minPlayerDist = 35f;
+    private float minPlayerDistX = 18f;
+    private float minPlayerDistY = 8f;
 
     private Coroutine activeCoroutine;
     private GameObject cubeRange;
@@ -95,7 +96,7 @@ public class Enemy_AI3 : MonoBehaviour
         choiceMark = baseChoiceMark;
 
         if (shootsForward) {
-            minPlayerDist *= 2;
+            minPlayerDistX *= 2;
         }
     }
 
@@ -240,9 +241,9 @@ public class Enemy_AI3 : MonoBehaviour
     }
 
     private bool PlayerClose() {
-        Vector3 vector = playerTransform.position - transform.position;
-        float magnitude = vector.magnitude;
-        return magnitude < minPlayerDist;
+        float x = playerTransform.position.x - transform.position.x;
+        float y = playerTransform.position.y - transform.position.y;
+        return x < minPlayerDistX || y < minPlayerDistY;
     }
 
     public void Cube() {

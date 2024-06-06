@@ -31,8 +31,6 @@ public class Trocar_Lado : MonoBehaviour
 
     void Start()
     {
-        GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
-
         anim = GetComponent<Animator>();
 
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
@@ -53,12 +51,14 @@ public class Trocar_Lado : MonoBehaviour
         //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
         if(canChangeSides)
         {
-            if(coll.gameObject.tag == "Player") 
+            if (coll != null) 
             {
-                if (Input.GetKeyDown(KeyCode.E)) 
-                {
-                    audioPlayer.Play("ChangeSideSFX");
-                    StartCoroutine(ChangeSides());
+                if (coll.gameObject.tag == "Player") {
+                    if (Input.GetKeyDown(KeyCode.E)) 
+                    {
+                        audioPlayer.Play("ChangeSideSFX");
+                        StartCoroutine(ChangeSides());
+                    }
                 }
             }
         }
@@ -115,25 +115,24 @@ public class Trocar_Lado : MonoBehaviour
         }
 
         player.transform.position = otherSideChanger.transform.position;
-        Debug.Log(otherSideChanger.name);
+        Debug.Log(otherSideChanger.name + " " + gameObject.name);
         Debug.Log(otherSideChanger.transform.position);
         
 
         yield return new WaitForSeconds(transTime/2);
         anim.SetTrigger("End");
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
+        GameObject.Find("Player").GetComponent<Player_Movement>().canMove2 = true;
         yield return new WaitForSeconds(transTime/2);
 
+        support.toFadeWhite = false;
+        canChangeSides = true;
         if (activateB) {
             objetoATL.SetActive(false);
         }
         else {
             objetoBTL.SetActive(false);
         }
-
-        coll.GetComponent<Player_Movement>().canMove2 = true;
-        support.toFadeWhite = false;
-        canChangeSides = true;
 
         // gameObject.SetActive(false);
     }
@@ -148,6 +147,7 @@ public class Trocar_Lado : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         canChangeSides = false;
+        coll = null;
     }
 
     public void Fade(float fadeDuration, Image image, float rgb, float a)

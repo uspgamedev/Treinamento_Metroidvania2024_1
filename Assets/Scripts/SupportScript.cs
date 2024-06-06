@@ -133,7 +133,7 @@ public class SupportScript : MonoBehaviour
         LadoInicialA = LadoInicial.A;
         LadoInicialB = LadoInicial.B;        
     }
-    
+
     public AudioManager getAudioManagerInstance()
     {
         if (AudioManager.Instance != null)
@@ -161,5 +161,10 @@ public class SupportScript : MonoBehaviour
         if ((objectSide == "LadoA" && listaA[0].activeInHierarchy) || (objectSide == "LadoB" && listaB[0].activeInHierarchy)) {
             objectToRespawn.SetActive(true);
         }
+    }
+
+    private void SwapSideChangers() {
+        listaATL.SetActive(!listaATL.activeInHierarchy);
+        listaBTL.SetActive(!listaBTL.activeInHierarchy);
     }
 }
