@@ -8,6 +8,8 @@ public class Trocar_Lado : MonoBehaviour
 {
     private GameObject[] listaA;
     private GameObject[] listaB;
+    [SerializeField] private GameObject objetoATL;
+    [SerializeField] private GameObject objetoBTL;
     [HideInInspector] public bool canChangeSides;
     private Collider2D coll;
 
@@ -39,9 +41,21 @@ public class Trocar_Lado : MonoBehaviour
         listaA = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaA;
         listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
 
+        // objetoATL = GameObject.FindGameObjectWithTag("ListaATL");
+        // objetoBTL = GameObject.FindGameObjectWithTag("ListaBTL");        
         canChangeSides = false;
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+
+        if (listaA[0].activeInHierarchy)
+        {
+            objetoBTL.SetActive(false);
+        } 
+        else
+        {
+            objetoATL.SetActive(false);
+        }
+
         player = GameObject.Find("Player");
         audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
     }
@@ -84,6 +98,8 @@ public class Trocar_Lado : MonoBehaviour
 
         otherSideChanger.SetActive(true);
         otherSideChanger.GetComponent<Trocar_Lado>().canChangeSides = false;
+        objetoATL.SetActive(!objetoATL.activeInHierarchy);
+        objetoBTL.SetActive(!objetoBTL.activeInHierarchy);
 
         anim.SetTrigger("Start");
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
