@@ -115,6 +115,8 @@ public class Trocar_Lado : MonoBehaviour
         }
 
         player.transform.position = otherSideChanger.transform.position;
+        Debug.Log(otherSideChanger.name);
+        Debug.Log(otherSideChanger.transform.position);
         
 
         yield return new WaitForSeconds(transTime/2);

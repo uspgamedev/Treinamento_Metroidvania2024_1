@@ -133,6 +133,7 @@ public class SupportScript : MonoBehaviour
         LadoInicialA = LadoInicial.A;
         LadoInicialB = LadoInicial.B;        
     }
+    
     public AudioManager getAudioManagerInstance()
     {
         if (AudioManager.Instance != null)
