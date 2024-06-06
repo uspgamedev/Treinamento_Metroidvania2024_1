@@ -72,7 +72,11 @@ public class PlayerCombat : MonoBehaviour
             //para cada inimigo no range de ataque chame TakeDamage;
             foreach (Collider2D enemy in hitEnemies)
             {
-                enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
+                if (enemy.gameObject.GetComponent<Vida_Inimiga>() != null){
+                    enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
+                } else {
+                    enemy.gameObject.GetComponent<VidaBoss>().TakeDamage(attackDamage);
+                }
             }
         }
     }
@@ -111,8 +115,10 @@ public class PlayerCombat : MonoBehaviour
         { 
             if (isParrying) {
                 if ((other.transform.position.x - transform.position.x) * transform.localScale.x > 0)
-                {
+                {   
+                    if (other.gameObject.GetComponent<Vida_Inimiga>() != null){
                     other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                    }
                     StartCoroutine(ParryAttack());
                 }
                 else {

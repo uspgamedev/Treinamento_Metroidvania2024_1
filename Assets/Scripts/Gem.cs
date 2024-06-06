@@ -56,6 +56,7 @@ public class Gem : MonoBehaviour
         flashScript.Flash(color);
         GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(color);
 
+        support.gemCount++;
         support.gemIDToDeactivate.Add(gemID);
 
         DOTween.To(() => light.intensity, (x) => light.intensity = x, light.intensity + 1.5f, 1f).SetEase(Ease.InOutSine);
