@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class BossAi : MonoBehaviour
 {   
+    private GameObject[] listaA;
+    private GameObject[] listaB;
+    
     private Vector2[] positions;
     
     private Rigidbody2D bossRB;
@@ -49,6 +53,12 @@ public class BossAi : MonoBehaviour
     [SerializeField] private GameObject blobPrefab;
     [SerializeField] private GameObject ratoPrefab;
 
+    [HideInInspector] public bool canChangeSides;
+
+    private SupportScript support;
+    [SerializeField] private float transTime; 
+    private Image whiteFade;
+
     float Timer;
     private enum State {
         Controller,
@@ -56,7 +66,8 @@ public class BossAi : MonoBehaviour
         Dashing, 
         Jumping,
         Firing,
-        Invocando
+        Invocando,
+        Trocando
     }
 
     private State currentState;
@@ -86,6 +97,17 @@ public class BossAi : MonoBehaviour
         }
         chamas = new GameObject[j];
 
+        listaA = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaA;
+        listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
+
+        GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
+
+        canChangeSides = true;
+
+        whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
+        whiteFade.color = new Color(1f, 1f, 1f, 0f);
+
+
     }
 
     // Update is called once per frame
@@ -110,6 +132,9 @@ public class BossAi : MonoBehaviour
             case State.Controller:
                 ChoiceState();
                 break;
+            case State.Trocando:
+                Trocando();
+                break;
 
         }
 
@@ -133,14 +158,17 @@ public class BossAi : MonoBehaviour
         if (nextState < 35f){
             currentState = State.Dashing;
         }
-        if (nextState >=35f && nextState < 60f ){
+        if (nextState >=35f && nextState < 55f ){
             currentState = State.Jumping;
         }
-        if (nextState >= 60f && nextState < 85f){
+        if (nextState >= 55f && nextState < 70f){
             currentState = State.Firing;
         }
-        if (nextState>85f){
+        if (nextState>=70f && nextState <90f){
             currentState = State.Invocando;
+        }
+        if (nextState>90f){
+            currentState = State.Trocando;
         }
     }
 
@@ -156,7 +184,7 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator Pulando(){
-        yield return new WaitForSeconds(TimerPulando);
+        yield return new WaitForSeconds(TimerPulando+2f);
 
         Raio100.SetActive(true);
 
@@ -262,7 +290,7 @@ public class BossAi : MonoBehaviour
             do {
                 enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
             } while (enemyposition > transform.position.x - 1f && enemyposition < transform.position.x + 1f);
-            nextState = Random.Range(-1, 1);
+            nextState = Random.Range(-1, 4);
             yield return new WaitForSeconds(1.5f);
             if (nextState < 0){
                 inimigos[i] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+1f), Quaternion.identity);
@@ -274,11 +302,45 @@ public class BossAi : MonoBehaviour
             invocando = false;
             yield return new WaitForSeconds(3f);
             currentState = State.Controller;
-            
+    }
 
+    private IEnumerator ChangeSides(){
+        Debug.Log("Começou");
+        canChangeSides = false;
+
+
+        StartCoroutine(White());
+        yield return new WaitForSeconds(transTime);
+
+        foreach (GameObject objeto in listaA)
+        {
+            if (objeto != null)
+            objeto.SetActive(!objeto.activeInHierarchy);
+        }
+        foreach (GameObject objeto in listaB)
+        {
+            if (objeto != null)
+                objeto.SetActive(!objeto.activeInHierarchy);
+        }
+
+        yield return new WaitForSeconds(transTime/2);
+        //animação
+        yield return new WaitForSeconds(transTime/2);
+
+        canChangeSides = true;
+        currentState = State.Controller;
         
-        
+    }
 
+    private IEnumerator White(){
+        whiteFade.DOColor(Color.white, transTime);
+        yield return new WaitForSeconds(0f);
+    }
 
+    private void Trocando(){
+        if(canChangeSides){
+            Debug.Log("Quase lá");
+            StartCoroutine(ChangeSides());
+        }
     }
 }
