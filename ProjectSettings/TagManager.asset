@@ -24,6 +24,8 @@ TagManager:
   - GanchoText
   - Raio
   - Fogo
+  - ListaATL
+  - ListaBTL
   layers:
   - Default
   - TransparentFX
