@@ -119,6 +119,9 @@ public class PlayerCombat : MonoBehaviour
                     if (other.gameObject.GetComponent<Vida_Inimiga>() != null){
                     other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
                     }
+                    if (other.gameObject.GetComponent<VidaBoss>() != null){
+                    other.gameObject.GetComponent<VidaBoss>().TakeDamage(parryDamage);
+                    }
                     StartCoroutine(ParryAttack());
                 }
                 else {

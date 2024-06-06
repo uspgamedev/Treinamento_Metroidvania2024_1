@@ -15,7 +15,7 @@ public class BossAi : MonoBehaviour
     private GameObject player;
     private float dist;
     private float g;
-    [SerializeField] private float TimerDesperta=1.5f;
+    [SerializeField] private float TimerDesperta = 3f;
     private float TimerPulando;
     private float TimerEmDash;
     private float nextState;
@@ -26,6 +26,7 @@ public class BossAi : MonoBehaviour
     private bool travarScaleDash = false;
     private bool emFogo = false;
     private bool invocando = false;
+    private bool idling = false;
 
     private bool canPular = true;
 
@@ -70,7 +71,8 @@ public class BossAi : MonoBehaviour
         Jumping,
         Firing,
         Invocando,
-        Trocando
+        Trocando,
+        Sleeping
     }
 
     private State currentState;
@@ -85,7 +87,7 @@ public class BossAi : MonoBehaviour
         
         bossRB = gameObject.GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
-        currentState = State.Idling;
+        currentState = State.Sleeping;
         bossRB.velocity = new Vector2(0f, 0f);
         g = 10*bossRB.gravityScale; 
         
@@ -121,6 +123,9 @@ public class BossAi : MonoBehaviour
     void Update()
     {
         switch (currentState){
+            case State.Sleeping:
+                IdleState();
+                break;
             case State.Idling:
                 IdleState();
                 break;
@@ -165,26 +170,36 @@ public class BossAi : MonoBehaviour
     private void ChoiceState(){ // Fun��o com as chances de cada novo estado aparecer
         nextState = Random.Range(1, 101);
 
-        if (nextState < 45f || true){
+        if (nextState < 45f){
             currentState = State.Dashing;
         }
-        // if (nextState >=45f && nextState < 65f ){
-        //     currentState = State.Jumping;
-        // }
-        // if (nextState >= 65f && nextState < 85f){
-        //     currentState = State.Firing;
-        // }
-        // if (nextState>=85f && nextState <90f){
-        //     currentState = State.Invocando;
-        // }
-        // if (nextState>90f){
-        //     currentState = State.Trocando;
-        // }
+        if (nextState >=45f && nextState < 65f ){
+            currentState = State.Jumping;
+        }
+        if (nextState >= 65f && nextState < 85f){
+            currentState = State.Firing;
+        }
+        if (nextState>=85f && nextState <90f){
+            currentState = State.Invocando;
+        }
+        if (nextState>90f){
+            currentState = State.Trocando;
+        }
     }
 
     void IdleState(){
-        //Sprite da Capivara Dormindo
+        if (!idling) {
+            StartCoroutine(Idling());
+        }
     }
+
+    private IEnumerator Idling() {
+        idling = true;
+        yield return new WaitForSeconds(2f);
+        idling = false;
+        currentState = State.Controller;
+    }
+
     void SleepState(){
         dormindo = true;
         anim.SetBool("Sleeping", true);
@@ -205,7 +220,7 @@ public class BossAi : MonoBehaviour
 
         gameObject.layer = LayerMask.NameToLayer("Enemies");
 
-        currentState = State.Controller; // Depois de acordada, um novo estado � aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra n�o ser t�o ca�tico)
+        currentState = State.Idling; // Depois de acordada, um novo estado � aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra n�o ser t�o ca�tico)
     }
 
     void DashState(){ 
@@ -224,6 +239,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         gameObject.tag = "enemyIsAttacking";
+        travarScaleDash = true;
 
         estaEmDash = true;
         anim.SetTrigger("DashJump");
@@ -231,15 +247,18 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(dashDistance/dashSpeed);
 
         estaEmDash = false;
-        travarScaleDash = true;
 
         Vector2 velocidade = bossRB.velocity; // velocidade inicial para ser usada no DOTween, meio in�til
         DOTween.To(() => velocidade, (x) => bossRB.velocity = x/4, new Vector2(0f, 0f), 2f);
         //S
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+
+        gameObject.tag = originalTag;
+
+        yield return new WaitForSeconds(1f);
 
         anim.SetTrigger("StopDash");
-        currentState = State.Controller;
+        currentState = State.Idling;
         canDash = true;
         travarScaleDash = false;
     }
@@ -279,12 +298,13 @@ public class BossAi : MonoBehaviour
         Raio100.SetActive(false); // desraio
         anim.SetTrigger("StopLaser");
 
-        currentState = State.Controller;
+        currentState = State.Idling;
         canPular = true;
     }
 
     private void FireState(){
         if (!emFogo){ // Flag intensa
+        anim.SetTrigger("Pound");
             primeiro = Random.Range(0, j); // para parecer mais ca�tico, o primeiro espinho da sequ�ncia sempre muda, mas depois continua na ordem normal
             emFogo = true;
             StartCoroutine(AteandoFogo());
@@ -292,6 +312,7 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator AteandoFogo(){
+        yield return new WaitForSeconds(1f);
          for (int i=(int)primeiro; i<j;i++){
              chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity); // usa um array para chamar os objetos
              yield return new WaitForSeconds(0.5f); // intervalinho
@@ -303,7 +324,7 @@ public class BossAi : MonoBehaviour
              }
          }
          emFogo = false;
-         currentState = State.Controller;
+         currentState = State.Idling;
 
     }
 
@@ -314,7 +335,6 @@ public class BossAi : MonoBehaviour
             inimigos = new GameObject[numerodebichos];
             invocando = true;
             StartCoroutine(ChamandoBicho(numerodebichos));
-
         }
     }
 
@@ -336,7 +356,7 @@ public class BossAi : MonoBehaviour
             
             yield return new WaitForSeconds(3f);
             anim.SetTrigger("StopChange");
-            currentState = State.Controller;
+            currentState = State.Idling;
             invocando = false;
     }
 
@@ -363,7 +383,7 @@ public class BossAi : MonoBehaviour
         //anima��o
         canChangeSides = true;
         anim.SetTrigger("StopChange");
-        currentState = State.Controller;
+        currentState = State.Idling;
     }
 
     private IEnumerator White(){

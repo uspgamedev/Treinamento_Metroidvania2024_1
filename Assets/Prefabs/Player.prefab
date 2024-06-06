@@ -9987,7 +9987,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65536
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -10024,7 +10024,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.013641804}
+  m_Offset: {x: -0.006875515, y: -0.034269527}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -10035,7 +10035,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9727164, y: 0.9727164}
+  m_Size: {x: 0.92229366, y: 0.931461}
   m_EdgeRadius: 0
 --- !u!114 &2556436613632562620
 MonoBehaviour:
@@ -10053,7 +10053,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   onGround: 0
-  collisionRadius: 0.45
+  collisionRadius: 0.4
   bottomOffset: {x: 0, y: -0.26}
 --- !u!114 &6416887898794572963
 MonoBehaviour:
@@ -10073,7 +10073,7 @@ MonoBehaviour:
   healthSize: 1.25
   fullHeart: {fileID: 1478464271, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
   emptyHeart: {fileID: -1780937957, guid: 3fc7363f91e2b4ce19ae56136149af8e, type: 3}
-  immortalTime: 3
+  immortalTime: 1.4
   knockbackForce: 5
   onKnockback: 0
   layerImmortality:

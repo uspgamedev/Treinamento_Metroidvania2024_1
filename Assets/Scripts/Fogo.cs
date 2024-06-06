@@ -8,17 +8,14 @@ public class Fogo : MonoBehaviour
     private Rigidbody2D rb;
 
     private ParticleSystem destroyParticles;
-
     private float originalGravity;
+
     void Awake(){
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<BoxCollider2D>();
+        col.enabled = false;
         originalGravity = rb.gravityScale;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        StartCoroutine(InitializeFogo());
     }
 
     private IEnumerator InitializeFogo() {
@@ -33,7 +30,7 @@ public class Fogo : MonoBehaviour
         if (collision.gameObject.tag == "Player") {
             Destroy(gameObject);
         }
-        else if (collision.gameObject.tag == "Ground") {
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")) {
             Destroy(gameObject);
         }
     }
