@@ -20,6 +20,7 @@ public class Enemy_AI3 : MonoBehaviour
 
     private bool cubing = false;
     private bool dying = false;
+    private bool teleporting = false;
 
     private Animator anim;
     private new Light2D light;
@@ -150,11 +151,14 @@ public class Enemy_AI3 : MonoBehaviour
             index -= pos.Length;
         }
 
+        teleporting = true;
+
         yield return new WaitForSeconds(1.4f);
         OnTeleport(false);
 
         yield return new WaitForSeconds(2.5f);
         OnTeleport(true);
+        teleporting = false;
         anim.SetTrigger("Appear");
         audioPlayer.Play("BlobAppear");
 
@@ -242,13 +246,15 @@ public class Enemy_AI3 : MonoBehaviour
     }
 
     public void Cube() {
-        anim.SetTrigger("Cube");
-        cubing = true;
-        if (!dying) {
-            StartNewCoroutine(null);
-        }
-        if (light.intensity > 0f) {
-            light.intensity = 0f;
+        if (!teleporting) {
+            anim.SetTrigger("Cube");
+            cubing = true;
+            if (!dying) {
+                StartNewCoroutine(null);
+            }
+            if (light.intensity > 0f) {
+                light.intensity = 0f;
+            }
         }
     }
 
