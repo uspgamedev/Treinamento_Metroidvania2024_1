@@ -15,7 +15,7 @@ public class BossAi : MonoBehaviour
     private GameObject player;
     private float dist;
     private float g;
-    [SerializeField] private float TimerDesperta=3f;
+    [SerializeField] private float TimerDesperta=1.5f;
     private float TimerPulando;
     private float TimerEmDash;
     private float nextState;
@@ -59,6 +59,8 @@ public class BossAi : MonoBehaviour
     [SerializeField] private float transTime; 
     private Image whiteFade;
 
+    private Animator anim;
+
     float Timer;
     private enum State {
         Controller,
@@ -75,6 +77,8 @@ public class BossAi : MonoBehaviour
     void Start()
     {
         TimerEmDash = dashDistance/dashSpeed;
+
+        anim = GetComponent<Animator>();
         
         bossRB = gameObject.GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
@@ -146,12 +150,15 @@ public class BossAi : MonoBehaviour
 
         Timer -= Time.deltaTime;
 
-        if (estaEmDash){ // Quando o Boss está em dash a velocidade dele é atualizada constantemente
+        if (estaEmDash){ // Quando o Boss estï¿½ em dash a velocidade dele ï¿½ atualizada constantemente
             bossRB.velocity = new Vector2(dashSpeed*direction, 0f);
         }
+
+        if (!dormindo) 
+        transform.localScale = new Vector3(-direction, 1f, 1f);
     }
     
-    private void ChoiceState(){ // Função com as chances de cada novo estado aparecer
+    private void ChoiceState(){ // Funï¿½ï¿½o com as chances de cada novo estado aparecer
         nextState = Random.Range(1, 101);
 
         if (nextState < 55f){
@@ -174,6 +181,10 @@ public class BossAi : MonoBehaviour
     void IdleState(){
         //Sprite da Capivara Dormindo
     }
+    void SleepState(){
+        dormindo = true;
+        anim.SetBool("Sleeping", true);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision){
         if (collision.gameObject.tag == "Player" && dormindo){ // Quando o Player se aproxima a capivara acorda
@@ -183,13 +194,15 @@ public class BossAi : MonoBehaviour
 
     private IEnumerator Acordando(){
         dormindo = false; // capivara acordada
-        yield return new WaitForSeconds(TimerDesperta); // Enquanto ela desperta deve haver uma animação dela levantadando
+        anim.SetTrigger("Wakeup");
+        anim.SetBool("Sleeping", false);
+        yield return new WaitForSeconds(TimerDesperta); // Enquanto ela desperta deve haver uma animaï¿½ï¿½o dela levantadando
 
-        currentState = State.Controller; // Depois de acordada, um novo estado é aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra não ser tão caótico)
+        currentState = State.Controller; // Depois de acordada, um novo estado ï¿½ aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra nï¿½o ser tï¿½o caï¿½tico)
     }
 
     void DashState(){ 
-        if (canDash){ // somente uma flag pra coroutine não ser chamada incessantemente
+        if (canDash){ // somente uma flag pra coroutine nï¿½o ser chamada incessantemente
             StartCoroutine(EmDash());
             canDash = false;
         }
@@ -202,7 +215,7 @@ public class BossAi : MonoBehaviour
 
         estaEmDash = false;
 
-        Vector2 velocidade = bossRB.velocity; // velocidade inicial para ser usada no DOTween, meio inútil
+        Vector2 velocidade = bossRB.velocity; // velocidade inicial para ser usada no DOTween, meio inï¿½til
         DOTween.To(() => velocidade, (x) => bossRB.velocity = x/4, new Vector2(0f, 0f), 2f);
         //S
         yield return new WaitForSeconds(2f);
@@ -212,12 +225,12 @@ public class BossAi : MonoBehaviour
 
     private void JumpState(){
 
-        if (transform.position.x < player.GetComponent<Transform>().position.x){ // Decide para qual lado a capivara pulará, sempre o lado oposto ao player
+        if (transform.position.x < player.GetComponent<Transform>().position.x){ // Decide para qual lado a capivara pularï¿½, sempre o lado oposto ao player
             dist = limites[0].GetComponent<Transform>().position.x - transform.position.x;
         } else {
             dist = limites[1].GetComponent<Transform>().position.x - transform.position.x;
         }
-        if (canPular){ // Flag que inicia a atribuição das velocidades usando umas fórmulas
+        if (canPular){ // Flag que inicia a atribuiï¿½ï¿½o das velocidades usando umas fï¿½rmulas
             if (direction > 0f){
             transform.localScale = new Vector3(1, 1, 1);
             } else {
@@ -228,13 +241,14 @@ public class BossAi : MonoBehaviour
            TimerPulando = 2*vely/g;
            canPular = false;
            
-           StartCoroutine(Pulando()); // Depois de começar a pular, a coroutine pulando irá ativar o raio quando o pulo acabar
+           StartCoroutine(Pulando()); // Depois de comeï¿½ar a pular, a coroutine pulando irï¿½ ativar o raio quando o pulo acabar
         }
     }
 
     private IEnumerator Pulando(){
         yield return new WaitForSeconds(TimerPulando+3f); // espera um pouco depois que o pulo acaba
 
+        Raio100.GetComponent<Animator>().SetTrigger("Activate");
         Raio100.SetActive(true); // raio
 
         yield return new WaitForSeconds(TimerRaio);
@@ -247,7 +261,7 @@ public class BossAi : MonoBehaviour
 
     private void FireState(){
         if (!emFogo){ // Flag intensa
-            primeiro = Random.Range(0, j); // para parecer mais caótico, o primeiro espinho da sequência sempre muda, mas depois continua na ordem normal
+            primeiro = Random.Range(0, j); // para parecer mais caï¿½tico, o primeiro espinho da sequï¿½ncia sempre muda, mas depois continua na ordem normal
             emFogo = true;
             StartCoroutine(AteandoFogo());
         }
@@ -258,7 +272,7 @@ public class BossAi : MonoBehaviour
              chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity); // usa um array para chamar os objetos
              yield return new WaitForSeconds(0.5f); // intervalinho
          }
-         if (primeiro != 0){ // quando chega no final volta pro primeiro, já que provavelmente o primeiro espinho gerado estrá no meio da sequência
+         if (primeiro != 0){ // quando chega no final volta pro primeiro, jï¿½ que provavelmente o primeiro espinho gerado estrï¿½ no meio da sequï¿½ncia
              for (int i=0; i<primeiro; i++){
                  chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity);
                  yield return new WaitForSeconds(0.5f);
@@ -271,6 +285,7 @@ public class BossAi : MonoBehaviour
 
     private void Invocando(){
         if (!invocando){
+            anim.SetTrigger("Change");
             numerodebichos = Random.Range(1, 2); //chama 1 ou 2 bichos
             inimigos = new GameObject[numerodebichos];
             invocando = true;
@@ -280,13 +295,13 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator ChamandoBicho(int N){
-        //animação antes de invocar
+        //animaï¿½ï¿½o antes de invocar
         
             
             for (int i=0;i<N;i++){
             do {
                 enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
-            } while (enemyposition > transform.position.x - 1f && enemyposition < transform.position.x + 1f); // gaante que o bicho não vai surgir em cima do boss
+            } while (enemyposition > transform.position.x - 1f && enemyposition < transform.position.x + 1f); // gaante que o bicho nï¿½o vai surgir em cima do boss
             nextState = Random.Range(-1, 4); // mais chance de aparecer um rato
             yield return new WaitForSeconds(1.5f);
             if (nextState < 0){
@@ -302,7 +317,7 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator ChangeSides(){ //troca de lados
-        Debug.Log("Começou");
+        Debug.Log("Comeï¿½ou");
         canChangeSides = false;
 
 
@@ -321,7 +336,7 @@ public class BossAi : MonoBehaviour
         }
 
         yield return new WaitForSeconds(transTime/2);
-        //animação
+        //animaï¿½ï¿½o
         yield return new WaitForSeconds(transTime/2);
 
         canChangeSides = true;
@@ -336,7 +351,7 @@ public class BossAi : MonoBehaviour
 
     private void Trocando(){
         if(canChangeSides){
-            Debug.Log("Quase lá");
+            anim.SetTrigger("Change");
             StartCoroutine(ChangeSides());
         }
     }
