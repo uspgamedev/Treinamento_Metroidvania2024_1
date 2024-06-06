@@ -38,23 +38,11 @@ public class Trocar_Lado : MonoBehaviour
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(whiteFade.color.r, whiteFade.color.g, whiteFade.color.b, 0f);
 
-        listaA = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaA;
-        listaB = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>().listaB;
-
-        // objetoATL = GameObject.FindGameObjectWithTag("ListaATL");
-        // objetoBTL = GameObject.FindGameObjectWithTag("ListaBTL");        
         canChangeSides = false;
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
-
-        if (listaA[0].activeInHierarchy)
-        {
-            objetoBTL.SetActive(false);
-        } 
-        else
-        {
-            objetoATL.SetActive(false);
-        }
+        listaA = support.listaA;
+        listaB = support.listaB;
 
         player = GameObject.Find("Player");
         audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
@@ -96,10 +84,19 @@ public class Trocar_Lado : MonoBehaviour
         canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
-        otherSideChanger.SetActive(true);
+        bool activateB = false;
+        if (objetoATL.activeInHierarchy) {
+            activateB = true;
+        }
+        
+        if (activateB) {
+            objetoBTL.SetActive(true);
+        }
+        else {
+            objetoATL.SetActive(true);
+        }
+
         otherSideChanger.GetComponent<Trocar_Lado>().canChangeSides = false;
-        objetoATL.SetActive(!objetoATL.activeInHierarchy);
-        objetoBTL.SetActive(!objetoBTL.activeInHierarchy);
 
         anim.SetTrigger("Start");
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
@@ -125,11 +122,18 @@ public class Trocar_Lado : MonoBehaviour
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
         yield return new WaitForSeconds(transTime/2);
 
+        if (activateB) {
+            objetoATL.SetActive(false);
+        }
+        else {
+            objetoBTL.SetActive(false);
+        }
+
         coll.GetComponent<Player_Movement>().canMove2 = true;
         support.toFadeWhite = false;
         canChangeSides = true;
 
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -41,6 +41,9 @@ public class SupportScript : MonoBehaviour
 
     [HideInInspector] public Vector3 lastRespawn;
 
+    private GameObject listaATL;
+    private GameObject listaBTL;
+
     
     void Start()
     {
@@ -109,6 +112,18 @@ public class SupportScript : MonoBehaviour
         if ((skillsIniciais & Skills.Gancho) == Skills.Gancho) {
             temGancho = true;
         }
+
+        listaATL = GameObject.FindGameObjectWithTag("ListaATL");
+        listaBTL = GameObject.FindGameObjectWithTag("ListaBTL");
+
+        if (ladoInicial == LadoInicial.B) {
+            listaATL.SetActive(false);
+        }
+        else {
+            listaBTL.SetActive(false);
+        }
+
+        
     }
     public AudioManager getAudioManagerInstance()
     {
