@@ -133,7 +133,7 @@ BoxCollider2D:
     m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -183,6 +183,7 @@ MonoBehaviour:
   hpCollect: {fileID: 3346471796626931006, guid: b6027e763f3fa4332ab6446e4d6e87ac, type: 3}
   dropChance: 0.5
   deathParticles: {fileID: 5143540793174024862, guid: 3e1c6a00851e54a0fb4b1c7a0dcbf84b, type: 3}
+  respawnTime: 0
 --- !u!95 &5517960147953102737
 Animator:
   serializedVersion: 5

@@ -39,7 +39,8 @@ public class BossAi : MonoBehaviour
     private int j = 0;
 
     private float primeiro = 0;
-    private float numerodebichos;
+    private int numerodebichos;
+    private float enemyposition;
     
 
     private GameObject[] chamas;
@@ -54,7 +55,8 @@ public class BossAi : MonoBehaviour
         Idling,
         Dashing, 
         Jumping,
-        Firing
+        Firing,
+        Invocando
     }
 
     private State currentState;
@@ -102,6 +104,9 @@ public class BossAi : MonoBehaviour
             case State.Firing:
                 FireState();
                 break;
+            case State.Invocando:
+                Invocando();
+                break;
             case State.Controller:
                 ChoiceState();
                 break;
@@ -125,14 +130,17 @@ public class BossAi : MonoBehaviour
     private void ChoiceState(){
         nextState = Random.Range(1, 101);
 
-        if (nextState < 50f){
+        if (nextState < 35f){
             currentState = State.Dashing;
         }
-        if (nextState >=50f && nextState < 70f ){
+        if (nextState >=35f && nextState < 60f ){
             currentState = State.Jumping;
         }
-        if (nextState >= 70f){
+        if (nextState >= 60f && nextState < 85f){
             currentState = State.Firing;
+        }
+        if (nextState>85f){
+            currentState = State.Invocando;
         }
     }
 
@@ -238,26 +246,38 @@ public class BossAi : MonoBehaviour
 
     private void Invocando(){
         if (!invocando){
-            numerodebichos = Random.Range(3, 6);
-            inimigos = new GameObject[(int)numerodebichos];
+            numerodebichos = Random.Range(2, 3);
+            inimigos = new GameObject[numerodebichos];
+            invocando = true;
             StartCoroutine(ChamandoBicho(numerodebichos));
 
         }
     }
 
-    private IEnumerator ChamandoBicho(float N){
+    private IEnumerator ChamandoBicho(int N){
         //animação antes de invocar
-        yield return new WaitForSeconds(1.5f);
-        float enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
-        nextState = Random.Range(-1, 1);
-        if (nextState < 0){
-            inimigos[(int)numerodebichos - (int)N] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+0.5f), Quaternion.identity);
-        } else {
-            inimigos[(int)numerodebichos - (int)N] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+0.5f), Quaternion.identity);
-        }
-        if (N-1 > 0){
-            StartCoroutine(ChamandoBicho(N-1));
-        }
+        
+            
+            for (int i=0;i<N;i++){
+            do {
+                enemyposition = Random.Range(limites[0].GetComponent<Transform>().position.x, limites[1].GetComponent<Transform>().position.x);
+            } while (enemyposition > transform.position.x - 1f && enemyposition < transform.position.x + 1f);
+            nextState = Random.Range(-1, 1);
+            yield return new WaitForSeconds(1.5f);
+            if (nextState < 0){
+                inimigos[i] = Instantiate(blobPrefab, new Vector2(enemyposition, transform.position.y+1f), Quaternion.identity);
+            } else {
+                inimigos[i] = Instantiate(ratoPrefab, new Vector2(enemyposition, transform.position.y+1f), Quaternion.identity);
+            }
+            }
+            
+            invocando = false;
+            yield return new WaitForSeconds(3f);
+            currentState = State.Controller;
+            
+
+        
+        
 
 
     }
