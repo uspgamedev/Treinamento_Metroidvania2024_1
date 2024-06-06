@@ -33,6 +33,7 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public Coroutine textCoroutine;
 
     [SerializeField] public int maxHealth = 3;
+    [HideInInspector] public int gemCount = 0;
 
     [HideInInspector] public List<int> healthIDToDeactivate;
     [HideInInspector] public List<int> powerupIDToDeactivate;
