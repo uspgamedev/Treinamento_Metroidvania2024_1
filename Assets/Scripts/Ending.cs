@@ -38,6 +38,7 @@ public class Ending : MonoBehaviour
             foreach (Image hp in hpCanvasImages) {
                 hp.DOFade(0f, 2f).SetEase(Ease.InOutSine);
             }
+            GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance().FadeOut("BossBattle_BGM");
             GameObject timerCanvas = GameObject.Find("Canvas Timer 1");
             if (timerCanvas != null)
                 timerCanvas.SetActive(false);

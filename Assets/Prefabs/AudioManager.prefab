@@ -174,7 +174,7 @@ MonoBehaviour:
   - name: FinalDoor
     loop: 0
     clip: {fileID: 8300000, guid: 06b9d1f95aa5f2d409970c4af5c8f7bb, type: 3}
-    volume: 0.2
+    volume: 0.8
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
