@@ -34,6 +34,7 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public bool temGancho = false;
 
     [HideInInspector] public bool toFadeWhite = false;
+    [HideInInspector] public bool canChangeSides = true;
     [HideInInspector] public Coroutine textCoroutine;
 
     [SerializeField] public int maxHealth = 3;
@@ -52,11 +53,24 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public float respawn_y;
     [HideInInspector] public float respawn_z; 
 
-
+    [HideInInspector] public int ultimoLado;
     
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+
+        canChangeSides = true;
+
+        ultimoLado = PlayerPrefs.GetInt("ultimo_lado", 1);
+
+        if (ultimoLado == 1) {
+            ladoInicial = LadoInicial.A;
+        }
+        else {
+            ladoInicial = LadoInicial.B;
+        }
+
+        Debug.Log(ladoInicial);
 
         respawn_x = PlayerPrefs.GetFloat("pos_x", 0f); 
         respawn_y = PlayerPrefs.GetFloat("pos_y", 0f); 
@@ -182,5 +196,15 @@ public class SupportScript : MonoBehaviour
     private void SwapSideChangers() {
         listaATL.SetActive(!listaATL.activeInHierarchy);
         listaBTL.SetActive(!listaBTL.activeInHierarchy);
+    }
+
+    public void SetChange() {
+        StartCoroutine(SetChangeSides());
+    }
+
+    private IEnumerator SetChangeSides() {
+        canChangeSides = false;
+        yield return new WaitForSeconds(2f);
+        canChangeSides = true;
     }
 }

@@ -21,6 +21,8 @@ public class SequenciaFinal : MonoBehaviour
     [SerializeField] private GameObject panel1;
     private SupportScript support;
 
+    [SerializeField] private GameObject endingTrigger;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +55,7 @@ public class SequenciaFinal : MonoBehaviour
         vagalumesFinais.SetActive(true);
         GetComponent<BoxCollider2D>().enabled = false;
         textCanvas.SetActive(true);
+        endingTrigger.SetActive(true);
         StartCoroutine(ShowText());
     }
 
