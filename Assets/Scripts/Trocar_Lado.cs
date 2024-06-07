@@ -17,7 +17,7 @@ public class Trocar_Lado : MonoBehaviour
     private Image whiteFade;
     private float alpha;
     private Health healthScript;
-    private SupportScript support;
+    [SerializeField] private SupportScript support;
 
     float min = 0f;
     float max = 1f;
@@ -48,6 +48,23 @@ public class Trocar_Lado : MonoBehaviour
 
     void Update()
     {
+        /*listaA = support.listaA;
+        listaB = support.listaB;*/
+        GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
+        int ia = 0;
+        int ib = 0;
+        if (listaA[0] == null){
+            foreach (GameObject obj in listaTemp) {
+                if (obj.CompareTag("LadoA")) {
+                    listaA[ia] = obj;
+                    ia++;
+                }
+                else if (obj.CompareTag("LadoB")) {
+                    listaB[ib] = obj;
+                    ib++;
+                }
+            }
+        }
         //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
         if(canChangeSides)
         {
@@ -62,24 +79,33 @@ public class Trocar_Lado : MonoBehaviour
                 }
             }
         }
-
-        if (support.toFadeWhite) {
-            Fade(transTime, whiteFade, 1f, alpha);
-            // healthScript.Fade(transTime, whiteFade, 1f, alpha);
-        }
-        else {
-            if (whiteFade.color.a > 0f || t > 0f) {
-                whiteFade.color = new Color (0f, 0f, 0f, 0f);
-                alpha = 0f;
-                t = 0f;
-                min = 0f;
-                max = 1f;
+        if (support == null){
+            support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        } else {
+            if (support.toFadeWhite) {
+                Fade(transTime, whiteFade, 1f, alpha);
+                // healthScript.Fade(transTime, whiteFade, 1f, alpha);
+            }
+            else {
+                if (whiteFade.color.a > 0f || t > 0f) {
+                    whiteFade.color = new Color (0f, 0f, 0f, 0f);
+                    alpha = 0f;
+                    t = 0f;
+                    min = 0f;
+                    max = 1f;
+                }
             }
         }
     }
 
     private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
+        Debug.Log("Trocando");
+        Debug.Log(objetoATL);
+        Debug.Log(objetoBTL);
+        Debug.Log(listaA[0]);
+        Debug.Log(listaB[0]);
+
         support.toFadeWhite = true;
         canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
@@ -134,11 +160,16 @@ public class Trocar_Lado : MonoBehaviour
             objetoBTL.SetActive(false);
         }
 
-        // gameObject.SetActive(false);
+        if (support.ladoInicial == support.LadoInicialA){
+        support.ladoInicial = support.LadoInicialB;
+        } else {
+        support.ladoInicial = support.LadoInicialA;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         canChangeSides = true;
         coll = collision;
         healthScript = coll.GetComponent<Health>();
