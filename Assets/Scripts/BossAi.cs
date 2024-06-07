@@ -38,6 +38,7 @@ public class BossAi : MonoBehaviour
     [SerializeField] private Transform[] limites; 
 
     public float direction;
+    private AudioManager audioPlayer;
     [SerializeField] private float dashDistance = 2f;
     [SerializeField] private float TimerRaio = 2f;
 
@@ -121,6 +122,8 @@ public class BossAi : MonoBehaviour
 
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(1f, 1f, 1f, 0f);
+
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
     }
 
     // Update is called once per frame
@@ -242,6 +245,7 @@ public class BossAi : MonoBehaviour
         dormindo = false; // capivara acordada
         anim.SetTrigger("Wakeup");
         anim.SetBool("Sleeping", false);
+        audioPlayer.Play("CapybaraAwake");
         GetComponent<CircleCollider2D>().enabled = false;
         gameObject.layer = LayerMask.NameToLayer("Enemies");
         

@@ -73,6 +73,7 @@ public class MainMenuButton : MonoBehaviour
     {
         if (spriteLooping != null)
         {
+             PlayerPrefs.DeleteAll();
             Application.Quit();
         }
     }

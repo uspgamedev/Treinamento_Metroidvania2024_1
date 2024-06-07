@@ -48,10 +48,21 @@ public class SupportScript : MonoBehaviour
     private GameObject listaATL;
     private GameObject listaBTL;
 
+    [HideInInspector] public float respawn_x;
+    [HideInInspector] public float respawn_y;
+    [HideInInspector] public float respawn_z; 
+
+
     
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+
+        respawn_x = PlayerPrefs.GetFloat("pos_x", 0f); 
+        respawn_y = PlayerPrefs.GetFloat("pos_y", 0f); 
+        respawn_z = PlayerPrefs.GetFloat("pos_z", 0f); 
+
+        lastRespawn = new Vector3(respawn_x, respawn_y, respawn_z); 
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = frameRate;
