@@ -7,6 +7,7 @@ public class HealthPowerup : MonoBehaviour
 {
     private Health healthScript;
     private SupportScript support;
+    private AudioManager audioPlayer;
 
     [SerializeField] private Color flashColor;
     [SerializeField] public GameObject hpObject;
@@ -25,6 +26,7 @@ public class HealthPowerup : MonoBehaviour
                 hpObject.SetActive(false);
             }
         }
+        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -58,6 +60,8 @@ public class HealthPowerup : MonoBehaviour
         hpObject.GetComponent<SimpleFlash>().Flash(Color.green);
 
         support.maxHealth++;
+        
+        audioPlayer.Play("PowerUP");
 
         yield return new WaitForSeconds(0.125f);
 

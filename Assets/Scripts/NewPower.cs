@@ -11,6 +11,7 @@ public class NewPower : MonoBehaviour
     }
 
     private SupportScript support;
+    private AudioManager audioPlayer;
 
     private bool canPickup = false;
     private SimpleFlash flashScript;
@@ -30,6 +31,7 @@ public class NewPower : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -74,6 +76,7 @@ public class NewPower : MonoBehaviour
         }
 
         skillText.SetActive(true);
+        audioPlayer.Play("PowerUP");
 
         yield return new WaitForSeconds(flashScript.duration);
 

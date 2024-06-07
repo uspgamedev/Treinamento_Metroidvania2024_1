@@ -16,6 +16,7 @@ public class MainMenuButton : MonoBehaviour
 
     void Start()
     {
+
         backLight = GameObject.Find("BackLight").GetComponent<Light2D>();
         spriteLooping = FindObjectOfType<SpriteLooping>();
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton");
@@ -31,6 +32,7 @@ public class MainMenuButton : MonoBehaviour
                 .SetEase(Ease.InOutSine);
             delay += 0.35f; 
         }
+        
 
         DOTween.To(() => backLight.intensity, (x) => backLight.intensity = x, 2.5f, 2.5f);
     }
