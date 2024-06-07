@@ -17,6 +17,10 @@ public class Gem : MonoBehaviour
 
     [SerializeField] private new Light2D light;
 
+    [SerializeField] private bool finalGem = false;
+
+    private GameObject colliderFinal;
+
     void Start()
     {
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
@@ -26,6 +30,10 @@ public class Gem : MonoBehaviour
             if (id == gemID) {
                 gameObject.SetActive(false);
             }
+        }
+
+        if (finalGem) {
+            colliderFinal = GameObject.FindObjectOfType<SequenciaFinal>(true).gameObject;
         }
     }
 
@@ -55,6 +63,10 @@ public class Gem : MonoBehaviour
     {
         flashScript.Flash(color);
         GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(color);
+
+        if (finalGem) {
+            colliderFinal.SetActive(true);
+        }
 
         support.gemCount++;
         support.gemIDToDeactivate.Add(gemID);

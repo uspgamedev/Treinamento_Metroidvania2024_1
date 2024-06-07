@@ -21,11 +21,14 @@ public class VidaBoss : MonoBehaviour
     private GameObject yellowBar;
     private GameObject stunBar;
 
+    private GameObject block;
+
     // Start is called before the first frame update
     void Start()
     {
         currentStun = 0f;
         flashScript = GetComponent<SimpleFlash>();
+        block = GameObject.Find("Block");
     }
 
     // Update is called once per frame
@@ -101,5 +104,7 @@ public class VidaBoss : MonoBehaviour
         GetComponent<Rigidbody2D>().gravityScale = 0f;
 
         GetComponent<BossAi>().toDie = true;
+
+        Destroy(block);
     }
 }
