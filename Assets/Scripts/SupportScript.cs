@@ -103,7 +103,7 @@ public class SupportScript : MonoBehaviour
         }
 
         if (ladoInicial == LadoInicial.A) {
-            if (SceneManager.GetActiveScene().name == "Mapa")
+            if (SceneManager.GetActiveScene().name.Contains("Mapa"))
                 getAudioManagerInstance().FadeIn("LadoA_BGM");
             foreach (GameObject objeto in listaA)
             {
@@ -122,7 +122,7 @@ public class SupportScript : MonoBehaviour
         }
         
         if (ladoInicial == LadoInicial.B) {
-            if (SceneManager.GetActiveScene().name == "Mapa")
+            if (SceneManager.GetActiveScene().name.Contains("Mapa"))
                 getAudioManagerInstance().FadeIn("LadoB_BGM");
             foreach (GameObject objeto in listaB)
             {
