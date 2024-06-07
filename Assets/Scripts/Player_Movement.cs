@@ -188,6 +188,7 @@ public class Player_Movement : MonoBehaviour
         isDashing = true;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f); 
+        audioPlayer.Play("Dash");
         yield return new WaitForSeconds(dashingTime);
         rb.gravityScale = initialGravity;
         isDashing = false;

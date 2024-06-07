@@ -117,10 +117,12 @@ public class PlayerCombat : MonoBehaviour
                 if ((other.transform.position.x - transform.position.x) * transform.localScale.x > 0)
                 {   
                     if (other.gameObject.GetComponent<Vida_Inimiga>() != null){
-                    other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                        other.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(parryDamage);
+                        audioPlayer.Play("SuccessParry");
                     }
                     if (other.gameObject.GetComponent<VidaBoss>() != null){
-                    other.gameObject.GetComponent<VidaBoss>().TakeDamage(parryDamage);
+                        other.gameObject.GetComponent<VidaBoss>().TakeDamage(parryDamage);
+                        audioPlayer.Play("SuccessParry");
                     }
                     StartCoroutine(ParryAttack());
                 }
