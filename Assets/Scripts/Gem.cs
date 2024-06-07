@@ -19,7 +19,7 @@ public class Gem : MonoBehaviour
 
     [SerializeField] private bool finalGem = false;
 
-    private GameObject colliderFinal;
+    [SerializeField] private GameObject colliderFinal;
 
     void Start()
     {
@@ -32,9 +32,9 @@ public class Gem : MonoBehaviour
             }
         }
 
-        if (finalGem) {
-            colliderFinal = GameObject.FindObjectOfType<SequenciaFinal>(true).gameObject;
-        }
+        // if (finalGem) {
+        //     colliderFinal = GameObject.FindObjectOfType<SequenciaFinal>(true).gameObject;
+        // }
     }
 
     void OnTriggerEnter2D(Collider2D other)
