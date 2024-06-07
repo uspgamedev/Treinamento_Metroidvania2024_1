@@ -243,7 +243,7 @@ public class Enemy_AI3 : MonoBehaviour
     private bool PlayerClose() {
         float x = playerTransform.position.x - transform.position.x;
         float y = playerTransform.position.y - transform.position.y;
-        return x < minPlayerDistX || y < minPlayerDistY;
+        return x < minPlayerDistX && y < minPlayerDistY;
     }
 
     public void Cube() {
