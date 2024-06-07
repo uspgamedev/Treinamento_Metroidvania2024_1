@@ -184,7 +184,7 @@ public class BossAi : MonoBehaviour
     private void ChoiceState(){ // Fun��o com as chances de cada novo estado aparecer
         nextState = Random.Range(1, 101);
 
-        if (!dead) {
+        if (!dead && !dormindo) {
             if (nextState < 45f){
                 currentState = State.Dashing;
             }
@@ -226,6 +226,25 @@ public class BossAi : MonoBehaviour
         anim.SetTrigger("StopDash");
         anim.SetTrigger("StopChange");
         anim.SetTrigger("StopLaser");
+
+        canChangeSides = false;
+
+        yield return new WaitForSeconds(0.5f);
+        if (!listaA[0].activeInHierarchy) {
+            StartCoroutine(White());
+            yield return new WaitForSeconds(transTime);
+
+            foreach (GameObject objeto in listaA)
+            {
+                if (objeto != null)
+                objeto.SetActive(!objeto.activeInHierarchy);
+            }
+            foreach (GameObject objeto in listaB)
+            {
+                if (objeto != null)
+                    objeto.SetActive(!objeto.activeInHierarchy);
+            }
+        }
         yield return new WaitForSeconds(2f);
         anim.SetTrigger("Die");
     }

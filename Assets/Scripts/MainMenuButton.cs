@@ -41,7 +41,7 @@ public class MainMenuButton : MonoBehaviour
     {
         if (spriteLooping != null)
         {
-            SceneManager.LoadScene("Mapa");
+            SceneManager.LoadScene("Mapa Definitivo");
         }
     }
 

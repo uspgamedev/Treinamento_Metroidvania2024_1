@@ -62,7 +62,7 @@ public class SupportScript : MonoBehaviour
         respawn_y = PlayerPrefs.GetFloat("pos_y", 0f); 
         respawn_z = PlayerPrefs.GetFloat("pos_z", 0f); 
 
-        lastRespawn = new Vector3(respawn_x, respawn_y, respawn_z); 
+        lastRespawn = new Vector3(respawn_x, respawn_y, respawn_z);
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = frameRate;

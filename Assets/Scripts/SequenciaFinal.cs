@@ -8,7 +8,7 @@ using TMPro;
 public class SequenciaFinal : MonoBehaviour
 {
     [SerializeField] private bool isFinalSequence = false;
-    [SerializeField] private GameObject[] VagalumesFinais;
+    [SerializeField] private GameObject vagalumesFinais;
     [SerializeField] private GameObject objetoGameOver;
     [SerializeField] private float timerMax = 120f;
     [SerializeField] private float timer = 60f;
@@ -50,10 +50,7 @@ public class SequenciaFinal : MonoBehaviour
     void OnTriggerEnter2D (Collider2D col)
     {
         isFinalSequence = true;
-        foreach (GameObject objeto in VagalumesFinais)
-        {
-            objeto.SetActive(true);
-        }
+        vagalumesFinais.SetActive(true);
         GetComponent<BoxCollider2D>().enabled = false;
         textCanvas.SetActive(true);
         StartCoroutine(ShowText());
