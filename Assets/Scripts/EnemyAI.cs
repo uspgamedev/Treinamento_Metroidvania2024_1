@@ -284,7 +284,7 @@ public class EnemyAI : MonoBehaviour
         if (pjDistance < 3f){
             currentState = State.Jump;
             enemyRB.velocity = new Vector2(0f, 0f);
-            Timer = 1.5f;
+            Timer = 1f;
             Timer2 = 0.5f;
         } else if (pjdirection > 0){
             direction = new Vector2(1f, 0f);

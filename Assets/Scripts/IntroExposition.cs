@@ -121,5 +121,7 @@ public class IntroExposition : MonoBehaviour
         gameObject.SetActive(false);
 
         support.textCoroutine = null;
+
+        Destroy(gameObject, 2f);
     }
 }
