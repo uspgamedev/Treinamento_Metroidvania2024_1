@@ -48,7 +48,7 @@ MonoBehaviour:
   - name: AttackMiss
     loop: 0
     clip: {fileID: 8300000, guid: f9a06b178d9151d4388dc215ba0ff5d0, type: 3}
-    volume: 0.25
+    volume: 0.5
     pitch: 1
     source: {fileID: 0}
   - name: Jump
@@ -66,19 +66,19 @@ MonoBehaviour:
   - name: GanchoGrab
     loop: 0
     clip: {fileID: 8300000, guid: 8912f4b998fe8bc4aae0948e1c307f0e, type: 3}
-    volume: 0.1
+    volume: 0.5
     pitch: 1
     source: {fileID: 0}
   - name: RatAttack
     loop: 0
     clip: {fileID: 8300000, guid: 120a8bb67aaba924a990d7d60921f12d, type: 3}
-    volume: 0.15
+    volume: 0.3
     pitch: 1
     source: {fileID: 0}
   - name: BlobPreShoot
     loop: 0
     clip: {fileID: 8300000, guid: ca15bca41b3b424488155322fd162a7d, type: 3}
-    volume: 0.1
+    volume: 0.5
     pitch: 1
     source: {fileID: 0}
   - name: BlobShoot
@@ -108,6 +108,6 @@ MonoBehaviour:
   - name: ChangeSideSFX
     loop: 0
     clip: {fileID: 8300000, guid: 132a5096433a39241adde8d3d0697b56, type: 3}
-    volume: 0.1
+    volume: 0.5
     pitch: 1
     source: {fileID: 0}
