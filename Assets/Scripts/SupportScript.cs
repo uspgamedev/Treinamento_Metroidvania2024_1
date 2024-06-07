@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SupportScript : MonoBehaviour
 {
@@ -77,6 +78,8 @@ public class SupportScript : MonoBehaviour
         }
 
         if (ladoInicial == LadoInicial.A) {
+            if (SceneManager.GetActiveScene().name == "Mapa")
+                getAudioManagerInstance().FadeIn("LadoA_BGM");
             foreach (GameObject objeto in listaA)
             {
                 if (objeto != null) {
@@ -88,12 +91,14 @@ public class SupportScript : MonoBehaviour
             {
                 if (objeto != null) {
                     if (objeto.tag != "Morto")
-                    objeto.SetActive(false);
+                        objeto.SetActive(false);
                 }
             }
         }
         
         if (ladoInicial == LadoInicial.B) {
+            if (SceneManager.GetActiveScene().name == "Mapa")
+                getAudioManagerInstance().FadeIn("LadoB_BGM");
             foreach (GameObject objeto in listaB)
             {
                 if (objeto != null)

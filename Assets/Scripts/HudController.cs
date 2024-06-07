@@ -28,6 +28,7 @@ public class HudController : MonoBehaviour
     private Tween currentTween; // Variável para manter uma referência ao tween atual
     [HideInInspector] public bool isOnPauseMenu = false;
     private GameObject gameOverMenu;
+    private AudioManager audioPlayer;
 
     private void setButtonStatus(bool status)
     {
@@ -51,6 +52,7 @@ public class HudController : MonoBehaviour
     }
 
     void Start(){
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetComponent<SupportScript>().getAudioManagerInstance();
         tweenButtons(InOut.OUT);
     }
 
@@ -71,6 +73,9 @@ public class HudController : MonoBehaviour
 
     void callPauseMenu()
     {
+        audioPlayer.Play("PauseEnter");
+        audioPlayer.Pause("LadoB_BGM");
+        audioPlayer.Pause("LadoA_BGM");
         isOnPauseMenu = true;
         setButtonStatus(true);
         Time.timeScale = 0;
@@ -155,6 +160,8 @@ public class HudController : MonoBehaviour
 
     public void ContinueGame()
     {
+        audioPlayer.Continue("LadoB_BGM");
+        audioPlayer.Continue("LadoA_BGM");
         Time.timeScale = 1;
         doBlackFadeTween(0.0f, TWEEN_TIME);
         tweenButtons(InOut.OUT);

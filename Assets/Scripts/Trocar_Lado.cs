@@ -128,9 +128,11 @@ public class Trocar_Lado : MonoBehaviour
         support.toFadeWhite = false;
         canChangeSides = true;
         if (activateB) {
+            audioPlayer.SwitchSound("LadoA_BGM", "LadoB_BGM");
             objetoATL.SetActive(false);
         }
         else {
+            audioPlayer.SwitchSound("LadoB_BGM", "LadoA_BGM");
             objetoBTL.SetActive(false);
         }
 
