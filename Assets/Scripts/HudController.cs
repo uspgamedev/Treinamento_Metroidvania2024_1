@@ -76,6 +76,8 @@ public class HudController : MonoBehaviour
         audioPlayer.Play("PauseEnter");
         audioPlayer.Pause("LadoB_BGM");
         audioPlayer.Pause("LadoA_BGM");
+        audioPlayer.Pause("BossBattle_BGM");
+
         isOnPauseMenu = true;
         setButtonStatus(true);
         Time.timeScale = 0;
@@ -162,6 +164,7 @@ public class HudController : MonoBehaviour
     {
         audioPlayer.Continue("LadoB_BGM");
         audioPlayer.Continue("LadoA_BGM");
+        audioPlayer.Continue("BossBattle_BGM");
         Time.timeScale = 1;
         doBlackFadeTween(0.0f, TWEEN_TIME);
         tweenButtons(InOut.OUT);

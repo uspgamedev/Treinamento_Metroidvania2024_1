@@ -21,12 +21,13 @@ public class BossDoor : MonoBehaviour
     private Animator anim;
 
     private Image blackFade;
-
+    private AudioManager audioPlayer;
     void Start()
     {
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         anim = GetComponent<Animator>();
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
     }
 
 
@@ -76,11 +77,17 @@ public class BossDoor : MonoBehaviour
         
         anim.SetTrigger("Open");
 
+        audioPlayer.Play("secreto");
+
         yield return new WaitForSeconds(1.5f);
         
         blackFade.DOFade(1f, 2f).SetEase(Ease.InOutSine);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
+
+        audioPlayer.Play("FinalDoor");
+
+        yield return new WaitForSeconds(1.5f);
         
         GameObject.Find("Player").transform.position = tpPoint.position;
         blackFade.DOFade(0f, 2f).SetEase(Ease.InOutSine);

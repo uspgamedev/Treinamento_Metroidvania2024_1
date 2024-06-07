@@ -34,6 +34,7 @@ public class Health : MonoBehaviour
     [HideInInspector] public bool onKnockback = false;
     private bool damageable = true;
     private SimpleFlash flashScript;
+    private AudioManager audioPlayer;
     private Animator anim;
     private float maxBlinkTime = 0.5f;
     private float blinkTime;
@@ -70,6 +71,7 @@ public class Health : MonoBehaviour
         flashScript = GetComponent<SimpleFlash>();
 
         moveScript.canMove2 = true;
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
 
     }
     
@@ -119,6 +121,7 @@ public class Health : MonoBehaviour
             //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
             hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
             currentHealth--;
+            audioPlayer.Play("PlayerDamaged");
             
             StartCoroutine(DamageKnockback(enemy));
         }

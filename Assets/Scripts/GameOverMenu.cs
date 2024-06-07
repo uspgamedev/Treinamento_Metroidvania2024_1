@@ -80,6 +80,7 @@ public class GameOverMenu : MonoBehaviour
         
         audioPlayer.Pause("LadoA_BGM");
         audioPlayer.Pause("LadoB_BGM");
+        audioPlayer.Pause("BossBattle_BGM");
         StartCoroutine(GameOverSequence());
     }
 
@@ -97,6 +98,7 @@ public class GameOverMenu : MonoBehaviour
 
             audioPlayer.Continue("LadoA_BGM");
             audioPlayer.Continue("LadoB_BGM");
+            audioPlayer.Continue("BossBattle_BGM");
         }
     }
 

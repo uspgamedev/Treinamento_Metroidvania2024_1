@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
     public Sound[] sounds;
-    public float fadeDuration = 1.0f; // Duração para fade in/out
+    private const float fadeDuration = 1.0f; // Duração para fade in/out
 
     private void Awake()
     {

@@ -83,28 +83,28 @@ MonoBehaviour:
   - name: BlobPreShoot
     loop: 0
     clip: {fileID: 8300000, guid: ca15bca41b3b424488155322fd162a7d, type: 3}
-    volume: 0.5
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: BlobShoot
     loop: 0
     clip: {fileID: 8300000, guid: eb6bd1d91a07fac43aad7c1096b8f06c, type: 3}
-    volume: 0.15
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: BlobAppear
     loop: 0
     clip: {fileID: 8300000, guid: 840615e7be6d8b8449f8f7b01cfa7178, type: 3}
-    volume: 0.15
+    volume: 0.1
     pitch: 1.1
     source: {fileID: 0}
     savedTime: 0
   - name: BlobDisappear
     loop: 0
     clip: {fileID: 8300000, guid: 66b56ce391a32734d8904006ed498e56, type: 3}
-    volume: 0.15
+    volume: 0.1
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -125,28 +125,28 @@ MonoBehaviour:
   - name: LadoA_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 4f70c497ad7b70f448eec2602e53f18e, type: 3}
-    volume: 0.1
+    volume: 0.3
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: LadoB_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 876d795379de4db40a506287319a7794, type: 3}
-    volume: 0.05
+    volume: 0.3
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: BossBattle_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 3716984e411eba84f886a68418019a53, type: 3}
-    volume: 0.1
+    volume: 0.3
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: PowerUP
     loop: 0
     clip: {fileID: 8300000, guid: f47115e8f6b2de64d90fa96e9246a65d, type: 3}
-    volume: 0.1
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -188,8 +188,42 @@ MonoBehaviour:
   - name: CapybaraStomp
     loop: 0
     clip: {fileID: 8300000, guid: 5db430e846c50bb43a1f48475e318bf0, type: 3}
-    volume: 0.2
+    volume: 1
+    pitch: 1.52
+    source: {fileID: 0}
+    savedTime: 0
+  - name: CapybaraLaser
+    loop: 0
+    clip: {fileID: 8300000, guid: e1c78c437ea1181429c923c035b1adf6, type: 3}
+    volume: 0.25
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
-  fadeDuration: 1
+  - name: SuccessHit
+    loop: 0
+    clip: {fileID: 8300000, guid: 0f1ad7d596446a147a1b1978cec94d0c, type: 3}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+    savedTime: 0
+  - name: PlayerDamaged
+    loop: 0
+    clip: {fileID: 8300000, guid: acac3d30065b3dd4cb9d263d15f7982d, type: 3}
+    volume: 0.3
+    pitch: 0.7
+    source: {fileID: 0}
+    savedTime: 0
+  - name: PreCapybaraFight
+    loop: 0
+    clip: {fileID: 8300000, guid: 4f71195e89e6bed44b39490c2fc671b8, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    savedTime: 0
+  - name: secreto
+    loop: 0
+    clip: {fileID: 8300000, guid: 16847301ac57c8b409514afc830547c7, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+    savedTime: 0

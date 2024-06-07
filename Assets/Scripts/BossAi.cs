@@ -245,6 +245,7 @@ public class BossAi : MonoBehaviour
                     objeto.SetActive(!objeto.activeInHierarchy);
             }
         }
+        audioPlayer.FadeOut("BossBattle_BGM");
         yield return new WaitForSeconds(2f);
         anim.SetTrigger("Die");
     }
@@ -261,15 +262,18 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator Acordando(){
+        const float TIME_BEFORE_AWAKE = 2.8f;
         dormindo = false; // capivara acordada
         anim.SetTrigger("Wakeup");
         anim.SetBool("Sleeping", false);
         audioPlayer.Play("CapybaraAwake");
+        audioPlayer.Play("PreCapybaraFight");
         GetComponent<CircleCollider2D>().enabled = false;
         gameObject.layer = LayerMask.NameToLayer("Enemies");
         
-        yield return new WaitForSeconds(TimerDesperta); // Enquanto ela desperta deve haver uma anima��o dela levantadando
-
+        yield return new WaitForSeconds(TIME_BEFORE_AWAKE);
+        audioPlayer.SwitchSound("LadoA_BGM", "BossBattle_BGM");
+        yield return new WaitForSeconds(TimerDesperta-TIME_BEFORE_AWAKE); // Enquanto ela desperta deve haver uma anima��o dela levantadando
 
         currentState = State.Idling; // Depois de acordada, um novo estado � aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra n�o ser t�o ca�tico)
     }
@@ -343,6 +347,7 @@ public class BossAi : MonoBehaviour
 
         Raio100.GetComponent<Animator>().SetTrigger("Activate");
         Raio100.SetActive(true); // raio
+        audioPlayer.Play("CapybaraLaser");
 
         yield return new WaitForSeconds(TimerRaio);
 
@@ -363,8 +368,10 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator AteandoFogo(){
-        yield return new WaitForSeconds(1f);
+        const float TIME_BEFORE_STOMP = 0.3f;
+        yield return new WaitForSeconds(TIME_BEFORE_STOMP);
         audioPlayer.Play("CapybaraStomp");
+        yield return new WaitForSeconds(1f-TIME_BEFORE_STOMP);
          for (int i=(int)primeiro; i<j;i++){
              chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity); // usa um array para chamar os objetos
              yield return new WaitForSeconds(0.5f); // intervalinho

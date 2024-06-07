@@ -68,23 +68,26 @@ public class PlayerCombat : MonoBehaviour
 
             //retorna uma lista com todos os inimigos que estão dentro do range de ataque;
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRange, enemiesLayer);
-
+            bool collidedWithSomeone = false;
             //para cada inimigo no range de ataque chame TakeDamage;
             foreach (Collider2D enemy in hitEnemies)
             {
                 if (enemy.gameObject.GetComponent<Vida_Inimiga>() != null){
                     enemy.gameObject.GetComponent<Vida_Inimiga>().TakeDamage(attackDamage);
+                    collidedWithSomeone=true;
                 } else {
                     enemy.gameObject.GetComponent<VidaBoss>().TakeDamage(attackDamage);
+                    collidedWithSomeone=true;
                 }
             }
+            if (!collidedWithSomeone){audioPlayer.Play("AttackMiss");}
+            else{audioPlayer.Play("SuccessHit");}
         }
     }
 
     private IEnumerator OnAttack() //implementa tempo entre ataques
     {
         isAttacking = true;
-        audioPlayer.Play("AttackMiss");
 
         yield return new WaitForSeconds(0.2f);
 
