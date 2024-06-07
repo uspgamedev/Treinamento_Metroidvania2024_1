@@ -21,6 +21,9 @@ public class Ending : MonoBehaviour
 
     Image[] hpCanvasImages;
 
+    [SerializeField] private GameObject escapeCanvas;
+    [SerializeField] private GameObject escapeObject;
+
     void Start()
     {
 
@@ -47,6 +50,8 @@ public class Ending : MonoBehaviour
     }
 
     private IEnumerator Sequence() {
+        Destroy(escapeCanvas);
+        Destroy(escapeObject);
         DOTween.To(() => entranceLight.intensity, (x) => entranceLight.intensity = x, 15f, 7f).SetEase(Ease.InOutSine);
         DOTween.To(() => entranceLight.pointLightOuterRadius, (x) => entranceLight.pointLightOuterRadius = x, 35f, 7f).SetEase(Ease.InOutSine);
         DOTween.To(() => entranceLight.pointLightInnerRadius, (x) => entranceLight.pointLightInnerRadius = x, 18f, 10f).SetEase(Ease.InOutSine);

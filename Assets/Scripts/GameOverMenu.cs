@@ -239,4 +239,8 @@ public class GameOverMenu : MonoBehaviour
             gameOverText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
         }
     }
+
+    public void ActualQuit() {
+        Application.Quit();
+    }
 }

@@ -170,4 +170,8 @@ public class HudController : MonoBehaviour
         tweenButtons(InOut.OUT);
         StartCoroutine(resetObjects(DELAY_BEFORE_INACTIVATION));
     }
+
+    public void ActualQuit() {
+        Application.Quit();
+    }
 }
