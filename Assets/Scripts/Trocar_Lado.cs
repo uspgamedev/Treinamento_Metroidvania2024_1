@@ -115,8 +115,6 @@ public class Trocar_Lado : MonoBehaviour
         }
 
         player.transform.position = otherSideChanger.transform.position;
-        Debug.Log(otherSideChanger.name + " " + gameObject.name);
-        Debug.Log(otherSideChanger.transform.position);
         
 
         yield return new WaitForSeconds(transTime/2);
@@ -128,9 +126,11 @@ public class Trocar_Lado : MonoBehaviour
         support.toFadeWhite = false;
         canChangeSides = true;
         if (activateB) {
+            audioPlayer.SwitchSound("LadoA_BGM", "LadoB_BGM");
             objetoATL.SetActive(false);
         }
         else {
+            audioPlayer.SwitchSound("LadoB_BGM", "LadoA_BGM");
             objetoBTL.SetActive(false);
         }
 

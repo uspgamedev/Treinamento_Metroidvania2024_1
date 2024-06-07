@@ -28,6 +28,8 @@ public class BossAi : MonoBehaviour
     private bool invocando = false;
     private bool idling = false;
 
+    private bool deathIdle = false;
+
     private bool canPular = true;
 
     private float vely;
@@ -63,6 +65,9 @@ public class BossAi : MonoBehaviour
 
     private Animator anim;
 
+    [HideInInspector] public bool toDie = false;
+    private bool dead;
+
     float Timer;
     private enum State {
         Controller,
@@ -72,7 +77,8 @@ public class BossAi : MonoBehaviour
         Firing,
         Invocando,
         Trocando,
-        Sleeping
+        Sleeping,
+        DeathIdle
     }
 
     private State currentState;
@@ -115,19 +121,25 @@ public class BossAi : MonoBehaviour
 
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(1f, 1f, 1f, 0f);
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (toDie) {
+            currentState = State.DeathIdle;
+            dead = true;
+            toDie = false;
+        }
         switch (currentState){
             case State.Sleeping:
                 IdleState();
                 break;
             case State.Idling:
                 IdleState();
+                break;
+            case State.DeathIdle:
+                DeathIdle();
                 break;
             case State.Dashing:
                 DashState();
@@ -147,7 +159,6 @@ public class BossAi : MonoBehaviour
             case State.Trocando:
                 Trocando();
                 break;
-
         }
 
         if (transform.position.x < player.GetComponent<Transform>().position.x && !travarScaleDash){
@@ -162,7 +173,7 @@ public class BossAi : MonoBehaviour
             bossRB.velocity = new Vector2(dashSpeed*direction, 0f);
         }
 
-        if (!dormindo && !travarScaleDash && canPular) {
+        if (!dormindo && !travarScaleDash && canPular && !dead) {
             transform.localScale = new Vector3(-direction, 1f, 1f);
         }
     }
@@ -170,20 +181,22 @@ public class BossAi : MonoBehaviour
     private void ChoiceState(){ // Fun��o com as chances de cada novo estado aparecer
         nextState = Random.Range(1, 101);
 
-        if (nextState < 45f){
-            currentState = State.Dashing;
-        }
-        if (nextState >=45f && nextState < 65f ){
-            currentState = State.Jumping;
-        }
-        if (nextState >= 65f && nextState < 85f){
-            currentState = State.Firing;
-        }
-        if (nextState>=85f && nextState <90f){
-            currentState = State.Invocando;
-        }
-        if (nextState>90f){
-            currentState = State.Trocando;
+        if (!dead) {
+            if (nextState < 45f){
+                currentState = State.Dashing;
+            }
+            if (nextState >=45f && nextState < 65f ){
+                currentState = State.Jumping;
+            }
+            if (nextState >= 65f && nextState < 85f){
+                currentState = State.Firing;
+            }
+            if (nextState>=85f && nextState <90f){
+                currentState = State.Invocando;
+            }
+            if (nextState>90f){
+                currentState = State.Trocando;
+            }
         }
     }
 
@@ -193,11 +206,25 @@ public class BossAi : MonoBehaviour
         }
     }
 
+    void DeathIdle(){
+        if (!deathIdle) {
+            StartCoroutine(DeathIdling());
+        }
+    }
+
     private IEnumerator Idling() {
         idling = true;
         yield return new WaitForSeconds(2f);
         idling = false;
         currentState = State.Controller;
+    }
+    private IEnumerator DeathIdling() {
+        deathIdle = true;
+        anim.SetTrigger("StopDash");
+        anim.SetTrigger("StopChange");
+        anim.SetTrigger("StopLaser");
+        yield return new WaitForSeconds(2f);
+        anim.SetTrigger("Die");
     }
 
     void SleepState(){
@@ -216,9 +243,10 @@ public class BossAi : MonoBehaviour
         anim.SetTrigger("Wakeup");
         anim.SetBool("Sleeping", false);
         GetComponent<CircleCollider2D>().enabled = false;
+        gameObject.layer = LayerMask.NameToLayer("Enemies");
+        
         yield return new WaitForSeconds(TimerDesperta); // Enquanto ela desperta deve haver uma anima��o dela levantadando
 
-        gameObject.layer = LayerMask.NameToLayer("Enemies");
 
         currentState = State.Idling; // Depois de acordada, um novo estado � aleatoriamente escolhido (analise a possibilidade de o primeiro estado ser o dash, pra n�o ser t�o ca�tico)
     }

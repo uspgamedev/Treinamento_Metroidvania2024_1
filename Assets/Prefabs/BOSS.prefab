@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1277655386616729397}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.41, y: 6.8, z: -0.53916866}
+  m_LocalPosition: {x: -1.41, y: 6.5, z: -0.53916866}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -85,7 +85,7 @@ Transform:
   m_GameObject: {fileID: 2809281283174861725}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.62, y: 6.8, z: -0.53916866}
+  m_LocalPosition: {x: 0.62, y: 6.5, z: -0.53916866}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 3739935338047610971}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.51, y: 6.8, z: -0.53916866}
+  m_LocalPosition: {x: 4.51, y: 6.5, z: -0.53916866}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -327,6 +327,7 @@ MonoBehaviour:
   ratoPrefab: {fileID: 9373511723480710, guid: c351ac732268f41b0aecae8022e712ce, type: 3}
   canChangeSides: 0
   transTime: 2
+  toDie: 0
 --- !u!61 &1148448895503354300
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -359,7 +360,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.04938686, y: -0.39096367}
+  m_Offset: {x: -0.025599718, y: -0.3809654}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -370,7 +371,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.4510648, y: 1.2619274}
+  m_Size: {x: 2.2111082, y: 1.2619272}
   m_EdgeRadius: 0
 --- !u!58 &1552422003566682311
 CircleCollider2D:
@@ -422,7 +423,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  maxStun: 50
+  maxStun: 10
   stunTime: 0.5
   stunDecreaseRate: 0.5
   stunCooldownTime: 5
@@ -655,7 +656,7 @@ Transform:
   m_GameObject: {fileID: 7218987145231136737}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.9, y: 6.8, z: -0.53916866}
+  m_LocalPosition: {x: 2.9, y: 6.5, z: -0.53916866}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
