@@ -104,16 +104,6 @@ public class Trocar_Lado : MonoBehaviour
 
     private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
-        Debug.Log(support.ultimoLado);
-        if (support.ultimoLado == 1) {
-            PlayerPrefs.SetInt("ultimo_lado", -1);
-            support.ultimoLado = -1;
-        }
-        if (support.ultimoLado == -1) {
-            PlayerPrefs.SetInt("ultimo_lado", 1);
-            support.ultimoLado = 1;
-        }
-
         support.toFadeWhite = true;
         support.SetChange();
 
@@ -168,13 +158,6 @@ public class Trocar_Lado : MonoBehaviour
             audioPlayer.SwitchSound("LadoB_BGM", "LadoA_BGM");
             objetoBTL.SetActive(false);
         }
-        
-
-        // if (support.ladoInicial == support.LadoInicialA){
-        // support.ladoInicial = support.LadoInicialB;
-        // } else {
-        // support.ladoInicial = support.LadoInicialA;
-        // }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

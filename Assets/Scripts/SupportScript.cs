@@ -61,23 +61,6 @@ public class SupportScript : MonoBehaviour
 
         canChangeSides = true;
 
-        ultimoLado = PlayerPrefs.GetInt("ultimo_lado", 1);
-
-        if (ultimoLado == 1) {
-            ladoInicial = LadoInicial.A;
-        }
-        else {
-            ladoInicial = LadoInicial.B;
-        }
-
-        Debug.Log(ladoInicial);
-
-        respawn_x = PlayerPrefs.GetFloat("pos_x", 0f); 
-        respawn_y = PlayerPrefs.GetFloat("pos_y", 0f); 
-        respawn_z = PlayerPrefs.GetFloat("pos_z", 0f); 
-
-        lastRespawn = new Vector3(respawn_x, respawn_y, respawn_z);
-
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = frameRate;
 
@@ -159,9 +142,7 @@ public class SupportScript : MonoBehaviour
                 listaBTL.SetActive(false);
             }
         }
-
-        LadoInicialA = LadoInicial.A;
-        LadoInicialB = LadoInicial.B;        
+       
     }
 
     public AudioManager getAudioManagerInstance()
