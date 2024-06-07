@@ -68,7 +68,6 @@ public class Player_Movement : MonoBehaviour
 
     void Start(){
             Vector3 nulo = new Vector3(0f, 0f, 0f);
-            Debug.Log(" first Last Respawn: " + support.lastRespawn);
             if (support.lastRespawn != nulo){
                 transform.position = support.lastRespawn;
             }
@@ -79,7 +78,6 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(Print());
         if (coll.onGround)
         {
             GetComponent<Better_Jumping>().enabled = true;
@@ -152,11 +150,6 @@ public class Player_Movement : MonoBehaviour
 
         CalculateLastPos();
         
-    }
-
-    private IEnumerator Print(){
-        yield return new WaitForSeconds(5f);
-        Debug.Log("Last Respawn: " + support.lastRespawn);
     }
 
     private void walk(Vector2 dir) 

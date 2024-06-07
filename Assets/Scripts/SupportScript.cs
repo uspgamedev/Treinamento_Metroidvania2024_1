@@ -34,6 +34,7 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public bool temGancho = false;
 
     [HideInInspector] public bool toFadeWhite = false;
+    [HideInInspector] public bool canChangeSides = false;
     [HideInInspector] public Coroutine textCoroutine;
 
     [SerializeField] public int maxHealth = 3;

@@ -66,7 +66,7 @@ public class Trocar_Lado : MonoBehaviour
             }
         }
         //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
-        if(canChangeSides)
+        if(support.canChangeSides)
         {
             if (coll != null) 
             {
@@ -107,7 +107,7 @@ public class Trocar_Lado : MonoBehaviour
         Debug.Log(listaB[0]);
 
         support.toFadeWhite = true;
-        canChangeSides = false;
+        support.canChangeSides = false;
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
         bool activateB = false;
@@ -122,7 +122,7 @@ public class Trocar_Lado : MonoBehaviour
             objetoATL.SetActive(true);
         }
 
-        otherSideChanger.GetComponent<Trocar_Lado>().canChangeSides = false;
+        // otherSideChanger.GetComponent<Trocar_Lado>().canChangeSides = false;
 
         anim.SetTrigger("Start");
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
@@ -150,7 +150,7 @@ public class Trocar_Lado : MonoBehaviour
         yield return new WaitForSeconds(transTime/2);
 
         support.toFadeWhite = false;
-        canChangeSides = true;
+        support.canChangeSides = true;
         if (activateB) {
             audioPlayer.SwitchSound("LadoA_BGM", "LadoB_BGM");
             objetoATL.SetActive(false);
