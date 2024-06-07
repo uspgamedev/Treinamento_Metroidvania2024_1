@@ -364,6 +364,7 @@ public class BossAi : MonoBehaviour
 
     private IEnumerator AteandoFogo(){
         yield return new WaitForSeconds(1f);
+        audioPlayer.Play("CapybaraStomp");
          for (int i=(int)primeiro; i<j;i++){
              chamas[i] = Instantiate(fogoPrefab, positions[i], Quaternion.identity); // usa um array para chamar os objetos
              yield return new WaitForSeconds(0.5f); // intervalinho
@@ -417,6 +418,7 @@ public class BossAi : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         StartCoroutine(White());
+        audioPlayer.Play("ChangeSideSFX");
         yield return new WaitForSeconds(transTime);
 
         foreach (GameObject objeto in listaA)
