@@ -10,6 +10,7 @@ public class Player_Movement : MonoBehaviour
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool canMove2 = true;
 
+
     private Rigidbody2D rb;
     private Collision coll;
     private Animator anim;
@@ -48,6 +49,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private ParticleSystem landParticle;
     [SerializeField] private ParticleSystem jumpParticle;
 
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -61,11 +63,23 @@ public class Player_Movement : MonoBehaviour
         initialGravity = rb.gravityScale;
         audioPlayer = support.getAudioManagerInstance();
         // groundLayer = GameObject.Find("MainTilemapA").layer;
+
+    }
+
+    void Start(){
+            Vector3 nulo = new Vector3(0f, 0f, 0f);
+            Debug.Log(" first Last Respawn: " + support.lastRespawn);
+            if (support.lastRespawn != nulo){
+                transform.position = support.lastRespawn;
+            }
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine(Print());
         if (coll.onGround)
         {
             GetComponent<Better_Jumping>().enabled = true;
@@ -138,6 +152,11 @@ public class Player_Movement : MonoBehaviour
 
         CalculateLastPos();
         
+    }
+
+    private IEnumerator Print(){
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Last Respawn: " + support.lastRespawn);
     }
 
     private void walk(Vector2 dir) 
