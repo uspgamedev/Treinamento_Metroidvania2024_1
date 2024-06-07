@@ -12,6 +12,7 @@ public class TentativaCamera : MonoBehaviour
     [SerializeField] private bool isRespawn;
     [SerializeField] private Transform respawnPoint;
 
+
     private SupportScript support;
     
     void Awake()
@@ -22,6 +23,9 @@ public class TentativaCamera : MonoBehaviour
         vcam.Follow = player;
         
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+
+        
+
     }
 
     void OnTriggerEnter2D (Collider2D coll)
@@ -29,7 +33,9 @@ public class TentativaCamera : MonoBehaviour
         if (coll.tag == "Player" && !virtualCam.activeInHierarchy) {
             virtualCam.SetActive(true);
             if (isRespawn) {
-                support.lastRespawn = respawnPoint.position;
+                PlayerPrefs.SetFloat("pos_x", respawnPoint.position.x);
+                PlayerPrefs.SetFloat("pos_y", respawnPoint.position.y);
+                PlayerPrefs.SetFloat("pos_z", respawnPoint.position.z);
             }
         }
     }
