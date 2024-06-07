@@ -48,6 +48,7 @@ public class Trocar_Lado : MonoBehaviour
 
     void Update()
     {
+        // Debug.Log(canChangeSides + " " + support.canChangeSides);
         /*listaA = support.listaA;
         listaB = support.listaB;*/
         GameObject[] listaTemp = FindObjectsOfType<GameObject>(true);
@@ -66,11 +67,14 @@ public class Trocar_Lado : MonoBehaviour
             }
         }
         //muda de lado se o player esta dentro do local de mudar de lado e se o player pressionou a tecla E
-        if(support.canChangeSides)
+        if(support.canChangeSides && canChangeSides)
         {
+            // Debug.Log("a");
             if (coll != null) 
             {
+                // Debug.Log("b");
                 if (coll.gameObject.tag == "Player") {
+                    // Debug.Log("c");
                     if (Input.GetKeyDown(KeyCode.E)) 
                     {
                         audioPlayer.Play("ChangeSideSFX");
@@ -100,14 +104,19 @@ public class Trocar_Lado : MonoBehaviour
 
     private IEnumerator ChangeSides() //habilita e desabilita objetos de acordo com o lado para o qual deve ser mudado
     {
-        Debug.Log("Trocando");
-        Debug.Log(objetoATL);
-        Debug.Log(objetoBTL);
-        Debug.Log(listaA[0]);
-        Debug.Log(listaB[0]);
+        Debug.Log(support.ultimoLado);
+        if (support.ultimoLado == 1) {
+            PlayerPrefs.SetInt("ultimo_lado", -1);
+            support.ultimoLado = -1;
+        }
+        if (support.ultimoLado == -1) {
+            PlayerPrefs.SetInt("ultimo_lado", 1);
+            support.ultimoLado = 1;
+        }
 
         support.toFadeWhite = true;
-        support.canChangeSides = false;
+        support.SetChange();
+
         coll.GetComponent<Player_Movement>().canMove2 = false;
 
         bool activateB = false;
@@ -150,7 +159,7 @@ public class Trocar_Lado : MonoBehaviour
         yield return new WaitForSeconds(transTime/2);
 
         support.toFadeWhite = false;
-        support.canChangeSides = true;
+        // canChangeSides = true;
         if (activateB) {
             audioPlayer.SwitchSound("LadoA_BGM", "LadoB_BGM");
             objetoATL.SetActive(false);
@@ -159,18 +168,20 @@ public class Trocar_Lado : MonoBehaviour
             audioPlayer.SwitchSound("LadoB_BGM", "LadoA_BGM");
             objetoBTL.SetActive(false);
         }
+        
 
-        if (support.ladoInicial == support.LadoInicialA){
-        support.ladoInicial = support.LadoInicialB;
-        } else {
-        support.ladoInicial = support.LadoInicialA;
-        }
+        // if (support.ladoInicial == support.LadoInicialA){
+        // support.ladoInicial = support.LadoInicialB;
+        // } else {
+        // support.ladoInicial = support.LadoInicialA;
+        // }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        // support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         canChangeSides = true;
+        // Debug.Log(canChangeSides + " " + support.canChangeSides);
         coll = collision;
         healthScript = coll.GetComponent<Health>();
     }
