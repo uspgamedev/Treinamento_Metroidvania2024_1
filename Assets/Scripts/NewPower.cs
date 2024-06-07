@@ -85,6 +85,9 @@ public class NewPower : MonoBehaviour
         yield return new WaitForSeconds(8f);
 
         skillText.SetActive(false);
-        Destroy(gameObject);
+
+        yield return new WaitForSeconds(1f);
+
+        gameObject.SetActive(false);
     }
 }

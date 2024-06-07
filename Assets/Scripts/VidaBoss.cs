@@ -96,7 +96,10 @@ public class VidaBoss : MonoBehaviour
         notStunned = true;
         timeSinceHit = 50f;
 
-        gameObject.tag = "Morto";
-        gameObject.SetActive(false);
+        gameObject.layer = LayerMask.NameToLayer("Ground");
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<Rigidbody2D>().gravityScale = 0f;
+
+        GetComponent<BossAi>().toDie = true;
     }
 }
