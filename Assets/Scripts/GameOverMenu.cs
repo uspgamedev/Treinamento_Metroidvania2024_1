@@ -20,6 +20,7 @@ public class GameOverMenu : MonoBehaviour
     private Vector3[][] originalVertices;
     private GameObject[] menuButtons;
     private SupportScript support;
+    private AudioManager audioPlayer;
     private GameObject player;
     private EventSystem events;
     void Awake()
@@ -46,6 +47,8 @@ public class GameOverMenu : MonoBehaviour
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         events = EventSystem.current;
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetComponent<SupportScript>().getAudioManagerInstance();
+
     }
 
     void Start()
@@ -74,6 +77,9 @@ public class GameOverMenu : MonoBehaviour
     private void StartGameOverProcess()
     {
         isGameOver = true;
+        
+        audioPlayer.Pause("LadoA_BGM");
+        audioPlayer.Pause("LadoB_BGM");
         StartCoroutine(GameOverSequence());
     }
 
@@ -88,6 +94,9 @@ public class GameOverMenu : MonoBehaviour
 
             ButtonsDisappear();
             events.SetSelectedGameObject(null);
+
+            audioPlayer.Continue("LadoA_BGM");
+            audioPlayer.Continue("LadoB_BGM");
         }
     }
 
@@ -108,28 +117,14 @@ public class GameOverMenu : MonoBehaviour
         // White flash
         whiteFlashImage.gameObject.SetActive(true);
         setButtonStatus(true);
-        whiteFlashImage.color = new Color(1, 1, 1, 0);
-        float elapsedTime = 0f;
-        float fadeInDuration = 0.1f; // Fast fade-in duration
-        // Fast fade-in to alpha = 1
-        while (elapsedTime < fadeInDuration)
-        {
-            whiteFlashImage.color = new Color(1, 1, 1, elapsedTime / fadeInDuration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        whiteFlashImage.color = new Color(1, 1, 1, 1);
 
         
         blackBG.color = new Color(blackBG.color.r, blackBG.color.g, blackBG.color.b, 1f);
-        // Wait for half a second
         StartCoroutine(AnimateCharacters());
-        yield return new WaitForSeconds(0.5f);
         AnimateButtons();
         // Slow fade-out to alpha = 0
-        elapsedTime = 0f;
-        float fadeOutDuration = 1.0f; // Slow fade-out duration
+        float elapsedTime = -1f;
+        float fadeOutDuration = 0.5f; // Slow fade-out duration
 
         while (elapsedTime < fadeOutDuration)
         {

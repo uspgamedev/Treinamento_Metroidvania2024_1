@@ -111,10 +111,6 @@ public class AudioManager : MonoBehaviour
             s.source.time = s.savedTime; // Define o tempo de reprodução salvo
             s.source.Play();
         }
-        else
-        {
-            Debug.LogWarning("Sound: " + name + " has not been paused or has not started.");
-        }
     }
 
     public void FadeIn(string name)
