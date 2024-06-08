@@ -55,7 +55,7 @@ MonoBehaviour:
   - name: Jump
     loop: 0
     clip: {fileID: 8300000, guid: a6edc68f3d4d3c049b89a9578c390849, type: 3}
-    volume: 0.9
+    volume: 1
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -125,21 +125,21 @@ MonoBehaviour:
   - name: LadoA_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 4f70c497ad7b70f448eec2602e53f18e, type: 3}
-    volume: 0.2
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: LadoB_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 876d795379de4db40a506287319a7794, type: 3}
-    volume: 0.2
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: BossBattle_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 3716984e411eba84f886a68418019a53, type: 3}
-    volume: 0.2
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}
     savedTime: 0

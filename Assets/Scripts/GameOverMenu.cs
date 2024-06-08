@@ -70,7 +70,7 @@ public class GameOverMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
                 RestartGame();
-            else if (Input.GetKeyDown(KeyCode.Escape))
+            else if (Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Backspace))
                 ExitGame();
         }
     }

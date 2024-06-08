@@ -64,7 +64,7 @@ public class HudController : MonoBehaviour
 
     void Update()
     {
-        if (!gameOverMenu.GetComponent<GameOverMenu>().isGameOver && Input.GetKeyDown(KeyCode.Escape))
+        if (!gameOverMenu.GetComponent<GameOverMenu>().isGameOver && (Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Backspace)||Input.GetKeyDown(KeyCode.P)))
         {
             if (isOnPauseMenu)
             {
