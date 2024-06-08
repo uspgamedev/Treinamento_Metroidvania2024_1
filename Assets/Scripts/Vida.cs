@@ -19,7 +19,7 @@ public class Health : MonoBehaviour
     float max = 1f;
     float t = 0f;
     float alpha;
-    private bool toFade = false;
+    public bool toFade = false;
     private float fadeDur = 1f;
 
     private Player_Movement moveScript;
@@ -32,7 +32,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float knockbackForce;
     private float dir;
     [HideInInspector] public bool onKnockback = false;
-    private bool damageable = true;
+    public bool damageable = true;
     private SimpleFlash flashScript;
     private AudioManager audioPlayer;
     private Animator anim;
