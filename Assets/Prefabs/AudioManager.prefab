@@ -55,14 +55,14 @@ MonoBehaviour:
   - name: Jump
     loop: 0
     clip: {fileID: 8300000, guid: a6edc68f3d4d3c049b89a9578c390849, type: 3}
-    volume: 0.8
+    volume: 0.9
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: Landing
     loop: 0
     clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
-    volume: 0.3
+    volume: 0.4
     pitch: 0.5
     source: {fileID: 0}
     savedTime: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
   - name: RatAttack
     loop: 0
     clip: {fileID: 8300000, guid: 120a8bb67aaba924a990d7d60921f12d, type: 3}
-    volume: 0.3
+    volume: 0.35
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
   - name: BlobShoot
     loop: 0
     clip: {fileID: 8300000, guid: eb6bd1d91a07fac43aad7c1096b8f06c, type: 3}
-    volume: 0.05
+    volume: 0.1
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
   - name: BlobDie
     loop: 0
     clip: {fileID: 8300000, guid: 9d2b23a84f2efb343892d14d7e3d6845, type: 3}
-    volume: 0.05
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -125,21 +125,21 @@ MonoBehaviour:
   - name: LadoA_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 4f70c497ad7b70f448eec2602e53f18e, type: 3}
-    volume: 0.3
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: LadoB_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 876d795379de4db40a506287319a7794, type: 3}
-    volume: 0.3
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
   - name: BossBattle_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 3716984e411eba84f886a68418019a53, type: 3}
-    volume: 0.3
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   - name: PauseEnter
     loop: 0
     clip: {fileID: 8300000, guid: cfc357f3d0e9b5940be0991147356af2, type: 3}
-    volume: 0.2
+    volume: 0.3
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
   - name: SuccessParry
     loop: 0
     clip: {fileID: 8300000, guid: 0493c3930e0f2f349bfb4a579ee9bb00, type: 3}
-    volume: 0.2
+    volume: 0.25
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   - name: SuccessHit
     loop: 0
     clip: {fileID: 8300000, guid: 0f1ad7d596446a147a1b1978cec94d0c, type: 3}
-    volume: 0.5
+    volume: 0.6
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -216,7 +216,7 @@ MonoBehaviour:
   - name: PreCapybaraFight
     loop: 0
     clip: {fileID: 8300000, guid: 4f71195e89e6bed44b39490c2fc671b8, type: 3}
-    volume: 0.1
+    volume: 0.15
     pitch: 1
     source: {fileID: 0}
     savedTime: 0

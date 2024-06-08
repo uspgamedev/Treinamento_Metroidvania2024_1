@@ -54,8 +54,9 @@ public class GameOverMenu : MonoBehaviour
     void Start()
     {
         gameOverText.gameObject.SetActive(false);
+        
         setupButtons();
-        setButtonStatus(true);
+        setButtonStatus(false);
     }
 
     void Update()
@@ -155,6 +156,7 @@ public class GameOverMenu : MonoBehaviour
     private void ButtonsDisappear() {
         blackBG.DOFade(0f, 2f);
         setupButtons();
+        setButtonStatus(false);
         gameOverText.gameObject.SetActive(false);
     }
 
