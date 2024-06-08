@@ -194,7 +194,6 @@ public class HudController : MonoBehaviour
         audioPlayer.Continue("LadoA_BGM");
         audioPlayer.Continue("LadoB_BGM");
         audioPlayer.Continue("BossBattle_BGM");
-        yield return new WaitForSeconds(TWEEN_TIME);
     }
 
     public void ContinueGame()

@@ -142,7 +142,6 @@ public class GameOverMenu : MonoBehaviour
         }
 
         whiteFlashImage.color = new Color(1, 1, 1, 0);
-        whiteFlashImage.gameObject.SetActive(false);
     }
 
     private void setupButtons(){

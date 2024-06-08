@@ -160,7 +160,7 @@ MonoBehaviour:
   - name: Dash
     loop: 0
     clip: {fileID: 8300000, guid: 9ff18283fc7cafc40aa78dfb70e1433f, type: 3}
-    volume: 0.3
+    volume: 0.8
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
   - name: CapybaraAwake
     loop: 0
     clip: {fileID: 8300000, guid: d365a8576be3a94489d3e86ad783c009, type: 3}
-    volume: 0.6
+    volume: 1
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
