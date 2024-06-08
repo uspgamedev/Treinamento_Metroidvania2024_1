@@ -14,10 +14,8 @@ public class HudController : MonoBehaviour
         IN,
         OUT
     }
-
-    private const float NEXT_BUTTON_POSITION = 250;
-    private const float BUTTONS_END_Y = 175; // Posição final dos botões
     private const float TWEEN_TIME = 0.5f;
+    private Health playerHealth;
     private const float BLACK_FADE_ALPHA_IN = 0.4f;
     private const float BLACK_FADE_ALPHA_OUT = 1f;
     private const float DELAY_BEFORE_RETURN = 0.4f;
@@ -25,6 +23,8 @@ public class HudController : MonoBehaviour
     private GameObject[] menuButtons;
     private Image blackFade;
     private GameObject pauseText;
+    private SupportScript support;
+    private GameObject player;
     private Tween currentTween; // Variável para manter uma referência ao tween atual
     [HideInInspector] public bool isOnPauseMenu = false;
     private GameObject gameOverMenu;
@@ -46,6 +46,12 @@ public class HudController : MonoBehaviour
         menuButtons = GameObject.FindGameObjectsWithTag("MenuButton")
                     .OrderByDescending(button => button.transform.position.y)
                     .ToArray();
+
+        if (playerHealth == null) {
+            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+            player = playerHealth.gameObject;
+        }
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
 
         gameOverMenu = GameObject.Find("GameOverMenu");
         setButtonStatus(false);
@@ -70,6 +76,7 @@ public class HudController : MonoBehaviour
             }
         }
     }
+    
 
     void callPauseMenu()
     {
@@ -134,8 +141,8 @@ public class HudController : MonoBehaviour
 
             if (direction == InOut.IN)
             {
-                targetAnchorMin.y = 0.5f; 
-                targetAnchorMax.y = 0.5f; 
+                targetAnchorMin.y = 0.25f; 
+                targetAnchorMax.y = 0.25f; 
             }
             else
             {
@@ -158,6 +165,36 @@ public class HudController : MonoBehaviour
         yield return new WaitForSeconds(timeBeforeInactivation);
         isOnPauseMenu = false;
         setButtonStatus(false);
+    }
+
+    public void RestartFromCheckpoint() //Só para o caso de alguma coisa dar errado e cairmos num softlock
+    {                                   //Acredito ter corrigido e / ou ter dado oportunidade de fuga de todos os softlocks mas só pra garantir né
+        StartCoroutine(checkpointReturn());
+
+    }
+    private IEnumerator checkpointReturn(){
+        Time.timeScale = 1;
+        doBlackFadeTween(1f, TWEEN_TIME);
+        yield return new WaitForSeconds(TWEEN_TIME);
+        player.transform.position = support.lastRespawn;
+        playerHealth.maxHealth = support.maxHealth;
+        playerHealth.HealthRestore(support.maxHealth);
+        player.layer = LayerMask.NameToLayer("Player");
+        playerHealth.damageable = true;
+        playerHealth.toFade = false;
+        StartCoroutine(desFade());
+    }
+    private IEnumerator desFade(){
+        
+        tweenButtons(InOut.OUT);
+        StartCoroutine(resetObjects(DELAY_BEFORE_INACTIVATION));
+        yield return new WaitForSeconds(TWEEN_TIME);
+        
+        doBlackFadeTween(0f, TWEEN_TIME);
+        audioPlayer.Continue("LadoA_BGM");
+        audioPlayer.Continue("LadoB_BGM");
+        audioPlayer.Continue("BossBattle_BGM");
+        yield return new WaitForSeconds(TWEEN_TIME);
     }
 
     public void ContinueGame()

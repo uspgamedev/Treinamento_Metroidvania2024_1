@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using DG.Tweening;
@@ -48,17 +46,29 @@ public class Enemy_AI3 : MonoBehaviour
     private SupportScript support;
     private AudioManager audioPlayer;
 
-    [SerializeField] private float respawnTime;
+    [SerializeField] private const float respawnTime = 150f;
 
-
-    void Awake()
+    private void Awake()
     {
-        if (respawnTime < 2f) {
-            respawnTime = 150f;
-        }
+        InitializeComponents();
+        InitializePositions();
+        InitializeTimers();
+    }
+
+    private void InitializeComponents()
+    {
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
 
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+        light = transform.GetChild(0).GetComponent<Light2D>();
+        anim = GetComponent<Animator>();
+        flashScript = GetComponent<SimpleFlash>();
+        cubeRange = transform.Find("Cube Range").gameObject;
+    }
+
+    private void InitializePositions()
+    {
         int j = 0;
         foreach (Transform child in transform) {
             if (child.GetComponent<Light2D>() == null && child.GetComponent<BlobCubeRange>() == null) {
@@ -80,17 +90,13 @@ public class Enemy_AI3 : MonoBehaviour
             pos[i+1] = transform.position + positions[i].localPosition;
         }
 
-        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
-        light = transform.GetChild(0).GetComponent<Light2D>();
-        anim = GetComponent<Animator>();
-        flashScript = GetComponent<SimpleFlash>();
-
-        cubeRange = transform.Find("Cube Range").gameObject;
-
         if (pos.Length <= 1) {
             baseChoiceMark = 0f;
         }
+    }
 
+    private void InitializeTimers()
+    {
         nextChoiceTimer = actionTime;
         choiceMark = baseChoiceMark;
 
@@ -101,6 +107,12 @@ public class Enemy_AI3 : MonoBehaviour
 
     void Update()
     {
+        UpdateDirection();
+        UpdateChoiceTimer();
+    }
+
+    private void UpdateDirection()
+    {
         if (playerTransform.position.x > transform.position.x){
             direction = 1f;
             transform.localScale = new Vector3(1f, 1f, 1f);
@@ -108,7 +120,10 @@ public class Enemy_AI3 : MonoBehaviour
             direction = -1f;
             transform.localScale = new Vector3(-1f, 1f, 1f);
         }
+    }
 
+    private void UpdateChoiceTimer()
+    {
         nextChoiceTimer -= Time.deltaTime;
         if (cubing) {
             nextChoiceTimer = actionTime * 0.6f;
@@ -205,25 +220,17 @@ public class Enemy_AI3 : MonoBehaviour
     private void OnTeleport(bool state) {
         GetComponent<SpriteRenderer>().enabled = state;
         GetComponent<BoxCollider2D>().enabled = state;
-        // GetComponent<CircleCollider2D>().enabled = state;
         cubeRange.SetActive(state);
-        if (!state) {
-            GetComponent<Rigidbody2D>().gravityScale = 0f;
-        }
-        else {
-            GetComponent<Rigidbody2D>().gravityScale = 1f;
-        }
+        GetComponent<Rigidbody2D>().gravityScale = state ? 1f : 0f;
     }
 
     public IEnumerator Die() {
         dying = true;
         flashScript.Flash(Color.green);
 
-        float willDrop = Random.Range(0f, 1f);
-
-        if (willDrop <= dropChance) {
-            GameObject hp = Instantiate(hpCollect, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
-            hp.GetComponent<HealthRecover>().goRight = GameObject.Find("Player").transform.position.x < transform.position.x;
+        if (Random.Range(0f, 1f) <= dropChance) {
+            GameObject hp = Instantiate(hpCollect, transform.position, Quaternion.identity);
+            hp.GetComponent<HealthRecover>().goRight = playerTransform.position.x < transform.position.x;
         }
 
         GameObject part = Instantiate(deathParticles, transform.position, Quaternion.identity);
@@ -240,14 +247,16 @@ public class Enemy_AI3 : MonoBehaviour
     }
 
     private bool PlayerClose() {
-        float x = playerTransform.position.x - transform.position.x;
-        float y = playerTransform.position.y - transform.position.y;
+        float x = Mathf.Abs(playerTransform.position.x - transform.position.x);
+        float y = Mathf.Abs(playerTransform.position.y - transform.position.y);
+        // Math.Abs pra garantir que os bixos não continuem atirando caso o player esteja muito a esquerda, ou muito abaixo dos bixos
+        // Vetores e Geometria Feat: Colucci moment
         return x < minPlayerDistX && y < minPlayerDistY;
     }
 
     public void Cube() {
         if (!teleporting) {
-            Debug.Log("a");
+            //Debug.Log("a");
             anim.SetTrigger("Cube");
             cubing = true;
             if (!dying) {
