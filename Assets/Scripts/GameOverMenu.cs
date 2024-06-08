@@ -88,6 +88,7 @@ public class GameOverMenu : MonoBehaviour
     public void RestartGame()
     {
         if (isGameOver) {
+            whiteFlashImage.gameObject.SetActive(true); //Só pra garantir que as outras coisas não quebrem após um gameover
             player.transform.position = support.lastRespawn;
             playerHealth.maxHealth = support.maxHealth;
             playerHealth.HealthRestore(support.maxHealth);
@@ -142,6 +143,7 @@ public class GameOverMenu : MonoBehaviour
         }
 
         whiteFlashImage.color = new Color(1, 1, 1, 0);
+        whiteFlashImage.gameObject.SetActive(false);
     }
 
     private void setupButtons(){

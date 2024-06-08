@@ -516,8 +516,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8101429891370359290}
-  - {fileID: 256884913277372442}
   - {fileID: 1281622319832508859}
+  - {fileID: 256884913277372442}
   - {fileID: 8190257485970032513}
   m_Father: {fileID: 6792909592766977682}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -533,7 +533,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2901774787154499008}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
