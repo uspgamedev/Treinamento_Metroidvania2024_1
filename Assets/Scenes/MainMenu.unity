@@ -6913,6 +6913,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4457060231785597574, guid: 04c8a3f84b71c4839b04fa24f651c912, type: 3}
+      propertyPath: skillsIniciais
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7836068624931551646, guid: 04c8a3f84b71c4839b04fa24f651c912, type: 3}
       propertyPath: m_Name
       value: ScriptsHelper
