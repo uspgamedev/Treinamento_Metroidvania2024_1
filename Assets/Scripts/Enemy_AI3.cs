@@ -18,9 +18,8 @@ public class Enemy_AI3 : MonoBehaviour
     private bool cubing = false;
     private bool dying = false;
     private bool teleporting = false;
-
     private Animator anim;
-    private Light2D light;
+    private new Light2D light;
     private SimpleFlash flashScript;
 
     [Header("State Machine")]
