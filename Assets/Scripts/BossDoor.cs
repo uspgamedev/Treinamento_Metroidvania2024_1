@@ -64,7 +64,8 @@ public class BossDoor : MonoBehaviour
                 yield return new WaitForSeconds(3f);
                 oneGem.DOFade(0f, 1f).SetEase(Ease.InOutSine);
                 break;
-            case 2:
+            case 2: //Não havia reparado nisso, mas basicamente esse coiso impede o mano de fazer a fuga.
+            case 3:
                 twoGems.DOFade(1f, 1f).SetEase(Ease.InOutSine);
                 StartCoroutine(Open());
                 yield return new WaitForSeconds(1f);
