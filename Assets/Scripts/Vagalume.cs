@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class Vagalume : MonoBehaviour
 {
     private Transform child;
-    private new Light2D light;
+    private Light2D light;
     private SpriteRenderer spriteRenderer;
     private SimpleFlash flashScript;
     private SupportScript support;

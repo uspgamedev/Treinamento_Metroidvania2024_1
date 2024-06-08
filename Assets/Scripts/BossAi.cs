@@ -447,6 +447,7 @@ public class BossAi : MonoBehaviour
     }
 
     private IEnumerator White(){
+        whiteFade.gameObject.SetActive(true);
         whiteFade.DOColor(Color.white, transTime);
         yield return new WaitForSeconds(0f);
     }

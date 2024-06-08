@@ -182,10 +182,6 @@ public class HudController : MonoBehaviour
         player.layer = LayerMask.NameToLayer("Player");
         playerHealth.damageable = true;
         playerHealth.toFade = false;
-        StartCoroutine(desFade());
-    }
-    private IEnumerator desFade(){
-        
         tweenButtons(InOut.OUT);
         StartCoroutine(resetObjects(DELAY_BEFORE_INACTIVATION));
         yield return new WaitForSeconds(TWEEN_TIME);

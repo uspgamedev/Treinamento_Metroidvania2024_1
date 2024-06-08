@@ -15,7 +15,7 @@ public class Gem : MonoBehaviour
 
     [SerializeField] private int gemID;
 
-    [SerializeField] private new Light2D light;
+    [SerializeField] private Light2D light;
 
     [SerializeField] private bool finalGem = false;
 

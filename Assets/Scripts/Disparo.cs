@@ -9,7 +9,7 @@ public class Disparo : MonoBehaviour
     private GameObject player;
     private Rigidbody2D enemyRB;
     private Animator anim;
-    private new Light2D light;
+    private Light2D light;
 
     private bool parry;
     [HideInInspector] public float projectileSpeed;

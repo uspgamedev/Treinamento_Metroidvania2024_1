@@ -177,6 +177,7 @@ public class Trocar_Lado : MonoBehaviour
 
     public void Fade(float fadeDuration, Image image, float rgb, float a)
     {
+        whiteFade.gameObject.SetActive(true);
         a = Mathf.Lerp(min, max, t);
 
         t += Time.deltaTime / fadeDuration;

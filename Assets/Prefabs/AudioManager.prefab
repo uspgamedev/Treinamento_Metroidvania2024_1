@@ -62,7 +62,7 @@ MonoBehaviour:
   - name: Landing
     loop: 0
     clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
-    volume: 0.4
+    volume: 0.5
     pitch: 0.5
     source: {fileID: 0}
     savedTime: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   - name: LadoB_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 876d795379de4db40a506287319a7794, type: 3}
-    volume: 0.15
+    volume: 0.08
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
