@@ -90,6 +90,9 @@ public class GameOverMenu : MonoBehaviour
             player.transform.position = support.lastRespawn;
             playerHealth.maxHealth = support.maxHealth;
             playerHealth.HealthRestore(support.maxHealth);
+            player.layer = LayerMask.NameToLayer("Player");
+            playerHealth.damageable = true;
+            playerHealth.toFade = false;
 
             isGameOver = false;
 
@@ -99,6 +102,8 @@ public class GameOverMenu : MonoBehaviour
             audioPlayer.Continue("LadoA_BGM");
             audioPlayer.Continue("LadoB_BGM");
             audioPlayer.Continue("BossBattle_BGM");
+
+
         }
     }
 
