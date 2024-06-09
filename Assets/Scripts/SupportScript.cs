@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class SupportScript : MonoBehaviour
 {
     [SerializeField] private GameObject audioPrefab;
+    [SerializeField] private bool ShouldDestroy = false;
     public enum LadoInicial {
         A,
         B
@@ -57,7 +58,7 @@ public class SupportScript : MonoBehaviour
     
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        if (!ShouldDestroy) DontDestroyOnLoad(gameObject);
 
         canChangeSides = true;
 
