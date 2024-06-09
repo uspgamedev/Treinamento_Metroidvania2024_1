@@ -1,93 +1,122 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class NewPower : MonoBehaviour
 {
-    private enum Skills {
-        Parry,
-        Dash,
-        Gancho
-    }
-
-    private SupportScript support;
-    private AudioManager audioPlayer;
-
-    private bool canPickup = false;
-    private SimpleFlash flashScript;
-
+    private enum Skills{Parry, Dash, Gancho}
     [SerializeField] private Skills skillAcquired;
     [SerializeField] private GameObject skillText;
-
     [SerializeField] private int powerID;
-
-    void Start()
+    private SupportScript support;
+    private AudioManager audioPlayer;
+    private SimpleFlash flashScript;
+    private bool canPickup = false;
+    private float pickupTime;
+    private void Start()
     {
-        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
-        flashScript = transform.GetChild(0).GetComponent<SimpleFlash>();
+        support = FindObjectOfType<SupportScript>();
+        if (support == null)
+        {
+            Debug.LogError("SupportScript is missing!");
+            return;
+        }
 
-        foreach (int id in support.powerupIDToDeactivate) {
-            if (id == powerID) {
+        flashScript = transform.GetChild(0).GetComponent<SimpleFlash>();
+        if (flashScript == null)
+        {
+            Debug.LogError("SimpleFlash component not found in child object!");
+            return;
+        }
+
+        foreach (int id in support.powerupIDToDeactivate)
+        {
+            if (id == powerID)
+            {
                 gameObject.SetActive(false);
+                break;
             }
         }
-        audioPlayer = support.GetComponent<SupportScript>().GetAudioManagerInstance();
+
+        audioPlayer = support.GetAudioManagerInstance();
+        if (audioPlayer == null)
+        {
+            Debug.LogWarning("AudioManager not found in SupportScript!");
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player"))
+        {
             canPickup = true;
+            pickupTime = Time.realtimeSinceStartup;
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player"))
+        {
             canPickup = false;
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canPickup) {
+        if (canPickup && Input.GetKeyDown(KeyCode.E))
+        {
             StartCoroutine(GainSkill());
-            canPickup = false;
         }
     }
 
     private IEnumerator GainSkill()
     {
         flashScript.Flash(Color.white);
-        GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(Color.white);
+        var playerFlashScript = GameObject.Find("Player")?.GetComponent<SimpleFlash>();
+        playerFlashScript?.Flash(Color.white);
 
         support.powerupIDToDeactivate.Add(powerID);
-
         GetComponent<Collider2D>().enabled = false;
 
-        if (skillAcquired == Skills.Parry) {
-            support.temParry = true;
+        switch (skillAcquired)
+        {
+            case Skills.Parry:
+                support.temParry = true;
+                break;
+            case Skills.Dash:
+                support.TemDash = true;
+                break;
+            case Skills.Gancho:
+                support.TemGancho = true;
+                break;
         }
-        else if (skillAcquired == Skills.Dash) {
-            support.TemDash = true;
+
+        if (audioPlayer != null)
+        {
+            audioPlayer.Play("PowerUP");
         }
-        else if (skillAcquired == Skills.Gancho) {
-            support.TemGancho = true;
+        else
+        {
+            Debug.LogWarning("AudioManager not found in SupportScript!");
         }
 
         skillText.SetActive(true);
-        audioPlayer.Play("PowerUP");
-
         yield return new WaitForSeconds(flashScript.duration);
 
-        Destroy(transform.GetChild(0).gameObject);
+        if (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+        }
 
-        yield return new WaitForSeconds(8f);
+        float elapsedTime = 0f;
+        while (elapsedTime < 15f)
+        {
+            yield return null; // Wait for one frame
+            elapsedTime = Time.realtimeSinceStartup - pickupTime;
+        }
 
         skillText.SetActive(false);
-
         yield return new WaitForSeconds(1f);
-
         gameObject.SetActive(false);
     }
 }

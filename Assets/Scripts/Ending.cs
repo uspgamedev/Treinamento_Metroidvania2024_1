@@ -30,7 +30,7 @@ public class Ending : MonoBehaviour
                 hp.DOFade(0f, 2f).SetEase(Ease.InOutSine);
             }
             GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance().FadeOut("BossBattle_BGM");
-            GameObject timerCanvas = GameObject.Find("Canvas Timer 1");
+            GameObject timerCanvas = GameObject.Find("Canvas Timer");
             if (timerCanvas != null)
                 timerCanvas.SetActive(false);
             StartCoroutine(Sequence());
