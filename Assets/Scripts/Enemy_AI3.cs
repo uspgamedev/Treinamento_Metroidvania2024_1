@@ -45,7 +45,7 @@ public class Enemy_AI3 : MonoBehaviour
     private SupportScript support;
     private AudioManager audioPlayer;
 
-    [SerializeField] private const float respawnTime = 150f;
+    [SerializeField] private const float respawnTime = 30f;
 
     private void Awake()
     {
