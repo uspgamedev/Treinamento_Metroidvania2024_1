@@ -107,7 +107,7 @@ public class BossAi : MonoBehaviour
         j=0;
         foreach(Transform child in transform){
             if (child.transform != transform){
-            positions[j] = child.transform.position;
+            positions[j] = new Vector2(child.transform.position.x, 20.5f);
             j++;
             }
         }
