@@ -239,7 +239,7 @@ public class Player_Movement : MonoBehaviour
         {
             groundTimeCounter += Time.deltaTime;
 
-            if (groundTimeCounter >= 0.3f) //Evitando update instantâneo, 
+            if (groundTimeCounter >= 0.15f) //Evitando update instantâneo, 
                                            //assim o player não é reespawnado no espinho ou no buraco gerando softlock
             {
                 LastPos = transform.position;

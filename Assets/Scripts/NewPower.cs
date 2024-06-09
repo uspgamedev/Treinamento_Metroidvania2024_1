@@ -109,7 +109,7 @@ public class NewPower : MonoBehaviour
         }
 
         float elapsedTime = 0f;
-        while (elapsedTime < 15f)
+        while (elapsedTime < 10f)
         {
             yield return null; // Wait for one frame
             elapsedTime = Time.realtimeSinceStartup - pickupTime;
