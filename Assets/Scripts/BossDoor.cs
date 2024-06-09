@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -9,89 +8,101 @@ public class BossDoor : MonoBehaviour
     private SupportScript support;
 
     [Header("Teleport")]
-    [SerializeField] private Transform tpPoint;
+    [SerializeField] private Transform teleportPoint;
 
     [Header("UI Indicators")]
-    [SerializeField] private SpriteRenderer noGems;
-    [SerializeField] private SpriteRenderer oneGem;
-    [SerializeField] private SpriteRenderer twoGems;
+    [SerializeField] private SpriteRenderer noGemsIndicator;
+    [SerializeField] private SpriteRenderer oneGemIndicator;
+    [SerializeField] private SpriteRenderer twoGemsIndicator;
 
-    private bool canPickup;
+    private bool canInteract;
 
-    private Animator anim;
-
-    private Image blackFade;
-    private AudioManager audioPlayer;
+    private Animator animator;
+    private Image blackFadeImage;
+    private AudioManager audioManager;
     void Start()
     {
-        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
-        anim = GetComponent<Animator>();
-        blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
-        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance();
-    }
+        support = GameObject.Find("ScriptsHelper")?.GetComponent<SupportScript>();
+        animator = GetComponent<Animator>();
+        blackFadeImage = GameObject.FindGameObjectWithTag("BlackFade")?.GetComponent<Image>();
+        audioManager = support?.GetAudioManagerInstance();
 
+        if (support == null || animator == null || blackFadeImage == null || audioManager == null)
+        {
+            Debug.LogError("One or more required components are missing. Please check the GameObject setup.");
+        }
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canPickup) {
-            StartCoroutine(TryOpen());
+        if (canInteract && Input.GetKeyDown(KeyCode.E)) {
+            StartCoroutine(TryOpenDoor());
         }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player") {
-            canPickup = true;
+        if (other.CompareTag("Player")) {
+            canInteract = true;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Player") {
-            canPickup = false;
+        if (other.CompareTag("Player")) {
+            canInteract = false;
         }
     }
 
-    private IEnumerator TryOpen() {
-        switch (support.gemCount) {
+    private IEnumerator TryOpenDoor() {
+        switch (support?.gemCount) {
             case 0:
-                noGems.DOFade(1f, 1f).SetEase(Ease.InOutSine);
-                yield return new WaitForSeconds(3f);
-                noGems.DOFade(0f, 1f).SetEase(Ease.InOutSine);
+                yield return FadeIndicator(noGemsIndicator);
                 break;
             case 1:
-                oneGem.DOFade(1f, 1f).SetEase(Ease.InOutSine);
-                yield return new WaitForSeconds(3f);
-                oneGem.DOFade(0f, 1f).SetEase(Ease.InOutSine);
+                yield return FadeIndicator(oneGemIndicator);
                 break;
-            case 2: //Não havia reparado nisso, mas basicamente esse coiso impede o mano de fazer a fuga.
+            case 2:
             case 3:
-                twoGems.DOFade(1f, 1f).SetEase(Ease.InOutSine);
-                StartCoroutine(Open());
-                yield return new WaitForSeconds(1f);
-                twoGems.DOFade(0f, 1f).SetEase(Ease.InOutSine);
+                yield return OpenDoor();
+                break;
+            default:
+                Debug.LogWarning("Unexpected gem count: " + support.gemCount);
                 break;
         }
     }
 
-    private IEnumerator Open() {
-        
-        anim.SetTrigger("Open");
+    private IEnumerator FadeIndicator(SpriteRenderer indicator)
+    {
+        indicator.DOFade(1f, 1f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(3f);
+        indicator.DOFade(0f, 1f).SetEase(Ease.InOutSine);
+    }
 
-        audioPlayer.Play("secreto");
+    private IEnumerator OpenDoor()
+    {
+        twoGemsIndicator.DOFade(1f, 0.5f).SetEase(Ease.InOutSine);
 
-        yield return new WaitForSeconds(1.5f);
+        animator.SetTrigger("Open");
+        audioManager?.Play("secreto");
+
+        yield return new WaitForSeconds(1f);
         
-        blackFade.DOFade(1f, 2f).SetEase(Ease.InOutSine);
+        blackFadeImage.DOFade(1f, 1f).SetEase(Ease.InOutSine);
 
         yield return new WaitForSeconds(0.5f);
 
-        audioPlayer.Play("FinalDoor");
+        audioManager?.Play("FinalDoor");
 
         yield return new WaitForSeconds(1.5f);
-        
-        GameObject.Find("Player").transform.position = tpPoint.position;
-        blackFade.DOFade(0f, 2f).SetEase(Ease.InOutSine);
+
+        twoGemsIndicator.DOFade(0f, 0.5f).SetEase(Ease.InOutSine);
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+        {
+            player.transform.position = teleportPoint.position;
+        }
+        blackFadeImage.DOFade(0f, 1f).SetEase(Ease.InOutSine);
 
         yield return new WaitForSeconds(2f);
     }
