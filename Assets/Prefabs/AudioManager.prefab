@@ -62,7 +62,7 @@ MonoBehaviour:
   - name: Landing
     loop: 0
     clip: {fileID: 8300000, guid: e9ddca1c91584b044a546d5bb42c0aad, type: 3}
-    volume: 0.5
+    volume: 0.7
     pitch: 0.5
     source: {fileID: 0}
     savedTime: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   - name: BossBattle_BGM
     loop: 1
     clip: {fileID: 8300000, guid: 3716984e411eba84f886a68418019a53, type: 3}
-    volume: 0.15
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
     savedTime: 0
@@ -188,14 +188,14 @@ MonoBehaviour:
   - name: CapybaraStomp
     loop: 0
     clip: {fileID: 8300000, guid: 5db430e846c50bb43a1f48475e318bf0, type: 3}
-    volume: 1
+    volume: 0.8
     pitch: 1.52
     source: {fileID: 0}
     savedTime: 0
   - name: CapybaraLaser
     loop: 0
     clip: {fileID: 8300000, guid: e1c78c437ea1181429c923c035b1adf6, type: 3}
-    volume: 0.25
+    volume: 0.1
     pitch: 1
     source: {fileID: 0}
     savedTime: 0

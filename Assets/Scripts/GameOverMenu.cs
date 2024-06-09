@@ -23,40 +23,16 @@ public class GameOverMenu : MonoBehaviour
     private AudioManager audioPlayer;
     private GameObject player;
     private EventSystem events;
+
     void Awake()
     {
-        if (playerHealth == null) {
-            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
-            player = playerHealth.gameObject;
-        }
-
-        if (whiteFlashImage == null)
-            whiteFlashImage = GameObject.Find("WhiteFade").GetComponent<Image>();
-
-        if (blackBG == null)
-            blackBG = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
-
-        if (gameOverText == null)
-            gameOverText = GameObject.Find("GameOverText").GetComponent<TextMeshProUGUI>();
-
-        if (menuButtons == null)
-        {
-            menuButtons = GameObject.FindGameObjectsWithTag("GameOverButton");
-            System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
-        }
-
-        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
-        events = EventSystem.current;
-        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetComponent<SupportScript>().getAudioManagerInstance();
-
+        InitializeComponents();
+        SetupMenuButtons();
     }
 
     void Start()
     {
-        gameOverText.gameObject.SetActive(false);
-        
-        setupButtons();
-        setButtonStatus(false);
+        InitializeGameOverMenu();
     }
 
     void Update()
@@ -66,74 +42,161 @@ public class GameOverMenu : MonoBehaviour
             StartGameOverProcess();
         }
 
+        HandleInput();
+    }
+
+    private void InitializeComponents()
+    {
+        playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+        player = playerHealth.gameObject;
+
+        whiteFlashImage = GameObject.Find("WhiteFade").GetComponent<Image>();
+        blackBG = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
+        gameOverText = GameObject.Find("GameOverText").GetComponent<TextMeshProUGUI>();
+
+        menuButtons = GameObject.FindGameObjectsWithTag("GameOverButton");
+        System.Array.Sort(menuButtons, (button1, button2) => button2.transform.position.y.CompareTo(button1.transform.position.y));
+
+        support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
+        events = EventSystem.current;
+        audioPlayer = support.getAudioManagerInstance();
+    }
+
+    private void InitializeGameOverMenu()
+    {
+        gameOverText.gameObject.SetActive(false);
+        SetButtonStatus(false);
+    }
+
+    private void SetupMenuButtons()
+    {
+        foreach (GameObject button in menuButtons)
+        {
+            RectTransform rectTransform = button.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition += new Vector2(0f, -BUTTON_DISTANCE);
+        }
+    }
+
+    private void HandleInput()
+    {
         if (isGameOver)
         {
             if (Input.GetKeyDown(KeyCode.Return))
                 RestartGame();
-            else if (Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Backspace))
-                ExitGame();
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
+                ActualQuit();
         }
     }
 
     private void StartGameOverProcess()
     {
         isGameOver = true;
-        
+        PauseBackgroundMusic();
+        StartCoroutine(GameOverSequence());
+    }
+
+    private void PauseBackgroundMusic()
+    {
         audioPlayer.Pause("LadoA_BGM");
         audioPlayer.Pause("LadoB_BGM");
         audioPlayer.Pause("BossBattle_BGM");
-        StartCoroutine(GameOverSequence());
+    }
+
+    private void ResumeBackgroundMusic()
+    {
+        audioPlayer.Continue("LadoA_BGM");
+        audioPlayer.Continue("LadoB_BGM");
+        audioPlayer.Continue("BossBattle_BGM");
     }
 
     public void RestartGame()
     {
         if (isGameOver) {
-            whiteFlashImage.gameObject.SetActive(true); //Só pra garantir que as outras coisas não quebrem após um gameover
-            player.transform.position = support.lastRespawn;
-            playerHealth.maxHealth = support.maxHealth;
-            playerHealth.HealthRestore(support.maxHealth);
-            player.layer = LayerMask.NameToLayer("Player");
-            playerHealth.damageable = true;
-            playerHealth.toFade = false;
-
+            whiteFlashImage.gameObject.SetActive(true);
+            ResetPlayerPosition();
             isGameOver = false;
-
-            ButtonsDisappear();
+            StartCoroutine(ButtonsDisappear());
             events.SetSelectedGameObject(null);
-
-            audioPlayer.Continue("LadoA_BGM");
-            audioPlayer.Continue("LadoB_BGM");
-            audioPlayer.Continue("BossBattle_BGM");
-
-
+            ResumeBackgroundMusic();
         }
     }
 
-    public void ExitGame()
+    private void ResetPlayerPosition()
     {
-        SceneManager.LoadScene("MainMenu");
+        player.transform.position = support.lastRespawn;
+        playerHealth.maxHealth = support.maxHealth;
+        playerHealth.HealthRestore(support.maxHealth);
+        player.layer = LayerMask.NameToLayer("Player");
+        playerHealth.damageable = true;
     }
 
-    private void setButtonStatus(bool status){
+    private void SetButtonStatus(bool status) {
         foreach (GameObject button in menuButtons)
         {
             button.SetActive(status);
         }
     }
 
+    private IEnumerator ButtonsDisappear()
+    {
+        yield return StartCoroutine(FadeOutGameOverText());
+        yield return StartCoroutine(TweenButtonsBack());
+        yield return StartCoroutine(FadeOutBlackBG());
+        SetButtonStatus(false);
+        gameOverText.gameObject.SetActive(false);
+    }
+
+    private IEnumerator FadeOutGameOverText()
+    {
+        gameOverText.DOFade(0f, 1.5f);
+        yield return null;
+    }
+
+    private IEnumerator TweenButtonsBack()
+    {
+        float duration = 1f; // Duration of the tween animation
+
+        foreach (GameObject button in menuButtons)
+        {
+            RectTransform rectTransform = button.GetComponent<RectTransform>();
+            Vector2 targetPosition = rectTransform.anchoredPosition - new Vector2(0f, BUTTON_DISTANCE);
+
+            // Tween the button back to its original position
+            rectTransform.DOAnchorPosY(targetPosition.y, duration).SetEase(Ease.InOutSine);
+        }
+
+        // Wait for the tween animation to complete
+        yield return new WaitForSeconds(duration);
+    }
+
+    private IEnumerator FadeOutBlackBG()
+    {
+        blackBG.DOFade(0f, 2f);
+        yield return null;
+    }
+
     private IEnumerator GameOverSequence()
     {
-        // White flash
-        whiteFlashImage.gameObject.SetActive(true);
-        setButtonStatus(true);
-
-        
-        blackBG.color = new Color(blackBG.color.r, blackBG.color.g, blackBG.color.b, 1f);
-        StartCoroutine(AnimateCharacters());
+        StartCoroutine(FadeOutWhiteFlash());
+        ShowGameOverUI();
+        yield return StartCoroutine(AnimateCharacters());
         AnimateButtons();
-        // Slow fade-out to alpha = 0
-        float elapsedTime = -1f;
-        float fadeOutDuration = 0.5f; // Slow fade-out duration
+    }
+
+    private void ShowGameOverUI()
+    {
+        gameOverText.gameObject.SetActive(true);
+        gameOverText.color = new Color(gameOverText.color.r, gameOverText.color.g, gameOverText.color.b, 1f);
+        SetButtonStatus(true);
+        blackBG.color = new Color(blackBG.color.r, blackBG.color.g, blackBG.color.b, 1f);
+    }
+
+    private IEnumerator FadeOutWhiteFlash()
+    {
+        
+        whiteFlashImage.gameObject.SetActive(true);
+        float elapsedTime = -1f; //Tempo negativo pra garantir o atraso de 1 segundo no fade
+        float fadeOutDuration = 0.5f;
 
         while (elapsedTime < fadeOutDuration)
         {
@@ -146,64 +209,31 @@ public class GameOverMenu : MonoBehaviour
         whiteFlashImage.gameObject.SetActive(false);
     }
 
-    private void setupButtons(){
-        foreach (GameObject button in menuButtons)
-        {
-            RectTransform rectTransform = button.GetComponent<RectTransform>();
-            rectTransform.anchoredPosition += new Vector2(0f, -BUTTON_DISTANCE);
-        }
-    }
-
-    private void ButtonsDisappear() {
-        blackBG.DOFade(0f, 2f);
-        setupButtons();
-        setButtonStatus(false);
-        gameOverText.gameObject.SetActive(false);
-    }
-
     private void AnimateButtons()
     {
-        // Agora, inicie a animação movendo os botões para a posição final (para cima)
         float delay = 0f;
         foreach (GameObject button in menuButtons)
         {
             RectTransform rectTransform = button.GetComponent<RectTransform>();
             rectTransform.DOAnchorPosY(rectTransform.anchoredPosition.y + BUTTON_DISTANCE, 0.75f).SetEase(Ease.InOutSine)
                 .SetDelay(delay);
-            delay = 0.5f;
+            delay += 0.5f;
         }
     }
     private IEnumerator AnimateCharacters()
     {
         yield return new WaitForSeconds(0.2f);
-        gameOverText.gameObject.SetActive(true);
         gameOverText.ForceMeshUpdate();
         textInfo = gameOverText.textInfo;
 
-        originalVertices = new Vector3[textInfo.meshInfo.Length][];
-        for (int i = 0; i < textInfo.meshInfo.Length; i++)
-        {
-            originalVertices[i] = new Vector3[textInfo.meshInfo[i].vertices.Length];
-            System.Array.Copy(textInfo.meshInfo[i].vertices, originalVertices[i], textInfo.meshInfo[i].vertices.Length);
-        }
+        SaveOriginalVertices();
 
         for (int i = 0; i < textInfo.characterCount; i++)
         {
             if (!textInfo.characterInfo[i].isVisible)
                 continue;
 
-            TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
-            int vertexIndex = charInfo.vertexIndex;
-            int materialIndex = charInfo.materialReferenceIndex;
-
-            Vector3 offset = new Vector3(0, 250, 0);
-            Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
-
-            for (int j = 0; j < 4; j++)
-            {
-                vertices[vertexIndex + j] += offset;
-            }
-
+            MoveCharacterUp(i);
             gameOverText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
             yield return new WaitForSeconds(0.05f);
         }
@@ -213,39 +243,69 @@ public class GameOverMenu : MonoBehaviour
             if (!textInfo.characterInfo[i].isVisible)
                 continue;
 
-            TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
-            int vertexIndex = charInfo.vertexIndex;
-            int materialIndex = charInfo.materialReferenceIndex;
+            yield return StartCoroutine(LerpCharacterToOriginalPosition(i));
+        }
+    }
 
-            Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
-            Vector3[] startVertices = new Vector3[4];
-            Vector3[] endVertices = new Vector3[4];
+    private void SaveOriginalVertices()
+    {
+        originalVertices = new Vector3[textInfo.meshInfo.Length][];
+        for (int i = 0; i < textInfo.meshInfo.Length; i++)
+        {
+            originalVertices[i] = new Vector3[textInfo.meshInfo[i].vertices.Length];
+            System.Array.Copy(textInfo.meshInfo[i].vertices, originalVertices[i], textInfo.meshInfo[i].vertices.Length);
+        }
+    }
 
+    private void MoveCharacterUp(int charIndex)
+    {
+        TMP_CharacterInfo charInfo = textInfo.characterInfo[charIndex];
+        int vertexIndex = charInfo.vertexIndex;
+        int materialIndex = charInfo.materialReferenceIndex;
+
+        Vector3 offset = new Vector3(0, 250, 0);
+        Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
+
+        for (int j = 0; j < 4; j++)
+        {
+            vertices[vertexIndex + j] += offset;
+        }
+    }
+
+    private IEnumerator LerpCharacterToOriginalPosition(int charIndex)
+    {
+        TMP_CharacterInfo charInfo = textInfo.characterInfo[charIndex];
+        int vertexIndex = charInfo.vertexIndex;
+        int materialIndex = charInfo.materialReferenceIndex;
+
+        Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
+        Vector3[] startVertices = new Vector3[4];
+        Vector3[] endVertices = new Vector3[4];
+
+        for (int j = 0; j < 4; j++)
+        {
+            startVertices[j] = vertices[vertexIndex + j];
+            endVertices[j] = originalVertices[materialIndex][vertexIndex + j];
+        }
+
+        for (float t = 0; t < TWEEN_TIME; t += Time.deltaTime)
+        {
+            float progress = t / TWEEN_TIME;
             for (int j = 0; j < 4; j++)
             {
-                startVertices[j] = vertices[vertexIndex + j];
-                endVertices[j] = originalVertices[materialIndex][vertexIndex + j];
-            }
-
-            for (float t = 0; t < TWEEN_TIME; t += Time.deltaTime)
-            {
-                float progress = t / TWEEN_TIME;
-                for (int j = 0; j < 4; j++)
-                {
-                    vertices[vertexIndex + j] = Vector3.Lerp(startVertices[j], endVertices[j], progress);
-                }
-
-                gameOverText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
-                yield return null;
-            }
-
-            for (int j = 0; j < 4; j++)
-            {
-                vertices[vertexIndex + j] = endVertices[j];
+                vertices[vertexIndex + j] = Vector3.Lerp(startVertices[j], endVertices[j], progress);
             }
 
             gameOverText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
+            yield return null;
         }
+
+        for (int j = 0; j < 4; j++)
+        {
+            vertices[vertexIndex + j] = endVertices[j];
+        }
+
+        gameOverText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
     }
 
     public void ActualQuit() {

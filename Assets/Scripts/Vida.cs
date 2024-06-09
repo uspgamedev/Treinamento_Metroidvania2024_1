@@ -10,16 +10,11 @@ public class Health : MonoBehaviour
     public int maxHealth;
     [SerializeField] private GameObject healthUI;
     [SerializeField] private float healthSize = 1f;
-    private Image[] hpSprites;
+    private List<Image> hpSprites = new List<Image>();
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
 
     private Image blackFade;
-    float min = 0f;
-    float max = 1f;
-    float t = 0f;
-    float alpha;
-    public bool toFade = false;
     private float fadeDur = 1f;
 
     private Player_Movement moveScript;
@@ -40,7 +35,6 @@ public class Health : MonoBehaviour
     private float blinkTime;
     private GameObject pauseMenu;
     private GameObject gameOverMenu;
-
     private bool onHazard = false;
 
     private LayerMask enemyLayer;
@@ -54,27 +48,36 @@ public class Health : MonoBehaviour
         maxHealth = support.maxHealth;
         currentHealth = maxHealth;
 
-        hpSprites = new Image[maxHealth];
-        for (int i = 0; i < maxHealth; i++)
-        {
-            InstantiateHealth(i);
-        }
+        InitializeHealthUI();
+        InitializeReferences();
 
         blinkTime = maxBlinkTime;
         pauseMenu = GameObject.Find("PauseMenu");
         gameOverMenu = GameObject.Find("GameOverMenu");
+        Fade(fadeDur, 0f);
+    }
 
+    private void InitializeHealthUI()
+    {
+        for (int i = 0; i < maxHealth; i++)
+        {
+            Image heart = Instantiate(healthUI, Vector3.zero, Quaternion.identity, GameObject.Find("CanvasHP").transform).GetComponent<Image>();
+            hpSprites.Add(heart);
+            heart.rectTransform.anchoredPosition = new Vector2(20f * i * healthSize * 1.5f + 16f, -16f);
+            heart.rectTransform.sizeDelta = new Vector2(30f * healthSize, 30f * healthSize);
+        }
+    }
+
+    private void InitializeReferences()
+    {
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
         moveScript = GetComponent<Player_Movement>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
-
-        moveScript.canMove2 = true;
         audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
-
+        moveScript.canMove2 = true;
     }
-    
 
     private void OnCollisionEnter2D(Collision2D collision) {
             enemyLayer = collision.gameObject.layer;
@@ -105,11 +108,11 @@ public class Health : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter2D(Collider2D other) {
             if (other.gameObject.tag == "Hazard" && !onHazard){
                 hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
+                UpdateHealthUI();
 
                 StartCoroutine(HazardDamage());
             }
@@ -118,107 +121,17 @@ public class Health : MonoBehaviour
     public void TomarDano(GameObject enemy) {
         gameObject.layer = LayerMask.NameToLayer("Immortality");
         if (currentHealth > 0) {
-            //Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
             hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
             currentHealth--;
             audioPlayer.Play("PlayerDamaged");
+            UpdateHealthUI();
             
             StartCoroutine(DamageKnockback(enemy));
         }
     }
 
-    private IEnumerator HazardDamage()
-    {
-        onHazard = true;
-
-        currentLastPos = moveScript.lastPos;
-        currentLastDir = new Vector3(moveScript.lastDir, 1f, 1f);
-
-        moveScript.canMove2 = false;
-        toFade = true;
-
-        yield return new WaitForSeconds(fadeDur);
-
-        rb.velocity = Vector2.zero;
-        transform.position = currentLastPos;
-        transform.localScale = currentLastDir;
-
-        yield return new WaitForSeconds(0.5f * fadeDur);
-
-        moveScript.canMove2 = true;
-
-        yield return new WaitForSeconds(0.5f * fadeDur);
-        
-        toFade = false;
-        onHazard = false;
-    }
-
-    void Update()
-    {
-
-        // Debug.Log(currentHealth);
-
-        if (currentHealth > maxHealth) {
-            currentHealth = maxHealth;
-        }
-
-        // Debug.Log(hpSprites.Length);
-        
-
-        for (int i = 0; i < hpSprites.Length; i++)
-        {
-            if (i < currentHealth) {
-                hpSprites[i].sprite = fullHeart;
-            }
-            else {
-                hpSprites[i].sprite = emptyHeart;
-            }
-
-            // if (i < maxHealth) {
-            //     hpSprites[i].enabled = true;
-            // }
-            // else {
-            //     hpSprites[i].enabled = false;
-            // }
-        }
-
-        if (toFade && currentHealth >= 1) {
-            Fade(fadeDur, blackFade, 0f, alpha);
-        }
-        else {
-            if ((blackFade.color.a > 0f || t > 0f) && !pauseMenu.GetComponent<HudController>().isOnPauseMenu && !gameOverMenu.GetComponent<GameOverMenu>().isGameOver) {
-                blackFade.color = new Color (0f, 0f, 0f, 0f);
-                alpha = 0f;
-                t = 0f;
-                min = 0f;
-                max = 1f;
-            }
-        }
-
-        if (onKnockback) {
-            rb.velocity = new Vector2(dir * knockbackForce, rb.velocity.y);
-        }
-    }
-
-    public void Fade(float fadeDuration, Image image, float rgb, float a)
-    {
-        a = Mathf.Lerp(min, max, t);
-
-        t += Time.deltaTime / fadeDuration;
-
-        image.color = new Color(rgb, rgb, rgb, a);
-
-        if (t >= 1f) {
-            float temp = max;
-            max = min;
-            min = temp;
-            t = 0f;
-        }
-    }
-
     private IEnumerator DamageKnockback(GameObject enemy)
     {
-        Debug.Log("knockbacks");
         anim.SetBool("Damaged", true);
 
         if (enemy.transform.position.x > transform.position.x) {
@@ -233,7 +146,7 @@ public class Health : MonoBehaviour
 
         rb.velocity = new Vector2(dir * knockbackForce, knockbackForce * 1.5f);
 
-        yield return new WaitForSeconds(0.4f);
+        yield return PushBackPlayer(0.4f);
 
         anim.SetBool("Damaged", false);
 
@@ -249,6 +162,30 @@ public class Health : MonoBehaviour
 
         damageable = true;
         gameObject.layer = playerLayer;
+    }
+
+    private IEnumerator HazardDamage()
+    {
+        onHazard = true;
+
+        currentLastPos = moveScript.lastPos; 
+        //Note for future self:
+
+        //Essa parte em si parece sus, mas ela deve ser resolvida lá no playerMovement
+        //Acredito que não tem mais nada a mexer por aqui.
+        currentLastDir = new Vector3(moveScript.lastDir, 1f, 1f);
+
+        moveScript.canMove2 = false;
+        Fade(fadeDur, 1f);
+
+        yield return new WaitForSeconds(fadeDur);
+
+        rb.velocity = Vector2.zero;
+        transform.position = currentLastPos;
+        transform.localScale = currentLastDir;
+        moveScript.canMove2 = true; 
+        if (currentHealth>0) Fade(fadeDur, 0f);
+        onHazard = false;
     }
 
     private IEnumerator Blink()
@@ -274,15 +211,11 @@ public class Health : MonoBehaviour
         foreach (Image sprite in hpSprites) {
             Destroy(sprite.gameObject);
         }
-        
-        hpSprites = new Image[maxHealth + 1];
-        
-        for (int i = 0; i < maxHealth + 1; i++) {
-            InstantiateHealth(i);
-        }
+        hpSprites.Clear();
 
         maxHealth++;
         currentHealth = maxHealth;
+        InitializeHealthUI();
     }
 
     public void HealthRestore(int amount)
@@ -293,15 +226,28 @@ public class Health : MonoBehaviour
                 hpSprites[i].GetComponent<Animator>().SetTrigger("HealthRecovered");
             }
         }
+        UpdateHealthUI();
         flashScript.Flash(Color.green);
     }
 
-    private void InstantiateHealth(int index)
+    private IEnumerator PushBackPlayer(float pushBackTime){
+        float elapsedTime = 0f;
+        while (elapsedTime < pushBackTime)
+        {
+            rb.velocity = new Vector2(dir * knockbackForce, rb.velocity.y);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+    private void UpdateHealthUI()
     {
-        GameObject t = Instantiate(healthUI, new Vector3(0, 0, 0), Quaternion.identity ,GameObject.Find("CanvasHP").transform);
-        hpSprites[index] = t.GetComponent<Image>();
-        t.GetComponent<RectTransform>().anchoredPosition = new Vector2(20f * index * healthSize * 1.5f + 16f, -16f);
-        t.GetComponent<RectTransform>().sizeDelta = new Vector2(30f * healthSize, 30f * healthSize);
+        for (int i = 0; i < hpSprites.Count; i++)
+        {
+            hpSprites[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
+        }
+    }
+    private void Fade(float fadeDuration, float toAlpha)
+    {
+        blackFade.DOFade(toAlpha, fadeDuration).SetEase(Ease.Linear);
     }
 }
-

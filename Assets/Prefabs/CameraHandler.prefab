@@ -712,7 +712,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5251169975964608453}
         m_TargetAssemblyTypeName: GameOverMenu, Assembly-CSharp
-        m_MethodName: ExitGame
+        m_MethodName: ActualQuit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1639,7 +1639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af9c92365702d64fac42b3fe2ae2147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOnPauseMenu: 0
 --- !u!1 &6620950637660050568
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,7 +2323,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3626889006441476849}
         m_TargetAssemblyTypeName: HudController, Assembly-CSharp
-        m_MethodName: QuitGame
+        m_MethodName: ActualQuit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
