@@ -123,7 +123,7 @@ public class BossAi : MonoBehaviour
         whiteFade = GameObject.Find("WhiteFade").GetComponent<Image>();
         whiteFade.color = new Color(1f, 1f, 1f, 0f);
 
-        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance();
     }
 
     // Update is called once per frame

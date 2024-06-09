@@ -75,8 +75,8 @@ public class Health : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         flashScript = GetComponent<SimpleFlash>();
-        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
-        moveScript.canMove2 = true;
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance();
+        moveScript.CanMove2 = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -108,14 +108,19 @@ public class Health : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-            if (other.gameObject.tag == "Hazard" && !onHazard){
-                hpSprites[currentHealth-1].GetComponent<Animator>().SetTrigger("DamageTaken");
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Hazard" && !onHazard)
+        {
+            if (currentHealth > 0)
+            {
+                hpSprites[currentHealth - 1].GetComponent<Animator>().SetTrigger("DamageTaken");
                 currentHealth--;
                 UpdateHealthUI();
 
                 StartCoroutine(HazardDamage());
             }
+        }
     }
 
     public void TomarDano(GameObject enemy) {
@@ -141,7 +146,7 @@ public class Health : MonoBehaviour
             dir = 1;
         }
 
-        moveScript.canMove2 = false;
+        moveScript.CanMove2 = false;
         onKnockback = true;
 
         rb.velocity = new Vector2(dir * knockbackForce, knockbackForce * 1.5f);
@@ -150,7 +155,7 @@ public class Health : MonoBehaviour
 
         anim.SetBool("Damaged", false);
 
-        moveScript.canMove2 = true;
+        moveScript.CanMove2 = true;
         onKnockback = false;
         damageable = false;
         StartCoroutine(Blink());
@@ -168,14 +173,14 @@ public class Health : MonoBehaviour
     {
         onHazard = true;
 
-        currentLastPos = moveScript.lastPos; 
+        currentLastPos = moveScript.LastPos; 
         //Note for future self:
 
         //Essa parte em si parece sus, mas ela deve ser resolvida lá no playerMovement
         //Acredito que não tem mais nada a mexer por aqui.
-        currentLastDir = new Vector3(moveScript.lastDir, 1f, 1f);
+        currentLastDir = new Vector3(moveScript.LastDir, 1f, 1f);
 
-        moveScript.canMove2 = false;
+        moveScript.CanMove2 = false;
         Fade(fadeDur, 1f);
 
         yield return new WaitForSeconds(fadeDur);
@@ -183,7 +188,7 @@ public class Health : MonoBehaviour
         rb.velocity = Vector2.zero;
         transform.position = currentLastPos;
         transform.localScale = currentLastDir;
-        moveScript.canMove2 = true; 
+        moveScript.CanMove2 = true; 
         if (currentHealth>0) Fade(fadeDur, 0f);
         onHazard = false;
     }

@@ -59,7 +59,7 @@ public class GameOverMenu : MonoBehaviour
 
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         events = EventSystem.current;
-        audioPlayer = support.getAudioManagerInstance();
+        audioPlayer = support.GetAudioManagerInstance();
     }
 
     private void InitializeGameOverMenu()
@@ -123,7 +123,7 @@ public class GameOverMenu : MonoBehaviour
 
     private void ResetPlayerPosition()
     {
-        player.transform.position = support.lastRespawn;
+        player.transform.position = support.LastRespawn;
         playerHealth.maxHealth = support.maxHealth;
         playerHealth.HealthRestore(support.maxHealth);
         player.layer = LayerMask.NameToLayer("Player");

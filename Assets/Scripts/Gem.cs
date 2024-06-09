@@ -61,7 +61,7 @@ public class Gem : MonoBehaviour
 
     private IEnumerator GetGem()
     {
-        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance().Play("PowerUP");
+        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance().Play("PowerUP");
         flashScript.Flash(color);
         GameObject.Find("Player").GetComponent<SimpleFlash>().Flash(color);
 

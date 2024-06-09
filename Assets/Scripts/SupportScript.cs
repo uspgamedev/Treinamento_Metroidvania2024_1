@@ -30,8 +30,8 @@ public class SupportScript : MonoBehaviour
     [SerializeField] int frameRate = 60;
 
     [HideInInspector] public bool temParry = false;
-    [HideInInspector] public bool temDash = false;
-    [HideInInspector] public bool temGancho = false;
+    [HideInInspector] public bool TemDash = false;
+    [HideInInspector] public bool TemGancho = false;
 
     [HideInInspector] public bool toFadeWhite = false;
     [HideInInspector] public bool canChangeSides = true;
@@ -44,7 +44,7 @@ public class SupportScript : MonoBehaviour
     [HideInInspector] public List<int> powerupIDToDeactivate;
     [HideInInspector] public List<int> gemIDToDeactivate;
 
-    [HideInInspector] public Vector3 lastRespawn;
+    [HideInInspector] public Vector3 LastRespawn;
 
     private GameObject listaATL;
     private GameObject listaBTL;
@@ -87,7 +87,7 @@ public class SupportScript : MonoBehaviour
 
         if (ladoInicial == LadoInicial.A) {
             if (SceneManager.GetActiveScene().name.Contains("Mapa"))
-                getAudioManagerInstance().FadeIn("LadoA_BGM");
+                GetAudioManagerInstance().FadeIn("LadoA_BGM");
             foreach (GameObject objeto in listaA)
             {
                 if (objeto != null) {
@@ -106,7 +106,7 @@ public class SupportScript : MonoBehaviour
         
         if (ladoInicial == LadoInicial.B) {
             if (SceneManager.GetActiveScene().name.Contains("Mapa"))
-                getAudioManagerInstance().FadeIn("LadoB_BGM");
+                GetAudioManagerInstance().FadeIn("LadoB_BGM");
             foreach (GameObject objeto in listaB)
             {
                 if (objeto != null)
@@ -123,10 +123,10 @@ public class SupportScript : MonoBehaviour
             temParry = true;
         }
         if ((skillsIniciais & Skills.Dash) == Skills.Dash) {
-            temDash = true;
+            TemDash = true;
         }
         if ((skillsIniciais & Skills.Gancho) == Skills.Gancho) {
-            temGancho = true;
+            TemGancho = true;
         }
 
         listaATL = GameObject.FindGameObjectWithTag("ListaATL");
@@ -145,7 +145,7 @@ public class SupportScript : MonoBehaviour
        
     }
 
-    public AudioManager getAudioManagerInstance()
+    public AudioManager GetAudioManagerInstance()
     {
         if (AudioManager.Instance != null)
         {

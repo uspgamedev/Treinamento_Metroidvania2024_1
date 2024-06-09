@@ -23,25 +23,13 @@ public class Ending : MonoBehaviour
 
     [SerializeField] private GameObject escapeCanvas;
     [SerializeField] private GameObject escapeObject;
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
             hpCanvasImages = GameObject.Find("CanvasHP").GetComponentsInChildren<Image>();
             foreach (Image hp in hpCanvasImages) {
                 hp.DOFade(0f, 2f).SetEase(Ease.InOutSine);
             }
-            GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance().FadeOut("BossBattle_BGM");
+            GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance().FadeOut("BossBattle_BGM");
             GameObject timerCanvas = GameObject.Find("Canvas Timer 1");
             if (timerCanvas != null)
                 timerCanvas.SetActive(false);
@@ -50,6 +38,7 @@ public class Ending : MonoBehaviour
     }
 
     private IEnumerator Sequence() {
+        GameObject.Find("PauseMenu").GetComponent<HudController>().canPause=false;
         Destroy(escapeCanvas);
         Destroy(escapeObject);
         DOTween.To(() => entranceLight.intensity, (x) => entranceLight.intensity = x, 15f, 7f).SetEase(Ease.InOutSine);

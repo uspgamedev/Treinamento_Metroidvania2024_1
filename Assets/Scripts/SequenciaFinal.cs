@@ -61,8 +61,8 @@ public class SequenciaFinal : MonoBehaviour
 
     IEnumerator ShowText()
     {
-        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance().Play("BossBattle_BGM");
-        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance().Play("CapybaraAwake");
+        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance().Play("BossBattle_BGM");
+        GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance().Play("CapybaraAwake");
         panel1.SetActive(false);
         textBox.SetActive(false);
         yield return new WaitForSeconds(8);

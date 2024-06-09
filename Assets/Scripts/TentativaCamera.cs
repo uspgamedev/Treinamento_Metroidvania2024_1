@@ -33,7 +33,7 @@ public class TentativaCamera : MonoBehaviour
         if (coll.tag == "Player" && !virtualCam.activeInHierarchy) {
             virtualCam.SetActive(true);
             if (isRespawn) {
-                support.lastRespawn = respawnPoint.position;
+                support.LastRespawn = respawnPoint.position;
             }
         }
     }

@@ -31,7 +31,7 @@ public class NewPower : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = support.GetComponent<SupportScript>().GetAudioManagerInstance();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -69,10 +69,10 @@ public class NewPower : MonoBehaviour
             support.temParry = true;
         }
         else if (skillAcquired == Skills.Dash) {
-            support.temDash = true;
+            support.TemDash = true;
         }
         else if (skillAcquired == Skills.Gancho) {
-            support.temGancho = true;
+            support.TemGancho = true;
         }
 
         skillText.SetActive(true);

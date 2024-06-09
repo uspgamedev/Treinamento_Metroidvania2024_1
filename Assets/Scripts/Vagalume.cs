@@ -47,11 +47,11 @@ public class Vagalume : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
-            col.GetComponent<Player_Movement>().vagalumeAtual = gameObject;
-            col.GetComponent<Player_Movement>().canGancho = true; 
+            col.GetComponent<Player_Movement>().VagalumeAtual = gameObject;
+            col.GetComponent<Player_Movement>().CanGancho = true; 
             ChangeSprite(true);
 
-            if (col.GetComponent<PlayerCombat>().isParrying && support.temGancho) {
+            if (col.GetComponent<PlayerCombat>().isParrying && support.TemGancho) {
                 StartCoroutine(col.GetComponent<Player_Movement>().Gancho());
                 StartCoroutine(TakeGancho());
             }
@@ -61,7 +61,7 @@ public class Vagalume : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
-            col.GetComponent<Player_Movement>().canGancho = false;
+            col.GetComponent<Player_Movement>().CanGancho = false;
             ChangeSprite(false);
         }
     }

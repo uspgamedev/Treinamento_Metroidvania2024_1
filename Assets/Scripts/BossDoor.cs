@@ -27,7 +27,7 @@ public class BossDoor : MonoBehaviour
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
         anim = GetComponent<Animator>();
         blackFade = GameObject.FindGameObjectWithTag("BlackFade").GetComponent<Image>();
-        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>().GetAudioManagerInstance();
     }
 
 

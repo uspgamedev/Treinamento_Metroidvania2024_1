@@ -26,7 +26,7 @@ public class HealthPowerup : MonoBehaviour
                 hpObject.SetActive(false);
             }
         }
-        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = support.GetComponent<SupportScript>().GetAudioManagerInstance();
     }
 
     void OnTriggerEnter2D(Collider2D other)

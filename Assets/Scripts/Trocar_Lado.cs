@@ -43,7 +43,7 @@ public class Trocar_Lado : MonoBehaviour
         listaB = support.listaB;
 
         player = GameObject.Find("Player");
-        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = support.GetComponent<SupportScript>().GetAudioManagerInstance();
     }
 
     void Update()
@@ -107,7 +107,7 @@ public class Trocar_Lado : MonoBehaviour
         support.toFadeWhite = true;
         support.SetChange();
 
-        coll.GetComponent<Player_Movement>().canMove2 = false;
+        coll.GetComponent<Player_Movement>().CanMove2 = false;
 
         bool activateB = false;
         if (objetoATL.activeInHierarchy) {
@@ -145,7 +145,7 @@ public class Trocar_Lado : MonoBehaviour
         yield return new WaitForSeconds(transTime/2);
         anim.SetTrigger("End");
         otherSideChanger.GetComponent<Animator>().SetTrigger("End");
-        GameObject.Find("Player").GetComponent<Player_Movement>().canMove2 = true;
+        GameObject.Find("Player").GetComponent<Player_Movement>().CanMove2 = true;
         yield return new WaitForSeconds(transTime/2);
 
         support.toFadeWhite = false;

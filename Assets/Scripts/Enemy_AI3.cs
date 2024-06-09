@@ -57,7 +57,7 @@ public class Enemy_AI3 : MonoBehaviour
     private void InitializeComponents()
     {
         support = GameObject.Find("ScriptsHelper").GetComponent<SupportScript>();
-        audioPlayer = support.GetComponent<SupportScript>().getAudioManagerInstance();
+        audioPlayer = support.GetComponent<SupportScript>().GetAudioManagerInstance();
 
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         light = transform.GetChild(0).GetComponent<Light2D>();

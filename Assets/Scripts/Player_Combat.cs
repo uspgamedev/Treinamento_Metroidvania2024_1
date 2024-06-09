@@ -31,7 +31,7 @@ public class PlayerCombat : MonoBehaviour
         anim = GetComponent<Animator>();
         support = GameObject.FindObjectOfType<SupportScript>().GetComponent<SupportScript>();
         healthScript = GetComponent<Health>();
-        audioPlayer = support.getAudioManagerInstance();
+        audioPlayer = support.GetAudioManagerInstance();
     }
 
 
@@ -43,7 +43,7 @@ public class PlayerCombat : MonoBehaviour
             Attack();
         }
 
-        if (Input.GetKeyDown(KeyCode.K) && !GetComponent<Player_Movement>().canGancho && support.temParry) //tem que mudar esse botao para mudar o botao do parry
+        if (Input.GetKeyDown(KeyCode.K) && !GetComponent<Player_Movement>().CanGancho && support.temParry) //tem que mudar esse botao para mudar o botao do parry
         {
             Parry();
         }
@@ -151,11 +151,11 @@ public class PlayerCombat : MonoBehaviour
         UpdateParticles();
         parryParticles.Play();
 
-        GetComponent<Player_Movement>().canMove2 = false;
+        GetComponent<Player_Movement>().CanMove2 = false;
         
         yield return new WaitForSeconds(0.25f);
 
-        GetComponent<Player_Movement>().canMove2 = true;
+        GetComponent<Player_Movement>().CanMove2 = true;
     }
 
     private void UpdateParticles() {

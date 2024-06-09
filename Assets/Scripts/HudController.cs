@@ -15,7 +15,7 @@ public class HudController : MonoBehaviour
     private const float BLACK_FADE_ALPHA_OUT = 1f;
     private const float DELAY_BEFORE_RETURN = 0.4f;
     private const float DELAY_BEFORE_INACTIVATION = 0.6f;
-
+    [HideInInspector] public bool canPause = true;
     private Health playerHealth;
     private GameObject[] menuButtons;
     private Image blackFade;
@@ -66,13 +66,13 @@ public class HudController : MonoBehaviour
 
     private void Start()
     {
-        audioPlayer = support.getAudioManagerInstance();
+        audioPlayer = support.GetAudioManagerInstance();
         TweenButtons(InOut.OUT);
     }
 
     private void Update()
     {
-        if (!gameOverMenu.GetComponent<GameOverMenu>().isGameOver && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.P)))
+        if (canPause && !gameOverMenu.GetComponent<GameOverMenu>().isGameOver && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.P)))
         {
             if (isTweening) return; // Prevent actions during tweening
 
@@ -217,7 +217,7 @@ public class HudController : MonoBehaviour
         });
 
         yield return new WaitForSeconds(TWEEN_TIME);
-        player.transform.position = support.lastRespawn;
+        player.transform.position = support.LastRespawn;
         playerHealth.maxHealth = support.maxHealth;
         playerHealth.HealthRestore(support.maxHealth);
         player.layer = LayerMask.NameToLayer("Player");
